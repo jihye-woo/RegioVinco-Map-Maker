@@ -65,7 +65,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
     double mousePerY = 0;
     double viewPortX = 0;
     double viewPortY = 0;
-    double numOfPolygons;
+    double numOfPolygons = 0;
     String webViewHTML ="";
       
     
@@ -168,6 +168,9 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             }
              
         });
+        
+        // num of polygons
+        
      
         // WEB VIEW
         webView.setMaxWidth(300);
@@ -189,6 +192,31 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         
         vbox.getChildren().add(webView);
         mapPane.setOnMouseMoved(e->{
+            currentX = e.getX();
+            currentY = e.getY();
+            double maxX = 0; double minX = 0;
+            double maxY = 0; double minY = 0;
+            
+            for(int i=1;i<mapPane.getChildren().size();i++){
+                Polygon p = (Polygon) mapPane.getChildren().get(i);
+                ObservableList<Double> xyvalues = p.getPoints();
+                for(int j=0; j<xyvalues.size(); j+=2){
+                    double x = xyvalues.get(j);
+                    double y = xyvalues.get(j+1);
+                    if(maxX < x){ maxX = x;}
+                    if(minX > x){ minX = x;}
+                    if(maxY < y){ maxY = y;}
+                    if(minY > y){ minY = y;}
+                }
+                if(maxX>=currentX && minX<=currentX){
+                    if(maxY>=currentY && minY <=currentY){
+                        numOfPolygons = xyvalues.size()/2;
+                        break;
+                    }
+                }
+            }
+            // num of Polygons
+            
             scale = mapPane.getScaleX();
             viewPortWidth = clippedPane.getWidth();
             viewPortHeight = clippedPane.getHeight();
@@ -196,13 +224,19 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             worldHeight = mapPane.getHeight();
             currentX = e.getX();
             currentY = e.getY();
-            mousePerX = 100*(currentX/worldWidth);
-            mousePerY = 100*(currentY/worldWidth);
-            viewPortX = mapPane.getTranslateX(); // to change
-            viewPortY = mapPane.getTranslateY(); // 
+            clippedPane.setOnMouseMoved(eh->{
+                viewPortX = eh.getX();
+                viewPortY = eh.getY();
+            });
             mousePerX = Math.round(100*Math.abs(viewPortX/viewPortWidth));
             mousePerY = Math.round(100*Math.abs(viewPortY/viewPortHeight));
-            numOfPolygons = 0;
+            
+            viewPortX = Double.parseDouble(String.format("%.2f", viewPortX));
+            viewPortY = Double.parseDouble(String.format("%.2f", viewPortY));
+            currentX = Double.parseDouble(String.format("%.2f", currentX));
+            currentY = Double.parseDouble(String.format("%.2f", currentY));
+            
+            
 //            int id = e.getTar;
             webViewHTML = mvController.fronthtmlCode();
         webViewHTML +=
@@ -223,7 +257,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             engine.loadContent(webViewHTML);
         });
         
-        // Fit to Polygons
         
         
         Rectangle ocean = new Rectangle();

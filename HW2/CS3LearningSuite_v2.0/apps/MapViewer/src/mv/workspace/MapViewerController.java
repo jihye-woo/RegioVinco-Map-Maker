@@ -30,8 +30,8 @@ public class MapViewerController {
         app = initApp;
     }
     
+    
      public void processFitToPoly(Pane mapPane, Button FitToPoly){
-         
          FitToPoly.setOnAction(e->{
             for(int i=1;i<mapPane.getChildren().size();i++){
                 Polygon p = (Polygon) mapPane.getChildren().get(i);
