@@ -35,7 +35,7 @@ import static mv.MapViewerPropertyType.MV_MOVE_LEFT_BUTTON;
 import static mv.MapViewerPropertyType.MV_MOVE_RIGHT_BUTTON;
 import static mv.MapViewerPropertyType.MV_MOVE_UP_BUTTON;
 import static mv.MapViewerPropertyType.MV_RESET_ZOOM_BUTTON;
-import static mv.MapViewerPropertyType.MV_RESET_LOCATION_BUTTON;
+import static mv.MapViewerPropertyType.MV_FITPLOY_BUTTON;
 import static mv.MapViewerPropertyType.MV_ZOOM_IN_BUTTON;
 import static mv.MapViewerPropertyType.MV_ZOOM_OUT_BUTTON;
 import static mv.workspace.style.MapViewerStyle.BUTTON_TAG_WIDTH;
@@ -67,6 +67,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
     double viewPortY = 0;
     double numOfPolygons;
     String webViewHTML ="";
+      
     
     public MapViewerWorkspace(MapViewerApp app) {
         super(app);
@@ -105,14 +106,13 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Label vboxLabel = workspaceBuilder.buildLabel(MV_LABEL, vbox, null, CLASS_MV_MAP_VBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox1 = workspaceBuilder.buildHBox(MV_MAP_HBOX1, vbox, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox2 = workspaceBuilder.buildHBox(MV_MAP_HBOX2, vbox, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        
                
         // BUTTON
-        Button FitToPoly = workspaceBuilder.buildIconButton(MV_RESET_LOCATION_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ResetZoom = workspaceBuilder.buildIconButton(MV_RESET_ZOOM_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        Button FitToPoly = workspaceBuilder.buildIconButton(MV_FITPLOY_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ZoomOut = workspaceBuilder.buildIconButton(MV_ZOOM_OUT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ZoomIn = workspaceBuilder.buildIconButton(MV_ZOOM_IN_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        hbox1.getChildren().addAll(ResetZoom,FitToPoly,ZoomOut,ZoomIn);
+        hbox1.getChildren().addAll(FitToPoly,ResetZoom,ZoomOut,ZoomIn);
        
         Button moveLeft = workspaceBuilder.buildIconButton(MV_MOVE_LEFT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button moveRight = workspaceBuilder.buildIconButton(MV_MOVE_RIGHT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -166,9 +166,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 mapPane.setScaleX(2*mapPane.getScaleX());
                 mapPane.setScaleY(2*mapPane.getScaleY());
             }
-            
-             //set translate
-           
+             
         });
      
         // WEB VIEW

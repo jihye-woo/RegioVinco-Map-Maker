@@ -63,10 +63,10 @@
         <property name="ABOUT_BUTTON_ICON"      value="About.png"></property>
 
         <!-- MapViewer TOOLBAR CONTROLS -->
-        <property name="MV_RESET_ZOOM_BUTTON_ICON"      value="ResetZoom.png"></property>
+        <property name="MV_FITPLOY_BUTTON_ICON"                value="FitPolygon.png"></property>
         <property name="MV_ZOOM_IN_BUTTON_ICON"         value="ZoomIn.png"></property>
         <property name="MV_ZOOM_OUT_BUTTON_ICON"        value="ZoomOut.png"></property>
-        <property name="MV_RESET_LOCATION_BUTTON_ICON"  value="ResetLocation.png"></property>
+        <property name="MV_RESET_ZOOM_BUTTON_ICON"           value="ResetZoom.png"></property>
         <property name="MV_MOVE_LEFT_BUTTON_ICON"       value="MoveLeft.png"></property>
         <property name="MV_MOVE_RIGHT_BUTTON_ICON"      value="MoveRight.png"></property>
         <property name="MV_MOVE_UP_BUTTON_ICON"         value="MoveUp.png"></property>

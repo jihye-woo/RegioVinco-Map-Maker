@@ -18,16 +18,20 @@ import javafx.scene.shape.Polygon;
  */
 public class MapViewerController {
     AppTemplate app;
-    double maxX = -180;
-    double maxY = -90;
-    double minX = 180;
-    double minY = 90;
+    double maxX = -1;
+    double maxY = -1;
+    double minX = 9999;
+    double minY = 9999;
+    double dX =0;
+    double dY =0;
+    
   
     public MapViewerController(AppTemplate initApp){
         app = initApp;
     }
     
      public void processFitToPoly(Pane mapPane, Button FitToPoly){
+         
          FitToPoly.setOnAction(e->{
             for(int i=1;i<mapPane.getChildren().size();i++){
                 Polygon p = (Polygon) mapPane.getChildren().get(i);
@@ -36,15 +40,46 @@ public class MapViewerController {
                     double x = xyvalues.get(j);
                     double y = xyvalues.get(j+1);
                     if(maxX < x){ maxX = x;}
-                    if(minX > xyvalues.get(j)){ minX = x;}
-                    if(maxY < xyvalues.get(j+1)){ maxY = y; }
-                    if(minY > xyvalues.get(j+1)){ minY = y;}
+                    if(minX > x){ minX = x;}
+                    if(maxY < y){ maxY = y;}
+                    if(minY > y){ minY = y;}
                 }
             }
-            
-            mapPane.setTranslateX(0);
-            mapPane.setTranslateY(0);
-            System.out.println(mapPane.getTranslateX());
+             System.out.println(maxX);
+             System.out.println(minX);
+             System.out.println(maxY);
+             System.out.println(minY);
+            dX = maxX - minX;
+            dY = maxY - minY;
+            double newScale = 1;
+//                   mapPane.setTranslateX((mapPane.getWidth() - (dX/2)+minX)*mapPane.getScaleX()+mapPane.getTranslateX());
+//                   mapPane.setTranslateY((mapPane.getHeight() - (dY/2)+minY)*mapPane.getScaleY()+mapPane.getTranslateY());
+                    double newX = (maxX-(dX/2));
+                    double newY = (maxY-(dY/2));
+                    System.out.println(mapPane.getTranslateX());
+                    System.out.println(newX*mapPane.getScaleX());
+                    mapPane.setTranslateX(-(mapPane.getWidth()/2-newX)*mapPane.getScaleX()+mapPane.getTranslateX());
+                    mapPane.setTranslateY(-(mapPane.getHeight()/2-newY)*mapPane.getScaleY()+mapPane.getTranslateY());
+         //         mapPane.setTranslateY(((mapPane.getHeight()/2-newY)*mapPane.getScaleY())+mapPane.getTranslateY());
+                    System.out.println("TranslateX");
+                    System.out.println(mapPane.getTranslateX());
+                    System.out.println("TranslateY");
+                    System.out.println(mapPane.getTranslateY());
+                    if(dX > dY){
+                        System.out.println(dX);
+                        newScale = mapPane.getScaleX()*(mapPane.getWidth()/dX);
+                        System.out.println(newScale);
+//                      newScale *=0.8;
+                        mapPane.setScaleX(newScale);
+                        mapPane.setScaleY(newScale);
+                    }
+                    else{
+                        newScale = mapPane.getScaleX()*(mapPane.getHeight()/dY);
+                        System.out.println(newScale);
+//                      newScale=newScale*0.8;
+                        mapPane.setScaleX(newScale*mapPane.getScaleX());
+                        mapPane.setScaleY(newScale*mapPane.getScaleY());
+                    }
         });
     }
     
@@ -52,7 +87,8 @@ public class MapViewerController {
         ResetZoom.setOnAction(e->{
             mapPane.setScaleX(1.0);
             mapPane.setScaleY(1.0);
-            System.out.println(mapPane.getTranslateX());
+            mapPane.setTranslateX(0);
+            mapPane.setTranslateY(0);
         });
         
     }
@@ -60,7 +96,6 @@ public class MapViewerController {
         ZoomOut.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*0.5);
             mapPane.setScaleY(mapPane.getScaleY()*0.5);
-            
 //            mv.viewPortX += mapPane.getTranslateX();
 //            mv.viewPortY += mapPane.getTranslateY();
         });
@@ -70,7 +105,6 @@ public class MapViewerController {
          ZoomIn.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*2);
             mapPane.setScaleY(mapPane.getScaleY()*2);
-            
 //            mv.viewPortX += mapPane.getTranslateX();
 //            mv.viewPortY += mapPane.getTranslateY();
         });
@@ -97,9 +131,6 @@ public class MapViewerController {
         moveDown.setOnAction(e->{
             mapPane.setTranslateY(mapPane.getTranslateY()-50);
         });
-    }
-    public void MovingMouseInMapPane(MapViewerWorkspace mv, double changedValue){
-        
     }
     
     
