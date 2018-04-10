@@ -92,21 +92,19 @@ public class MapViewerController {
         });
         
     }
-    public void processZoomOut(MapViewerWorkspace mv, Pane mapPane, Button ZoomOut){
+    public void processZoomOut(Pane mapPane, Button ZoomOut){
         ZoomOut.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*0.5);
             mapPane.setScaleY(mapPane.getScaleY()*0.5);
-//            mv.viewPortX += mapPane.getTranslateX();
-//            mv.viewPortY += mapPane.getTranslateY();
+           
+        
         });
     }
     
-    public void processZoomIn(MapViewerWorkspace mv, Pane mapPane, Button ZoomIn){
+    public void processZoomIn(Pane mapPane, Button ZoomIn){
          ZoomIn.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*2);
             mapPane.setScaleY(mapPane.getScaleY()*2);
-//            mv.viewPortX += mapPane.getTranslateX();
-//            mv.viewPortY += mapPane.getTranslateY();
         });
     }
     

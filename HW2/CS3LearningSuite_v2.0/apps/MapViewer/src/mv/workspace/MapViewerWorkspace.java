@@ -122,8 +122,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         
         mvController.processFitToPoly(mapPane, FitToPoly);
         mvController.processResetZoom(mapPane, ResetZoom);
-        mvController.processZoomOut(this, mapPane, ZoomOut);
-        mvController.processZoomIn(this, mapPane, ZoomIn);
+        mvController.processZoomOut(mapPane, ZoomOut);
+        mvController.processZoomIn(mapPane, ZoomIn);
         
         mvController.processMoveLeft(mapPane, moveLeft);
         mvController.processMoveRight(mapPane, moveRight);
@@ -256,7 +256,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         webViewHTML += mvController.rearhtmlCode();
             engine.loadContent(webViewHTML);
         });
-        
         
         
         Rectangle ocean = new Rectangle();

@@ -112,11 +112,4 @@ public class MapViewerData implements AppDataComponent {
         return paneHeight - newLatCoord;
     }
     
-    public double numOfPolyPoints(double x, double y, Pane map){
-        double num = 0;
-        double longx = longToX(x);
-        double longy = latToY(y);
-        
-        return num;
-    }
 }
