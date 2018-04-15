@@ -47,6 +47,10 @@ public class MapViewerData implements AppDataComponent {
         return subregions.get(id);
     }
 
+    public Pane getMap(){
+        return map;
+    }
+    
     @Override
     public void reset() {
         // CLEAR THE DATA
@@ -64,6 +68,10 @@ public class MapViewerData implements AppDataComponent {
         map.setTranslateX(0);
         map.setTranslateY(0);
        
+        System.out.println("map.scaleXProperty() :" + map.scaleXProperty());
+        System.out.println("map.getScaleX() : " + map.getScaleX());
+        System.out.println("map.getTranslateX() : " + map.getTranslateX());
+        System.out.println();
     }
 
     /**

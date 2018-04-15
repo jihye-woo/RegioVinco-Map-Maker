@@ -2,16 +2,30 @@ package mv.files;
 
 import djf.components.AppDataComponent;
 import djf.components.AppFileComponent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Transform;
+import javax.imageio.ImageIO;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -22,7 +36,9 @@ import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import mv.MapViewerApp;
 import mv.data.MapViewerData;
+import mv.workspace.MapViewerWorkspace;
 
 /**
  *
@@ -80,6 +96,9 @@ public class MapViewerFiles implements AppFileComponent {
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
 	pw.close();
+        
+        
+        
     }
     
     @Override
@@ -150,10 +169,32 @@ public class MapViewerFiles implements AppFileComponent {
     @Override
     public void exportData(AppDataComponent data, String savedFileName) throws IOException {
         // YOU'LL NEED TO DEFINE THIS 
-//        MapVierData mvd = (MapViewerData) data.getClass().getAnnotatedSuperclass();
+        MapViewerData mapViewerData = (MapViewerData)data;
+        Pane map = mapViewerData.getMap();
+        
+        savedFileName = savedFileName.substring(0, savedFileName.length()-5);
+        SnapshotParameters sp = new SnapshotParameters();
+        double scale = map.getScaleX();
+        sp.setTransform(new Scale(scale, scale));
+        WritableImage image = (WritableImage) map.snapshot(sp, null);
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        
+        String html = "<html><body><h2>"+ savedFileName +"</h2> <img src=\""+savedFileName+".png\"> </body> </html>";
+        File file = new File("./export/"+ savedFileName +".png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            File htmlFile = new File("./export/"+ savedFileName +".html");
+            FileWriter fw = new FileWriter(htmlFile);
+            BufferedWriter out = new BufferedWriter(fw);
+            out.write(html);
+            out.close();
+        } catch (IOException e) {
+            e.getMessage();
+        }
     }
     
-    /**
+    /** 
      * This method is provided to satisfy the compiler, but it
      * is not used by this application.
      */

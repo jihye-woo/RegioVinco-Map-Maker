@@ -61,6 +61,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
     double worldWidth = 0;
     double viewPortX = 0;
     double viewPortY = 0;
+    double worldvpX = 0;
+    double worldvpy = 0;
     double numOfPolygons = 0;
     String webViewHTML ="";
       
@@ -95,7 +97,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Pane clippedPane = new Pane(); // viewport
         outerMapPane.setCenter(clippedPane);
         clippedPane.getChildren().add(mapPane);
-        
         
         Rectangle ocean = new Rectangle();
         mapPane.getChildren().add(ocean);
@@ -205,10 +206,16 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         mapPane.setOnMouseMoved(e->{
             currentX = e.getX();
             currentY = e.getY();
-            for(int i=1;i<mapPane.getChildren().size();i++){
-                Polygon p = (Polygon) mapPane.getChildren().get(i);
-                if(p.isHover()){
-                    numOfPolygons = p.getPoints().size()/2;
+            for(int i=0 ;i<mapPane.getChildren().size();i++){
+                
+                if(i==0){
+                     numOfPolygons = 0;
+                }
+                else{
+                    Polygon p = (Polygon) mapPane.getChildren().get(i);
+                    if(p.isHover()){
+                        numOfPolygons = p.getPoints().size()/2;
+                    }
                 }
             }
             // num of Polygons

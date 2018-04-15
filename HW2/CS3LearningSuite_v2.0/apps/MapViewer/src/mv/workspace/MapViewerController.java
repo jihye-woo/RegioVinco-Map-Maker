@@ -25,11 +25,9 @@ public class MapViewerController {
     double dX =0;
     double dY =0;
     
-    
     public MapViewerController(AppTemplate initApp){
         app = initApp;
     }
-    
     
     public void processFitToPoly(Pane mapPane, Button FitToPoly, Pane clippedPane){
         FitToPoly.setOnAction(e->{
@@ -96,11 +94,11 @@ public class MapViewerController {
         ZoomIn.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*2);
             mapPane.setScaleY(mapPane.getScaleY()*2);
-            System.out.println((mapPane.getWidth()/4));
-            System.out.println();
-            System.out.println((mapPane.getWidth()/4)/mapPane.getScaleX());
-            mapPane.setTranslateX(((mapPane.getWidth()/4)/mapPane.getScaleX())+mapPane.getTranslateX());
-            mapPane.setTranslateY(((mapPane.getHeight()/4)/mapPane.getScaleY()) + mapPane.getTranslateY());
+//            System.out.println((mapPane.getWidth()/4));
+//            System.out.println();
+//            System.out.println((mapPane.getWidth()/4)/mapPane.getScaleX());
+//            mapPane.setTranslateX(((mapPane.getWidth()/4)/mapPane.getScaleX())+mapPane.getTranslateX());
+//            mapPane.setTranslateY(((mapPane.getHeight()/4)/mapPane.getScaleY()) + mapPane.getTranslateY());
         });
     }
     
