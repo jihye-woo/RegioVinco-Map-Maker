@@ -57,12 +57,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
     double currentX = 0;
     double currentY = 0;
     double scale = 1.0;
-    double viewPortHeight = 0;
-    double viewPortWidth = 0;
     double worldHeight = 0;
     double worldWidth = 0;
-    double mousePerX = 0;
-    double mousePerY = 0;
     double viewPortX = 0;
     double viewPortY = 0;
     double numOfPolygons = 0;
@@ -100,6 +96,22 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         outerMapPane.setCenter(clippedPane);
         clippedPane.getChildren().add(mapPane);
         
+        
+        Rectangle ocean = new Rectangle();
+        mapPane.getChildren().add(ocean);
+        ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
+        app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
+        mapPane.minWidthProperty().bind(outerMapPane.widthProperty());
+        mapPane.maxWidthProperty().bind(outerMapPane.widthProperty());
+        mapPane.minHeightProperty().bind(outerMapPane.heightProperty());
+        mapPane.maxHeightProperty().bind(outerMapPane.heightProperty());
+        outerMapPane.layoutBoundsProperty().addListener((ov, oldValue, newValue) -> {
+            clippingRectangle.setWidth(newValue.getWidth());
+            clippingRectangle.setHeight(newValue.getHeight());
+            ocean.setWidth(newValue.getHeight()*2);
+            ocean.setHeight(newValue.getHeight());
+        });
+        
         // VBOX
         VBox vbox = workspaceBuilder.buildVBox(MV_MAP_VBOX, null, null, CLASS_MV_MAP_VBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         outerMapPane.setLeft(vbox);
@@ -120,7 +132,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Button moveDown = workspaceBuilder.buildIconButton(MV_MOVE_DOWN_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         hbox2.getChildren().addAll(moveLeft,moveRight,moveUp,moveDown);
         
-        mvController.processFitToPoly(mapPane, FitToPoly);
+        mvController.processFitToPoly(mapPane, FitToPoly, clippedPane);
         mvController.processResetZoom(mapPane, ResetZoom);
         mvController.processZoomOut(mapPane, ZoomOut);
         mvController.processZoomIn(mapPane, ZoomIn);
@@ -152,7 +164,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             double currenty = e.getY();
             double centerX = mapPane.getWidth()/2;
             double centerY = mapPane.getHeight()/2;
-            if(scroll < 0){ 
+            if(scroll < 0) { 
                if(mapPane.getScaleX() > 1.0){
                 mapPane.setScaleX(0.5*mapPane.getScaleX());
                 mapPane.setScaleY(0.5*mapPane.getScaleY());
@@ -166,10 +178,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 mapPane.setScaleX(2*mapPane.getScaleX());
                 mapPane.setScaleY(2*mapPane.getScaleY());
             }
-             
         });
-        
-        // num of polygons
         
      
         // WEB VIEW
@@ -179,99 +188,68 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 scale + "<br>" +
                 clippedPane.widthProperty().get()+ "<br>"+
                 clippedPane.heightProperty().get() + "<br>"+
-                mapPane.getWidth() +"<br>" +
-                mapPane.getHeight() +"<br>" +
+                ocean.getWidth() +"<br>" +
+                ocean.getHeight() +"<br>" +
                 currentX +"<br>" +
                 currentY +"<br>" +
-                mousePerX + "% <br>" +
-                mousePerY + "% <br>" +
+                0.0 + "% <br>" +
+                0.0 + "% <br>" +
+                0.0 +"<br>"+
+                0.0 +"<br>"+
                 numOfPolygons+"<br>"
                 ;
         webViewHTML += mvController.rearhtmlCode();
         engine.loadContent(webViewHTML);
-        
         vbox.getChildren().add(webView);
+        
         mapPane.setOnMouseMoved(e->{
             currentX = e.getX();
             currentY = e.getY();
-            double maxX = 0; double minX = 0;
-            double maxY = 0; double minY = 0;
-            
             for(int i=1;i<mapPane.getChildren().size();i++){
                 Polygon p = (Polygon) mapPane.getChildren().get(i);
-                ObservableList<Double> xyvalues = p.getPoints();
-                for(int j=0; j<xyvalues.size(); j+=2){
-                    double x = xyvalues.get(j);
-                    double y = xyvalues.get(j+1);
-                    if(maxX < x){ maxX = x;}
-                    if(minX > x){ minX = x;}
-                    if(maxY < y){ maxY = y;}
-                    if(minY > y){ minY = y;}
-                }
-                if(maxX>=currentX && minX<=currentX){
-                    if(maxY>=currentY && minY <=currentY){
-                        numOfPolygons = xyvalues.size()/2;
-                        break;
-                    }
+                if(p.isHover()){
+                    numOfPolygons = p.getPoints().size()/2;
                 }
             }
             // num of Polygons
             
             scale = mapPane.getScaleX();
-            viewPortWidth = clippedPane.getWidth();
-            viewPortHeight = clippedPane.getHeight();
-            worldWidth = mapPane.getWidth();
-            worldHeight = mapPane.getHeight();
+            double viewPortWidth = mapPane.getWidth();
+            double viewPortHeight = mapPane.getHeight();
+            worldWidth = ocean.getWidth();
+            worldHeight = ocean.getHeight();
             currentX = e.getX();
             currentY = e.getY();
-            clippedPane.setOnMouseMoved(eh->{
-                viewPortX = eh.getX();
-                viewPortY = eh.getY();
-            });
-            mousePerX = Math.round(100*Math.abs(viewPortX/viewPortWidth));
-            mousePerY = Math.round(100*Math.abs(viewPortY/viewPortHeight));
-            
-            viewPortX = Double.parseDouble(String.format("%.2f", viewPortX));
-            viewPortY = Double.parseDouble(String.format("%.2f", viewPortY));
+            double mousePerX = Math.round(100*Math.abs(viewPortX/viewPortWidth));
+            double mousePerY = Math.round(100*Math.abs(viewPortY/viewPortHeight));
+            double worldViewportX = -mapPane.getTranslateX();
+            double worldViewportY = -mapPane.getTranslateY();
+            worldViewportX = Double.parseDouble(String.format("%.2f", worldViewportX));
+            worldViewportY = Double.parseDouble(String.format("%.2f", worldViewportY));
             currentX = Double.parseDouble(String.format("%.2f", currentX));
             currentY = Double.parseDouble(String.format("%.2f", currentY));
             
-            
-//            int id = e.getTar;
-            webViewHTML = mvController.fronthtmlCode();
-        webViewHTML +=
-               scale + "<br>" +
+            engine.loadContent(mvController.fronthtmlCode()+
+                scale + "<br>" +
                 clippedPane.widthProperty().get()+ "<br>"+
                 clippedPane.heightProperty().get() + "<br>"+
                 worldWidth +"<br>" +
-                worldHeight +"<br>" +
+                worldHeight +"<br>"+
                 currentX +"<br>" +
                 currentY +"<br>" +
                 mousePerX + "% <br>" +
                 mousePerY + "% <br>" +
-                viewPortX+ "<br>" +
-                viewPortY+ "<br>" +
+                worldViewportX+ "<br>" +
+                worldViewportY+ "<br>" +
                 numOfPolygons+"<br>"
-                ;
-        webViewHTML += mvController.rearhtmlCode();
-            engine.loadContent(webViewHTML);
+                   +mvController.rearhtmlCode()
+            );
+        });
+        clippedPane.setOnMouseMoved(eh->{
+                viewPortX = eh.getX();
+                viewPortY = eh.getY();
         });
         
-        
-        Rectangle ocean = new Rectangle();
-        mapPane.getChildren().add(ocean);
-        ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
-        app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
-        mapPane.minWidthProperty().bind(outerMapPane.widthProperty());
-        mapPane.maxWidthProperty().bind(outerMapPane.widthProperty());
-        mapPane.minHeightProperty().bind(outerMapPane.heightProperty());
-        mapPane.maxHeightProperty().bind(outerMapPane.heightProperty());
-        outerMapPane.layoutBoundsProperty().addListener((ov, oldValue, newValue) -> {
-            clippingRectangle.setWidth(newValue.getWidth());
-            clippingRectangle.setHeight(newValue.getHeight());
-            ocean.setWidth(newValue.getHeight()*2);
-            ocean.setHeight(newValue.getHeight());
-        });
         // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();
         ((BorderPane)workspace).setCenter(outerMapPane);

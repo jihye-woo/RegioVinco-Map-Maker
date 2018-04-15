@@ -31,7 +31,7 @@ public class MapViewerData implements AppDataComponent {
     HashMap<Integer, ObservableList<Polygon>> subregions;
     
     // LINE THICKNESS AT SCALE 1.0
-    final double DEFAULT_LINE_THICKNESS = 1.0;
+    final double DEFAULT_LINE_THICKNESS = 0.1;
 
     /**
      * Constructor can only be called after the workspace
@@ -57,6 +57,13 @@ public class MapViewerData implements AppDataComponent {
         Rectangle ocean = (Rectangle)map.getChildren().get(0);
         map.getChildren().clear();
         map.getChildren().add(ocean);
+        
+        // RESET SCALE AND TRANSLATE
+        map.setScaleX(1);
+        map.setScaleY(1);
+        map.setTranslateX(0);
+        map.setTranslateY(0);
+       
     }
 
     /**

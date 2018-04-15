@@ -150,6 +150,7 @@ public class MapViewerFiles implements AppFileComponent {
     @Override
     public void exportData(AppDataComponent data, String savedFileName) throws IOException {
         // YOU'LL NEED TO DEFINE THIS 
+//        MapVierData mvd = (MapViewerData) data.getClass().getAnnotatedSuperclass();
     }
     
     /**
