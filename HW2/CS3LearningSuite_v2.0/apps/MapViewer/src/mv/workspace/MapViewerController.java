@@ -29,7 +29,7 @@ public class MapViewerController {
         app = initApp;
     }
     
-    public void processFitToPoly(Pane mapPane, Button FitToPoly, Pane clippedPane){
+    public void processFitToPoly(Pane mapPane, Button FitToPoly){
         FitToPoly.setOnAction(e->{
             for(int i=1;i<mapPane.getChildren().size();i++){
                 Polygon p = (Polygon) mapPane.getChildren().get(i);
@@ -81,6 +81,7 @@ public class MapViewerController {
             mapPane.setScaleY(1.0);
             mapPane.setTranslateX(0);
             mapPane.setTranslateY(0);
+ //           app.getFoolproofModule().(ResetZoom, settings);
         });
     }
     public void processZoomOut(Pane mapPane, Button ZoomOut){
@@ -100,6 +101,13 @@ public class MapViewerController {
 //            mapPane.setTranslateX(((mapPane.getWidth()/4)/mapPane.getScaleX())+mapPane.getTranslateX());
 //            mapPane.setTranslateY(((mapPane.getHeight()/4)/mapPane.getScaleY()) + mapPane.getTranslateY());
         });
+    }
+    
+    public double getWorldViewPortX(Pane mapPane){
+        return((mapPane.getWidth()/2 - (mapPane.getWidth()/mapPane.getScaleX())/2 ) - mapPane.getTranslateX()/mapPane.getScaleX());
+    }
+    public double getWorldViewPortY(Pane mapPane){
+        return ((mapPane.getHeight()/2 - (mapPane.getHeight()/mapPane.getScaleY())/2 ) - mapPane.getTranslateY()/mapPane.getScaleY());
     }
     
     public void processMoveLeft(Pane mapPane, Button moveLeft){

@@ -133,15 +133,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Button moveDown = workspaceBuilder.buildIconButton(MV_MOVE_DOWN_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         hbox2.getChildren().addAll(moveLeft,moveRight,moveUp,moveDown);
         
-        mvController.processFitToPoly(mapPane, FitToPoly, clippedPane);
-        mvController.processResetZoom(mapPane, ResetZoom);
-        mvController.processZoomOut(mapPane, ZoomOut);
-        mvController.processZoomIn(mapPane, ZoomIn);
-        
-        mvController.processMoveLeft(mapPane, moveLeft);
-        mvController.processMoveRight(mapPane, moveRight);
-        mvController.processMoveUp(mapPane, moveUp);
-        mvController.processMoveDown(mapPane, moveDown);
         
         // Mouse Evenet
          mapPane.setOnMousePressed(e->{
@@ -229,8 +220,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             currentY = e.getY();
             double mousePerX = Math.round(100*Math.abs(viewPortX/viewPortWidth));
             double mousePerY = Math.round(100*Math.abs(viewPortY/viewPortHeight));
-            double worldViewportX = -mapPane.getTranslateX();
-            double worldViewportY = -mapPane.getTranslateY();
+            double worldViewportX = mvController.getWorldViewPortX(mapPane);
+            double worldViewportY = mvController.getWorldViewPortY(mapPane);
             worldViewportX = Double.parseDouble(String.format("%.2f", worldViewportX));
             worldViewportY = Double.parseDouble(String.format("%.2f", worldViewportY));
             currentX = Double.parseDouble(String.format("%.2f", currentX));
@@ -256,6 +247,16 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 viewPortX = eh.getX();
                 viewPortY = eh.getY();
         });
+        
+        mvController.processFitToPoly(mapPane, FitToPoly);
+        mvController.processResetZoom(mapPane, ResetZoom);
+        mvController.processZoomOut(mapPane, ZoomOut);
+        mvController.processZoomIn(mapPane, ZoomIn);
+        
+        mvController.processMoveLeft(mapPane, moveLeft);
+        mvController.processMoveRight(mapPane, moveRight);
+        mvController.processMoveUp(mapPane, moveUp);
+        mvController.processMoveDown(mapPane, moveDown);
         
         // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();

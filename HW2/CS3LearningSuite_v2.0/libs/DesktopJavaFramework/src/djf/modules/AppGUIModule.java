@@ -278,7 +278,6 @@ public class AppGUIModule {
         if (props.isTrue(HAS_HELP_TOOLBAR)) {
             initHelpToolbar();
         }
-
     }
 
     private void initFileToolbar() {

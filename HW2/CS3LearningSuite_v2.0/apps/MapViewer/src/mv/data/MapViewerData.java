@@ -46,6 +46,9 @@ public class MapViewerData implements AppDataComponent {
     public ObservableList<Polygon> getSubregion(int id) {
         return subregions.get(id);
     }
+    public int numOfSubregion(){
+        return subregions.size();
+    }
 
     public Pane getMap(){
         return map;
@@ -61,19 +64,7 @@ public class MapViewerData implements AppDataComponent {
         Rectangle ocean = (Rectangle)map.getChildren().get(0);
         map.getChildren().clear();
         map.getChildren().add(ocean);
-        
-        // RESET SCALE AND TRANSLATE
-        map.setScaleX(1);
-        map.setScaleY(1);
-        map.setTranslateX(0);
-        map.setTranslateY(0);
-       
-        System.out.println("map.scaleXProperty() :" + map.scaleXProperty());
-        System.out.println("map.getScaleX() : " + map.getScaleX());
-        System.out.println("map.getTranslateX() : " + map.getTranslateX());
-        System.out.println();
     }
-
     /**
      * For adding polygons to the map.
     */
@@ -98,7 +89,7 @@ public class MapViewerData implements AppDataComponent {
             map.getChildren().add(polygonToAdd);
         }
         subregions.put(subregionId, subregionPolygons);
-        subregionId++; 
+        subregionId++;
     }
 
     /**
