@@ -135,8 +135,6 @@ public class MapViewerFiles implements AppFileComponent {
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
 	pw.close();
-        
-        
     }
     
     @Override

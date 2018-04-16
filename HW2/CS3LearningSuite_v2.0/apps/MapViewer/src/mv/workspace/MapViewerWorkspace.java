@@ -157,6 +157,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             mapPane.setTranslateX(mapPane.getTranslateX()+transX);
             mapPane.setTranslateY(mapPane.getTranslateY()+transY);
             app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
+             app.getFileModule().markAsEdited(true);
         });
         mapPane.setOnMouseReleased(e->{
             mapPane.setCursor(Cursor.DEFAULT);
@@ -173,6 +174,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 mapPane.setScaleY(0.5*mapPane.getScaleY());
                 mapPane.setTranslateX(-(mapPane.getScaleX()*(centerX-currentx))+mapPane.getTranslateX());
                 mapPane.setTranslateY(-(mapPane.getScaleY()*(centerY-currenty))+mapPane.getTranslateY());
+                app.getFileModule().markAsEdited(true);
                }
             }
             else{ 
@@ -180,6 +182,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 mapPane.setTranslateY((mapPane.getScaleY()*(centerY-currenty))+mapPane.getTranslateY()); 
                 mapPane.setScaleX(2*mapPane.getScaleX());
                 mapPane.setScaleY(2*mapPane.getScaleY());
+                 app.getFileModule().markAsEdited(true);
             }
             
             if(mapPane.getScaleX() <= 1){
