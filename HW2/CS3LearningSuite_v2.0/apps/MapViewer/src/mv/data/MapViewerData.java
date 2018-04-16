@@ -53,6 +53,9 @@ public class MapViewerData implements AppDataComponent {
     public Pane getMap(){
         return map;
     }
+    public MapViewerApp getApp(){
+        return app;
+    }
     
     @Override
     public void reset() {

@@ -45,6 +45,8 @@ import mv.MapViewerApp;
 import mv.data.MapViewerData;
 import mv.workspace.MapViewerWorkspace;
 import properties_manager.PropertiesManager;
+import static mv.MapViewerPropertyType.MV_RESET_ZOOM_BUTTON;
+import static mv.MapViewerPropertyType.MV_ZOOM_OUT_BUTTON;
 
 /**
  *
@@ -155,10 +157,19 @@ public class MapViewerFiles implements AppFileComponent {
         mapData.getMap().setScaleX(mapScaleX);
         double mapScaleY = getDataAsDouble(json, JSON_SCALE_Y);
         mapData.getMap().setScaleY(mapScaleY);
-        double mapTranslateSX = getDataAsDouble(json, JSON_TRANSLATE_X);
-        mapData.getMap().setTranslateX(mapTranslateSX);
-        double mapTranslateSY = getDataAsDouble(json, JSON_TRANSLATE_Y);
-        mapData.getMap().setTranslateY(mapTranslateSY);
+        
+        double mapTranslatesX = getDataAsDouble(json, JSON_TRANSLATE_X);
+        mapData.getMap().setTranslateX(mapTranslatesX);
+        double mapTranslatesY = getDataAsDouble(json, JSON_TRANSLATE_Y);
+        mapData.getMap().setTranslateY(mapTranslatesY);
+        
+        if(mapScaleX <= 1){
+            if(mapTranslatesX==0 && mapTranslatesY==0){
+                mapData.getApp().getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(true);
+            }
+            mapData.getApp().getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(true);
+        }
+        
         
 // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
@@ -233,17 +244,12 @@ public class MapViewerFiles implements AppFileComponent {
         // YOU'LL NEED TO DEFINE THIS 
         MapViewerData mapViewerData = (MapViewerData)data;
         BorderPane outermap = (BorderPane) mapViewerData.getMap().getParent().getParent();
-//        Scene sceneOfMap = map.getScene();
-//        Pane centerPane = (Pane) map.getCenter();
-        
         savedFileName = savedFileName.substring(0, savedFileName.length()-5);
         SnapshotParameters sp = new SnapshotParameters();
         WritableImage image = (WritableImage) outermap.snapshot(sp, null);
 
-        
         String PATH = "./export/";
         String directoryName = PATH +"/"+savedFileName;
-        
         File exportDir = new File(directoryName);
         if(!exportDir.exists()){
             exportDir.mkdir();

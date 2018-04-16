@@ -3,12 +3,14 @@ package mv.workspace;
 import djf.components.AppWorkspaceComponent;
 import djf.AppTemplate;
 import static djf.modules.AppGUIModule.ENABLED;
+import static djf.modules.AppGUIModule.DISABLED;
 import static djf.modules.AppGUIModule.FOCUS_TRAVERSABLE;
 import static djf.modules.AppGUIModule.HAS_KEY_HANDLER;
 import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
+import static javafx.scene.DepthTest.DISABLE;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -36,6 +38,7 @@ import static mv.MapViewerPropertyType.MV_MOVE_RIGHT_BUTTON;
 import static mv.MapViewerPropertyType.MV_MOVE_UP_BUTTON;
 import static mv.MapViewerPropertyType.MV_RESET_ZOOM_BUTTON;
 import static mv.MapViewerPropertyType.MV_FITPLOY_BUTTON;
+import static mv.MapViewerPropertyType.MV_RESET_ZOOM_BUTTON;
 import static mv.MapViewerPropertyType.MV_ZOOM_IN_BUTTON;
 import static mv.MapViewerPropertyType.MV_ZOOM_OUT_BUTTON;
 import static mv.workspace.style.MapViewerStyle.BUTTON_TAG_WIDTH;
@@ -83,10 +86,10 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         
         // THIS WILL BUILD ALL OF OUR JavaFX COMPONENTS FOR US
         AppNodesBuilder workspaceBuilder = app.getGUIModule().getNodesBuilder();
-        
         // THIS IS WHERE WE'LL DRAW THE MAP
         Pane mapPane = new Pane();
         
+       
         // Controller
         AppFileController controller = new AppFileController((AppTemplate)app);
         MapViewerController mvController = new MapViewerController((AppTemplate) app);
@@ -97,6 +100,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Pane clippedPane = new Pane(); // viewport
         outerMapPane.setCenter(clippedPane);
         clippedPane.getChildren().add(mapPane);
+        
+        
         
         Rectangle ocean = new Rectangle();
         mapPane.getChildren().add(ocean);
@@ -115,18 +120,23 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         
         // VBOX
         VBox vbox = workspaceBuilder.buildVBox(MV_MAP_VBOX, null, null, CLASS_MV_MAP_VBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        outerMapPane.setLeft(vbox);
         Label vboxLabel = workspaceBuilder.buildLabel(MV_LABEL, vbox, null, CLASS_MV_MAP_VBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox1 = workspaceBuilder.buildHBox(MV_MAP_HBOX1, vbox, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox2 = workspaceBuilder.buildHBox(MV_MAP_HBOX2, vbox, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-               
+        
+         // AND PUT EVERYTHING IN THE WORKSPACE
+        workspace = new BorderPane();
+        ((BorderPane)workspace).setLeft(vbox);
+        ((BorderPane)workspace).setCenter(outerMapPane);
+        
         // BUTTON
+       
         Button ResetZoom = workspaceBuilder.buildIconButton(MV_RESET_ZOOM_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button FitToPoly = workspaceBuilder.buildIconButton(MV_FITPLOY_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ZoomOut = workspaceBuilder.buildIconButton(MV_ZOOM_OUT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ZoomIn = workspaceBuilder.buildIconButton(MV_ZOOM_IN_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         hbox1.getChildren().addAll(FitToPoly,ResetZoom,ZoomOut,ZoomIn);
-       
+      
         Button moveLeft = workspaceBuilder.buildIconButton(MV_MOVE_LEFT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button moveRight = workspaceBuilder.buildIconButton(MV_MOVE_RIGHT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button moveUp = workspaceBuilder.buildIconButton(MV_MOVE_UP_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -146,6 +156,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             double transY = e.getY()-originalY;
             mapPane.setTranslateX(mapPane.getTranslateX()+transX);
             mapPane.setTranslateY(mapPane.getTranslateY()+transY);
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
         mapPane.setOnMouseReleased(e->{
             mapPane.setCursor(Cursor.DEFAULT);
@@ -170,6 +181,14 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
                 mapPane.setScaleX(2*mapPane.getScaleX());
                 mapPane.setScaleY(2*mapPane.getScaleY());
             }
+            
+            if(mapPane.getScaleX() <= 1){
+                app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(true);
+            }
+            else{
+                app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(false);
+            }
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
         
      
@@ -258,9 +277,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         mvController.processMoveUp(mapPane, moveUp);
         mvController.processMoveDown(mapPane, moveDown);
         
-        // AND PUT EVERYTHING IN THE WORKSPACE
-        workspace = new BorderPane();
-        ((BorderPane)workspace).setCenter(outerMapPane);
     }
     
     @Override

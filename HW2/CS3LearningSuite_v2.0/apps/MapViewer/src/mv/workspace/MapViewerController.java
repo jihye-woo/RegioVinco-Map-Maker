@@ -11,6 +11,8 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
+import static mv.MapViewerPropertyType.MV_RESET_ZOOM_BUTTON;
+import static mv.MapViewerPropertyType.MV_ZOOM_OUT_BUTTON;
 
 /**
  *
@@ -48,18 +50,13 @@ public class MapViewerController {
             double newScale = 1;
             double newX = (maxX-(dX/2));
             double newY = (maxY-(dY/2));
-//                    mapPane.setTranslateX((((mapPane.getWidth()/2)-newX)*mapPane.getScaleX())+mapPane.getTranslateX());
-//                    mapPane.setTranslateY((((mapPane.getHeight()/2)-newY)*mapPane.getScaleY())+mapPane.getTranslateY());
-//        mapPane.setTranslateX((-newX*mapPane.getScaleX())+mapPane.getTranslateX());
-//        mapPane.setTranslateY((-newY*mapPane.getScaleY())+mapPane.getTranslateY());
-        if(dX > dY){
-            newScale = ((mapPane.getWidth()/dX))*0.6;
-        }
-        else{
-            newScale = ((mapPane.getHeight()/dY))*0.6;
-}
-//        mapPane.setTranslateX(clippedPane.getWidth()/2+mapPane.getTranslateX());
-//        mapPane.setTranslateY(clippedPane.getHeight()/2+mapPane.getTranslateY());
+            if(dX > dY){
+                newScale = ((mapPane.getWidth()/dX))*0.6;
+            }
+            else{
+                newScale = ((mapPane.getHeight()/dY))*0.6;
+            }
+            
             if(newScale >= mapPane.getScaleX()){ // should be zoom in
                 mapPane.setScaleX(newScale);
                 mapPane.setScaleY(newScale);
@@ -72,6 +69,8 @@ public class MapViewerController {
                 mapPane.setScaleX(newScale);
                 mapPane.setScaleY(newScale);
             }
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
+            app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(false);
         });
     }
     
@@ -81,13 +80,20 @@ public class MapViewerController {
             mapPane.setScaleY(1.0);
             mapPane.setTranslateX(0);
             mapPane.setTranslateY(0);
- //           app.getFoolproofModule().(ResetZoom, settings);
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(true);
+            app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(true);
         });
     }
     public void processZoomOut(Pane mapPane, Button ZoomOut){
         ZoomOut.setOnAction(e->{
-            mapPane.setScaleX(mapPane.getScaleX()*0.5);
-            mapPane.setScaleY(mapPane.getScaleY()*0.5);
+            if(mapPane.getScaleX() > 1){
+                mapPane.setScaleX(mapPane.getScaleX()*0.5);
+                mapPane.setScaleY(mapPane.getScaleY()*0.5);
+                app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
+            }
+            if(mapPane.getScaleX() <= 1){
+                app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(true);
+            }
         });
     }
     
@@ -95,11 +101,8 @@ public class MapViewerController {
         ZoomIn.setOnAction(e->{
             mapPane.setScaleX(mapPane.getScaleX()*2);
             mapPane.setScaleY(mapPane.getScaleY()*2);
-//            System.out.println((mapPane.getWidth()/4));
-//            System.out.println();
-//            System.out.println((mapPane.getWidth()/4)/mapPane.getScaleX());
-//            mapPane.setTranslateX(((mapPane.getWidth()/4)/mapPane.getScaleX())+mapPane.getTranslateX());
-//            mapPane.setTranslateY(((mapPane.getHeight()/4)/mapPane.getScaleY()) + mapPane.getTranslateY());
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
+            app.getGUIModule().getGUINode(MV_ZOOM_OUT_BUTTON).setDisable(false);
         });
     }
     
@@ -114,22 +117,26 @@ public class MapViewerController {
         moveLeft.setOnAction(e->{
             mapPane.setTranslateX(mapPane.getTranslateX()+50);
             System.out.println(mapPane.getTranslateX());
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
     }
     public void processMoveRight(Pane mapPane, Button moveRight){
         moveRight.setOnAction(e->{
             mapPane.setTranslateX(mapPane.getTranslateX()-50);
             System.out.println(mapPane.getTranslateX());
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
     }
     public void processMoveUp(Pane mapPane, Button moveUp){
         moveUp.setOnAction(e->{
             mapPane.setTranslateY(mapPane.getTranslateY()+50);
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
     }
     public void processMoveDown(Pane mapPane, Button moveDown){
         moveDown.setOnAction(e->{
             mapPane.setTranslateY(mapPane.getTranslateY()-50);
+            app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
         });
     }
     
