@@ -88,7 +88,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         AppNodesBuilder workspaceBuilder = app.getGUIModule().getNodesBuilder();
         // THIS IS WHERE WE'LL DRAW THE MAP
         Pane mapPane = new Pane();
-        
        
         // Controller
         AppFileController controller = new AppFileController((AppTemplate)app);
@@ -100,7 +99,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Pane clippedPane = new Pane(); // viewport
         outerMapPane.setCenter(clippedPane);
         clippedPane.getChildren().add(mapPane);
-        
         
         
         Rectangle ocean = new Rectangle();
@@ -130,7 +128,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         ((BorderPane)workspace).setCenter(outerMapPane);
         
         // BUTTON
-       
         Button ResetZoom = workspaceBuilder.buildIconButton(MV_RESET_ZOOM_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button FitToPoly = workspaceBuilder.buildIconButton(MV_FITPLOY_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button ZoomOut = workspaceBuilder.buildIconButton(MV_ZOOM_OUT_BUTTON, null, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -162,6 +159,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         mapPane.setOnMouseReleased(e->{
             mapPane.setCursor(Cursor.DEFAULT);
         });
+        
         mapPane.setOnScroll(e->{
             double scroll = e.getDeltaY();
             double currentx = e.getX();

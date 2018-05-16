@@ -1,6 +1,6 @@
 package mv.workspace.style;
 
-import static mv.MapViewerPropertyType.MV_MAP_VBOX;
+
 
 /**
  * This class lists all CSS style types for this application. These
