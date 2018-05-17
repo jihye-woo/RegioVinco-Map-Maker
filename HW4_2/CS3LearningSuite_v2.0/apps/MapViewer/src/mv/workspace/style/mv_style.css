@@ -104,24 +104,39 @@
 /**
     NEXT THE APP-SPECIFIC CONTROLS
 **/
+.rvmm_toolbar{
+    -fx-pref-height:   80;
+    -fx-border-width : 1px;
+    -fx-border-color : PINK;
+    -fx-background-color : LIGHTCORAL;
+    -fx-padding:      8px;
+}
 .rvmm_checkbox{
     
+}
+.rvmm_bottombox2{
+    -fx-padding : 10;
+}
+.rvmm_bottombox{
+    -fx-border: 30 1 1 1;
+    -fx-background-color : LIGHTCORAL;
 }
 
 .rvmm_bottombox_label{
     -fx-font-size:          7pt;
     -fx-font-color:         black;
     -fx-font-weight:        bold;
+    -fx-padding : 5 5;
 }
 
 .rvmm_tablecol{
     -fx-background-color : WHITE;
     -fx-border-color:       GRAY;
-    -fx-border-width :      33.3%
 }
 .rvmm_table{
-    -fx-background-color:   LIGNTGRAY;
+    -fx-background-color:   WHITE;
     -fx-border-color:       BLACK;
+    -fx-pref-height:        300;
 }
 
 .mv_map {
@@ -165,10 +180,10 @@
 }
 .mv_map_hbox_icon{
     -fx-background-color:   PINK;
-    -fx-pref-height:        45;
-    -fx-pref-width:         50;
-    -fx-min-height:         45;
-    -fx-min-width:          50;
+    -fx-pref-height:        40;
+    -fx-pref-width:         40;
+    -fx-min-height:         40;
+    -fx-min-width:          40;
     -fx-margin:             100px;
     -fx-border-color:       black;
     -fx-border-width:       0.4px;

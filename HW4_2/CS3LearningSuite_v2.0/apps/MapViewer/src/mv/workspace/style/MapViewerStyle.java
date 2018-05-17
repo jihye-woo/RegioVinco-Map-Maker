@@ -1,5 +1,7 @@
 package mv.workspace.style;
 
+import static mv.MapMakerPropertyType.RVMM_TABLE;
+
 
 
 /**
@@ -28,11 +30,15 @@ public class MapViewerStyle {
     public static final String CLASS_MV_MAP = "mv_map";
     public static final String CLASS_MV_MAP_SELECTED = "mv_map_selected";
     
+    public static final String CLASS_RFMM_BOTTOMBOX = "rvmm_bottombox";
+    public static final String CLASS_RFMM_BOTTOMBOX2 = "rvmm_bottombox2";
     public static final String CLASS_RVMM_TABLE = "rvmm_table";
     public static final String CLASS_RVMM_TABLECOL = "rvmm_tablecol";
     public static final String CLASS_RVMM_RIGHTAREA = "rvmm_rightarea";
     public static final String CLASS_RVMM_CHECKBOX = "rvmm_checkbox";
     public static final String CLASS_RVMM_BOTTOMBOX_LABEL = "rvmm_bottombox_label";
+    public static final String CLASS_RVMM_TOOLBAR = "rvmm_toolbar";
+   
     
     
     

@@ -171,7 +171,7 @@ public class AppNodesBuilder {
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(0);
         slider.setBlockIncrement(1);
-        slider.setShowTickLabels(false);
+        slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.valueProperty().addListener((obs, oldval, newVal)
                 -> slider.setValue(Math.round(newVal.doubleValue())));

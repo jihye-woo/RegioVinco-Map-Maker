@@ -94,7 +94,7 @@ public class AppGUIModule {
     public AppGUIModule(AppTemplate initApp) {
         // SAVE THESE FOR LATER
         app = initApp;
-
+        
         // MAKE THE KEY CONTROLLER
         keyController = new AppKeyController(app);
     }

@@ -27,6 +27,8 @@
         <property name="EXIT_BUTTON_TOOLTIP"        value="Exit"></property>
 
         <!-- LOAD FEEDBACK DIALOGS -->
+        <property name="LOAD_PARENTREGION_TITLE"   value="Choose Parent Region Directory"></property>
+        <property name="LOAD_DATAFILE_TITLE"   value="Choose Data File"></property>
         <property name="LOAD_WORK_TITLE"        value="Load Work"></property>
         <property name="LOAD_SUCCESS_TITLE"     value="Load Complete"></property>
         <property name="LOAD_SUCCESS_CONTENT"   value="The File has Loaded Successfully and can now be edited."></property>
@@ -64,6 +66,12 @@
         <property name="RVMM_BOTTOM2_3LABEL_TEXT"       value="Center Y"></property>
         <property name="RVMM_BOTTOM2_4LABEL_TEXT"       value="Cycle Method"></property>
         <property name="RVMM_BOTTOM2_5LABEL_TEXT"       value="Stop 1 Color"></property>
+
+        <!-- TOOLBAR -->
+        <property name="RVMM_TOOLBAR_CHECKBOX1_LABEL_TEXT"       value="Toggle Frame"></property>
+        <property name="RVMM_TOOLBAR_CHECKBOX2_LABEL_TEXT"       value="Move Polygon Mode"></property>
+        <property name="RVMM_TOOLBAR_COLORPICKER_LABEL_TEXT"       value="Border Color"></property>
+        <property name="RVMM_TOOLBAR_SLIDER_LABEL_TEXT"       value="Border Thickness"></property>
 
 
     </property_list>

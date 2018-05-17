@@ -90,6 +90,22 @@ public class AppDialogsFacade {
         messageDialog.getDialogPane().setContent(label);
         messageDialog.showAndWait();
     }
+    
+    public static void showCreatDialog(Stage window, AppTemplate app){
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+        File selectedFile = fc.showOpenDialog(window);
+        FileChooser parentRegion = new FileChooser();
+        FileChooser dataFile = new FileChooser();
+        parentRegion.setInitialDirectory(new File(PATH_WORK));
+        dataFile.setInitialDirectory(new File(PATH_WORK));
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+	parentRegion.setTitle(props.getProperty(LOAD_PARENTREGION_TITLE));
+	dataFile.setTitle(props.getProperty(LOAD_DATAFILE_TITLE));
+        File selectedParentFile = parentRegion.showOpenDialog(window);
+        File selecteddataFile = dataFile.showOpenDialog(window);  
+    }
+    
     public static File showOpenDialog(Stage window, AppPropertyType openTitleProp) {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(PATH_WORK));
@@ -157,7 +173,6 @@ public class AppDialogsFacade {
         // FIRST LOAD ALL THE RECENT WORK
         AppRecentWorkModule recentWork = app.getRecentWorkModule();
         recentWork.loadRecentWorkList();
-
         // OPEN THE DIALOG
         AppWelcomeDialog wd = new AppWelcomeDialog(app);
         wd.showAndWait();
