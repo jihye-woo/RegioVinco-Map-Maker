@@ -138,6 +138,7 @@
 .rvmm_bottombox{
     -fx-border: 30 1 1 1;
     -fx-background-color : LIGHTCORAL;
+    -fx-min-height : 170px;
 }
 
 .rvmm_bottombox_label{
@@ -148,17 +149,11 @@
 }
 
 .rvmm_tablecol{
-    -fx-background-color : WHITE;
-    -fx-border-color:       GRAY;
-    -fx-table-layout : auto;
-    -fx-table-layout : 100%
     
 }
 
 .rvmm_table{
-    -fx-background-color:   WHITE;
-    -fx-border-color:       BLACK;
-    -fx-pref-height:        300;
+    
 }
 
 .mv_map {

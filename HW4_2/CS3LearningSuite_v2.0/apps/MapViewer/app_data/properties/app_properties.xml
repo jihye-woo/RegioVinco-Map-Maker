@@ -103,7 +103,7 @@
                 <!-- Creat New Map Dialogs -->
                 <property name="CREATENEW_DIALOG_HEADER_LABEL_TEXT"       value="Create New Map"></property>
                 <property name="CREATENEW_DIALOG_REGIONAME_LABEL_TEXT"       value="Region Name"></property>
-                <property name="CREATENEW_DIALOG_PARENTS_LABEL_TEXT"       value="Parent Regopm Directory Not Choose"></property>
+                <property name="CREATENEW_DIALOG_PARENTS_LABEL_TEXT"       value="Parent Region Directory Not Choose"></property>
                 <property name="CREATENEW_DIALOG_DATACHOICE_LABEL_TEXT"       value="Data File Not Chosen"></property>
                 <property name="CREATENEW_DIALOG_PARENTS_BUTTON_TEXT"       value="Choose Parent Region Directory"></property>
                 <property name="CREATENEW_DIALOG_DATACHOICE_BUTTON_TEXT"       value="Choose Data File"></property>
@@ -127,6 +127,17 @@
                 <property name="EDITSUB_DIALOG_FLAG_LABEL_TEXT"              value="Flag"></property>
                 <property name="EDITSUB_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
 
+                <!-- Load Dialog -->
+                <property name="LOAD_DIALOG_HEADER_LABEL_TEXT"             value="Load File"></property>
+                <property name="LOAD_DIALOG_REGIONAME_LABEL_TEXT"             value="Name of Region for Map"></property>
+                <property name="LOAD_DIALOG_CHOOSER_BUTTON_TEXT"             value="Choose Load File Directory"></property>
+                <property name="LOAD_DIALOG_CHOOSER_LABEL_TEXT"             value="Load File Not Chosen"></property>
+
+                <!-- Rename Dialog -->
+                <property name="RENAME_DIALOG_HEADER_LABEL_TEXT"             value="Rename"></property>
+                <property name="RENAME_DIALOG_OLD_LABEL_TEXT"             value="Current Name"></property>
+                <property name="RENAME_DIALOG_NEW_LABEL_TEXT"             value="Enter the New Name"></property>
+                <property name="RENAME_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
 
 
         <!-- ENGLISH IS THE DEFAULT -->

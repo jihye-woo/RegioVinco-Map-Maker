@@ -85,7 +85,7 @@ public class MapMakerEditDialog extends Stage{
         if (col >= 0)
             gridPane.add(node, col, row, colSpan, rowSpan);
         
-//        node.getStyleClass().add(styleClass);
+            node.getStyleClass().add(styleClass);
     }
     
     private void initDialog() {

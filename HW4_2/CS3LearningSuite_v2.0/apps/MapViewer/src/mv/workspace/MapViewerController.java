@@ -9,6 +9,8 @@ import djf.AppTemplate;
 import djf.ui.dialogs.MapMakerChangeDiemensionDialog;
 import djf.ui.dialogs.MapMakerDialog;
 import djf.ui.dialogs.MapMakerEditDialog;
+import djf.ui.dialogs.MapMakerLoadDialog;
+import djf.ui.dialogs.MapMakerRenameDialog;
 
 /**
  *
@@ -20,12 +22,16 @@ public class MapViewerController {
     MapMakerDialog mapMakerDialog;
     MapMakerChangeDiemensionDialog mapMakerChangeDialogs;
     MapMakerEditDialog mapMakerEditDialog;
+    MapMakerLoadDialog mapMakerLoadDialog;
+    MapMakerRenameDialog mapMakerRenameDialog;
     
     public MapViewerController(AppTemplate initApp) {
         app = initApp;
         mapMakerDialog = new MapMakerDialog(app);
         mapMakerChangeDialogs = new MapMakerChangeDiemensionDialog(app);
-        mapMakerEditDialog = new MapMakerEditDialog(app);
+        mapMakerEditDialog = new MapMakerEditDialog(app); 
+        mapMakerLoadDialog = new MapMakerLoadDialog(app);
+        mapMakerRenameDialog = new MapMakerRenameDialog(app);
     }
     
     public void processCreatNewMap(){
@@ -38,6 +44,14 @@ public class MapViewerController {
     
     public void processEditSubregion(){
         mapMakerEditDialog.showAddMapMakerEditDialog();
+    }
+    
+    public void processLoadFile(){
+        mapMakerLoadDialog.showLoadMapMakerDialog();
+    }
+    
+    public void processRename(){
+        mapMakerRenameDialog.showRenameDialog();
     }
     
     private void updateSaveButton(){

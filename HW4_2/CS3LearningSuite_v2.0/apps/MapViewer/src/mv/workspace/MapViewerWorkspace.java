@@ -9,6 +9,8 @@ import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -21,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -143,6 +146,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         Button movedown = workspaceBuilder.buildIconButton(MV_MOVE_DOWN_BUTTON, hbox1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button moveup = workspaceBuilder.buildIconButton(MV_MOVE_UP_BUTTON, hbox1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         SplitPane sp = new SplitPane(leftArea,rightArea);
+        sp.setOrientation(Orientation.HORIZONTAL);
+        sp.setDividerPositions(0.6);
         Rectangle clipTable = new Rectangle();
         
         //ToolBar
@@ -163,6 +168,10 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         });
         
         Button load = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_LOAD, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        load.setOnAction(e->{
+            mvController.processLoadFile();
+        });
+        
         Button save = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_SAVE, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button export =workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXPORT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button exit = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXIT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -176,9 +185,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         //toolbar3
         Button text= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TEXT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         text.setOnAction(e->{
-            mvController.processEditSubregion();
+            mvController.processRename();
         });
-        
         Button addImage = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_ADDIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -211,6 +219,17 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         TableColumn tableCol1 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL1, table, CLASS_RVMM_TABLECOL);
         TableColumn tableCol2 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL2, table, CLASS_RVMM_TABLECOL);
         TableColumn tableCol3 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL3, table, CLASS_RVMM_TABLECOL);
+        
+        ObservableList<String> characters = FXCollections.observableArrayList("Sean");
+        table.setItems(characters);
+        
+        table.setOnMouseClicked(e->{
+            if(e.getButton().equals(MouseButton.PRIMARY)){
+                if(e.getClickCount()==2){
+                     mvController.processEditSubregion();
+                }
+            }
+        });
         
         //Hbox1 -3
         HBox hbox2 = workspaceBuilder.buildHBox(MV_MAP_HBOX2, rightArea, null, CLASS_RFMM_BOTTOMBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -276,7 +295,6 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         workspace = new BorderPane();
         ((BorderPane)workspace).setTop(topToolBar);
         ((BorderPane)workspace).setCenter(outerMapPane);
-        
 //        
     }
     
