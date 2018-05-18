@@ -15,6 +15,9 @@ import djf.modules.AppFoolproofModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppRecentWorkModule;
 import static djf.modules.AppLanguageModule.*;
+import djf.ui.dialogs.MapMakerChangeDiemensionDialog;
+import djf.ui.dialogs.MapMakerDialog;
+import djf.ui.dialogs.MapMakerEditDialog;
 import jtps.jTPS;
 import jtps.jTPS_Transaction;
 import properties_manager.InvalidXMLFileFormatException;
@@ -64,6 +67,7 @@ public abstract class AppTemplate extends Application {
     public static final String PATH_WORK = "./work/";
     public static final String PATH_ICONS = "./images/icons/";
     public static final String PATH_TEMP = "./temp/";
+    public static final String PATH_FLAGS ="./images/The World/Europe/";
     
     // APP MODULES PROVIDE IMPORTANT APP SERVICES AND
     // USE FILES WITH APPLICATION-DEPENDENT DATA THAT
@@ -88,6 +92,9 @@ public abstract class AppTemplate extends Application {
     // DEFINED INSIDE OF THIS PROJECT
     protected jTPS tps = new jTPS();
         
+//    protected MapMakerChangeDiemensionDialog appdialogsdiemensionDialogs = new MapMakerChangeDiemensionDialog(this);
+//    protected MapMakerDialog creatnewmapdialogs = new MapMakerDialog(this);
+//    protected MapMakerEditDialog editdialogs = new MapMakerEditDialog(this);
     // APP ACCESSOR METHODS ARE PROVIDED FOR
     // ALL MODULES AND COMPONENTS AS WELL AS
     // FOR THE SHARED TRANSACTION PROCESSING SYSTEM
@@ -196,6 +203,18 @@ public abstract class AppTemplate extends Application {
     public jTPS getTPS() { 
         return tps; 
     }
+ 
+//    public MapMakerChangeDiemensionDialog getMapMakerChangeDiemensionDialog(){
+//        return appdialogsdiemensionDialogs;
+//    }
+//    
+//    public MapMakerDialog getMapMakerDialog(){
+//        return creatnewmapdialogs;
+//    }
+//    
+//    public MapMakerEditDialog getMapMakerEditDialog(){
+//        return editdialogs;
+//    }
     
     /**
      * This is where our Application begins its initialization, it will load
@@ -268,6 +287,7 @@ public abstract class AppTemplate extends Application {
                     // BEFORE CONTINUING ON TO THE APPLICATION WINDOW
                     AppDialogsFacade.showWelcomeDialog(this);                
                 }
+                
                 
                 // NOW OPEN UP THE APPLICATION WINDOW
                 primaryStage.show();

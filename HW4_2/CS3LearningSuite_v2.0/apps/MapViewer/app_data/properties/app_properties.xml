@@ -99,6 +99,36 @@
         <property name="CREATEMAP_BUTTON_ICON"       value="create.png"></property>
         <property name="WELCOME_DIALOG_NEW_BUTTON_TEXT"       value="Creat A New Map"></property>
 
+
+                <!-- Creat New Map Dialogs -->
+                <property name="CREATENEW_DIALOG_HEADER_LABEL_TEXT"       value="Create New Map"></property>
+                <property name="CREATENEW_DIALOG_REGIONAME_LABEL_TEXT"       value="Region Name"></property>
+                <property name="CREATENEW_DIALOG_PARENTS_LABEL_TEXT"       value="Parent Regopm Directory Not Choose"></property>
+                <property name="CREATENEW_DIALOG_DATACHOICE_LABEL_TEXT"       value="Data File Not Chosen"></property>
+                <property name="CREATENEW_DIALOG_PARENTS_BUTTON_TEXT"       value="Choose Parent Region Directory"></property>
+                <property name="CREATENEW_DIALOG_DATACHOICE_BUTTON_TEXT"       value="Choose Data File"></property>
+                <property name="CREATENEW_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
+                <property name="CREATENEW_DIALOG_OKBUTTON"             value="OK"></property>
+
+                  <!-- Change Map Dimensions Dialogs -->
+                <property name="MAP_DIMENSIONS_DIALOG_HEADER_LABEL_TEXT"       value="Change Map Dimensions"></property>
+                <property name="MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL_TEXT"       value="Height"></property>
+                <property name="MAP_DIMENSIONS_DIALOG_WIDTH_BUTTON_TEXT"       value="Width"></property>
+                <property name="MAP_DIMENSIONS_DIALOG_OKBUTTON_TEXT"       value="OK"></property>
+                <property name="MAP_DIMENSIONS_DIALOG_OKBUTTON"            value="OK"></property>
+
+                <!-- View/Edit Subregion -->
+                <property name="EDITSUB_DIALOG_HEADER_LABEL_TEXT"          value="View / Edit Subregion"></property>
+                <property name="EDITSUB_DIALOG_PREV_BUTTON_TEXT"            value="Previous"></property>
+                <property name="EDITSUB_DIALOG_NEXT_BUTTON_TEXT"            value="Next"></property>
+                <property name="EDITSUB_DIALOG_SUBREIONNAME_LABEL_TEXT"      value="Subregion"></property>
+                <property name="EDITSUB_DIALOG_CAPTIAL_LABEL_TEXT"          value="Capital"></property>
+                <property name="EDITSUB_DIALOG_LEADER_LABEL_TEXT"            value="Leader's Name"></property>
+                <property name="EDITSUB_DIALOG_FLAG_LABEL_TEXT"              value="Flag"></property>
+                <property name="EDITSUB_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
+
+
+
         <!-- ENGLISH IS THE DEFAULT -->
         <property name="DEFAULT_LANGUAGE"               value="English"></property>
         <property name="ENGLISH_ABBREVIATION"           value="EN"></property>

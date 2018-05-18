@@ -39,4 +39,13 @@ public class DJFStyle {
     
     public static final String CLASS_DJF_WELCOME_NEW_BUTTON = "djf_welcome_new_button";
     
+    
+     // Creat New Map Dialog
+    public static final String CLASS_RVMM_DIALOG_HEADER = "rvmm_dialog_header";
+    
+    public static final String CLASS_RVMM_DIALOG_LABEL = "rvmm_dialog_label";
+    
+    public static final String CLASS_RVMM_DIALOG_HEADERPANE = "rvmm_dialog_headerpane";
+    
+    public static final String CLASS_RVMM_DIALOG_OK = "rvmm_dialog_ok";
 }

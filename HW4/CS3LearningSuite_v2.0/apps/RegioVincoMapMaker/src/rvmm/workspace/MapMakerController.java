@@ -5,6 +5,7 @@
  */
 package rvmm.workspace;
 import djf.AppTemplate;
+//import mv.workspace.dialogs.MapMakerDialog;
 
 /**
  *
@@ -12,12 +13,18 @@ import djf.AppTemplate;
  */
 public class MapMakerController {
     AppTemplate app;
+    MapMakerDialog mapMakerDialog;
     
     public MapMakerController(AppTemplate initApp){
          app = initApp;
+         mapMakerDialog = new MapMakerDialog(app);
+         
     }
     
 //    public void process
+    public void processChangeDimension(){
+        
+    }
     
     
     

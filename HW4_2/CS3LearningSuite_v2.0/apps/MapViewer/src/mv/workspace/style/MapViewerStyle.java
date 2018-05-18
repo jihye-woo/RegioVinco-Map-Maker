@@ -1,5 +1,6 @@
 package mv.workspace.style;
 
+import static mv.MapMakerPropertyType.MAP_DIMENSIONS_DIALOG_HEADER_LABEL;
 import static mv.MapMakerPropertyType.RVMM_TABLE;
 
 
@@ -38,8 +39,11 @@ public class MapViewerStyle {
     public static final String CLASS_RVMM_CHECKBOX = "rvmm_checkbox";
     public static final String CLASS_RVMM_BOTTOMBOX_LABEL = "rvmm_bottombox_label";
     public static final String CLASS_RVMM_TOOLBAR = "rvmm_toolbar";
-   
     
-    
+    // Creat New Map Dialog
+    public static final String CLASS_RVMM_DIALOG_HEADER = "rvmm_dialog_header";
+    public static final String CLASS_RVMM_DIALOG_LABEL = "rvmm_dialog_label";
+    public static final String CLASS_RVMM_DIALOG_HEADERPANE = "rvmm_dialog_headerpane";
+    public static final String CLASS_RVMM_DIALOG_OK = "rvmm_dialog_ok";
     
 }

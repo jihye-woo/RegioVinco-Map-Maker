@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Optional;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
@@ -29,6 +30,7 @@ import properties_manager.PropertiesManager;
  * @author McKillaGorilla
  */
 public class AppDialogsFacade {
+    
     public static void showAboutDialog(AppTemplate app) {
         AppWebDialog dialog = new AppWebDialog(app);
         try {
@@ -47,6 +49,7 @@ public class AppDialogsFacade {
         String filePath = props.getProperty(APP_EXPORT_PAGE);
         dialog.showWebDialog(filePath);
     }
+    
     public static void showHelpDialog(AppTemplate app) {
         AppWebDialog dialog = new AppWebDialog(app);
         try {
@@ -194,4 +197,9 @@ public class AppDialogsFacade {
         Optional<ButtonType> result = confirmationDialog.showAndWait();
         return result.get();
     }
+    
+    
+//    public static 
+    
+    
 }

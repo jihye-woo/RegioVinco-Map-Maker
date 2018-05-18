@@ -93,8 +93,10 @@ public class AppNodesBuilder {
         // LOAD THE OPTIONS INTO THE COMBO BOX
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         ObservableList<String> items = comboBox.getItems();
-        ArrayList<String> propertyOptions = props.getPropertyOptionsList(optionsListProperty);
-        String defaultValue = props.getProperty(defaultValueProperty);
+        ArrayList<String> propertyOptions = (ArrayList<String>)optionsListProperty;
+//        ArrayList<String> propertyOptions = props.getPropertyOptionsList(optionsListProperty);
+        String defaultValue = (String) defaultValueProperty;
+//        String defaultValue = props.getProperty(defaultValueProperty);
         if (defaultValue != null) {
             items.add(defaultValue);
             comboBox.getSelectionModel().select(defaultValue);
