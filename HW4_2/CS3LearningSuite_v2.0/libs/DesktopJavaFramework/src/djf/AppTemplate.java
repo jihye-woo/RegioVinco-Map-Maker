@@ -66,6 +66,8 @@ public abstract class AppTemplate extends Application {
      */
     public static final String PATH_WORK = "./work/";
     public static final String PATH_ICONS = "./images/icons/";
+    public static final String PATH_MAP = "./images/";
+    
     public static final String PATH_TEMP = "./temp/";
     public static final String PATH_FLAGS ="./images/The World/Europe/";
     
@@ -288,9 +290,9 @@ public abstract class AppTemplate extends Application {
                     AppDialogsFacade.showWelcomeDialog(this);                
                 }
                 
-                
+                 primaryStage.show();
                 // NOW OPEN UP THE APPLICATION WINDOW
-                primaryStage.show();
+               
 	    } 
 	}catch (Exception e) {
             // THIS TYPE OF ERROR IS LIKELY DUE TO PROGRAMMER ERROR IN

@@ -11,7 +11,6 @@ import static djf.AppPropertyType.CREATENEW_DIALOG_HEADER_LABEL;
 import static djf.AppPropertyType.CREATENEW_DIALOG_HEADER_LABEL_TEXT;
 import static djf.AppPropertyType.CREATENEW_DIALOG_OKBUTTON;
 import static djf.AppPropertyType.CREATENEW_DIALOG_PARENTS_BUTTON;
-import static djf.AppPropertyType.CREATENEW_DIALOG_PARENTS_BUTTON_TEXT;
 import static djf.AppPropertyType.CREATENEW_DIALOG_PARENTS_LABEL;
 import static djf.AppPropertyType.CREATENEW_DIALOG_REGIONAME_LABEL;
 import djf.AppTemplate;
@@ -19,6 +18,7 @@ import djf.modules.AppLanguageModule;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
+import java.io.File;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -56,14 +56,12 @@ public class MapMakerDialog extends Stage{
         app = initApp;
         
         gridPane = new GridPane();
-//        gridPane.getStyleClass().add(CLASS_RVMM_DIALOG_GRID);
         initDialog();
 
         Scene scene = new Scene(gridPane);
         this.setScene(scene);
 
         app.getGUIModule().initStylesheet(this);
-//        scene.getStylecheets().add(CLASS_RVMM_DIALOG_GRID);
 
     }
     
@@ -72,8 +70,6 @@ public class MapMakerDialog extends Stage{
         
         if (isLanguageDependent) {
             languageSettings.addLabeledControlProperty(nodeId + "_TEXT", ((Labeled)node).textProperty());
-//            ((Labeled)node).setTooltip(new Tooltip(""));
-//            languageSettings.addLabeledControlProperty(nodeId + "_TOOLTIP", ((Labeled)node).tooltipProperty().get().textProperty());
         }
         if (col >= 0)
             gridPane.add(node, col, row, colSpan, rowSpan);
@@ -92,28 +88,25 @@ public class MapMakerDialog extends Stage{
         initGridNode(dataChoiceLabel,         CREATENEW_DIALOG_DATACHOICE_LABEL,     CLASS_RVMM_DIALOG_LABEL,       2, 3, 1, 1, true);
         initGridNode(okButton,                CREATENEW_DIALOG_OKBUTTON,            CLASS_RVMM_DIALOG_OK,          2, 4, 1, 1, true);
          
-//        app.getGUIModule().addGUINode(CREATENEW_DIALOG_PARENTS_BUTTON_TEXT, ParentRegionChoice);
         app.getGUIModule().addGUINode(CREATENEW_DIALOG_PARENTS_BUTTON, ParentRegionChoice);
-//        app.getGUIModule().addGUINode(CREATENEW_DIALOG_DATACHOICE_BUTTON, dataChoice);
         
-//        AppLanguageModule languageSettings = app.getLanguageModule();
-//        languageSettings.addLabeledControlProperty(CREATENEW_DIALOG_PARENTS_BUTTON + "_TEXT",       ParentRegionChoice.textProperty());
-//        languageSettings.addLabeledControlProperty(CREATENEW_DIALOG_DATACHOICE_BUTTON + "_TEXT",    dataChoice.textProperty());
         gridPane.setPadding(new Insets(30, 20, 20, 20));
         gridPane.setVgap(5);
         gridPane.setHgap(50);
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
         ParentRegionChoice.setOnAction(e->{
-            AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
+            File file = AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
+            if(file !=null){
+                ParentRegionChoiceLabel.setText(file.getName());
+            }
         });
         
         dataChoice.setOnAction(e->{
-            AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_DATACHOICE_BUTTON);
-        });
-        
-        okButton.setOnAction(e->{
-            this.hide();
+            File file = AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_DATACHOICE_BUTTON);
+            if(file !=null){
+                dataChoiceLabel.setText(file.getName());
+            }
         });
     }
     
@@ -129,7 +122,8 @@ public class MapMakerDialog extends Stage{
         dataChoice.setText("Choose Data File");
         dataChoiceLabel.setText("Data File Not Chosen");
         okButton.setText("OK");
-        
+        okButton.setOnAction(e->{
+        });
         regionNameTextField.setText("");
         showAndWait();
     }

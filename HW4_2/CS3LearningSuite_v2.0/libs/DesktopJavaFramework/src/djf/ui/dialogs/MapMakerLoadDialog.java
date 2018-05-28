@@ -19,6 +19,7 @@ import djf.modules.AppLanguageModule;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
+import java.io.File;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -60,7 +61,6 @@ public class MapMakerLoadDialog extends Stage{
 
         app.getGUIModule().initStylesheet(this);
 //        scene.getStylecheets().add(CLASS_RVMM_DIALOG_GRID);
-
     }
     
     protected void initGridNode(Node node, Object nodeId, String styleClass, int col, int row, int colSpan, int rowSpan, boolean isLanguageDependent) {
@@ -98,11 +98,7 @@ public class MapMakerLoadDialog extends Stage{
         gridPane.setHgap(50);
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
-        
-        loadfilechooserButton.setOnAction(e->{
-            AppDialogsFacade.showOpenDialog(this, LOAD_DIALOG_CHOOSER_BUTTON);
-        });
-        
+     
         okButton.setOnAction(e->{
             this.hide();
         });
@@ -117,6 +113,12 @@ public class MapMakerLoadDialog extends Stage{
         
         regionNameLabel.setText(props.getProperty(LOAD_DIALOG_REGIONAME_LABEL_TEXT));
         loadfilechooserButton.setText(props.getProperty(LOAD_DIALOG_CHOOSER_BUTTON_TEXT));
+        loadfilechooserButton.setOnAction(e->{
+            File file = AppDialogsFacade.showOpenDialog(this, LOAD_DIALOG_CHOOSER_BUTTON);
+            if(file !=null){
+                loadfilechooserLabel.setText(file.getName());
+            }
+        });
         loadfilechooserLabel.setText(props.getProperty(LOAD_DIALOG_CHOOSER_LABEL_TEXT));
         okButton.setText("OK");
         

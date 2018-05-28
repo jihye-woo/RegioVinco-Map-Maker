@@ -4,6 +4,7 @@ import djf.AppPropertyType;
 import static djf.AppPropertyType.*;
 import djf.AppTemplate;
 import static djf.AppTemplate.PATH_WORK;
+import static djf.AppTemplate.PATH_MAP;
 import djf.modules.AppRecentWorkModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppLanguageModule.LanguageException;
@@ -111,10 +112,10 @@ public class AppDialogsFacade {
     
     public static File showOpenDialog(Stage window, AppPropertyType openTitleProp) {
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setInitialDirectory(new File(PATH_MAP));
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
-        File selectedFile = fc.showOpenDialog(window);        
+        File selectedFile = fc.showOpenDialog(window);    
         return selectedFile;
     }
     public static File showSaveDialog(Stage window, AppPropertyType saveTitleProp) {
@@ -179,6 +180,7 @@ public class AppDialogsFacade {
         // OPEN THE DIALOG
         AppWelcomeDialog wd = new AppWelcomeDialog(app);
         wd.showAndWait();
+        
         
         // AND RETURN THE USER SELECTION
         return wd.selectedWorkName;

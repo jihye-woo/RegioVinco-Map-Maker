@@ -7,15 +7,15 @@
     customizable.
 -->
 <properties>
-    <property_list>        
+    <property_list>
         <!-- DESKTOP JAVA FRAMEWORK CONTROLS SETTINGS -->
         <property name="APP_TITLE"	    value="Map Viewer"></property>
-	<property name="APP_LOGO"	    value="MapViewerLogo.png"></property>
+	       <property name="APP_LOGO"	    value="MapViewerLogo.png"></property>
         <property name="APP_EXPORT_PAGE"    value="index.html"></property>
         <property name="APP_HELP_PAGE"      value="Help.html"></property>
         <property name="APP_ABOUT_PAGE"     value="About.html"></property>
-	<property name="APP_PATH_CSS"	    value="workspace/style/"></property>
-	<property name="APP_CSS"	    value="mv_style.css"></property>
+	      <property name="APP_PATH_CSS"	    value="workspace/style/"></property>
+	      <property name="APP_CSS"	    value="mv_style.css"></property>
         <property name="APP_PATH_EXPORT"    value="./export/"></property>
         <property name="APP_PATH_IMAGES"    value="./images/"></property>
         <property name="PREF_WIDTH"         value="800"></property>
@@ -23,7 +23,7 @@
         <property name="START_MAXIMIZED"    value="true"></property>
         <!-- TOP TOOLBARS AND CONTROLS TO INCLUDE -->
         <property name="HAS_WELCOME_DIALOG"     value="false"></property>
-        <property name="HAS_TOP_TOOLBAR"        value="true"></property>        
+        <property name="HAS_TOP_TOOLBAR"        value="true"></property>
         <property name="HAS_FILE_TOOLBAR"       value="true"></property>
         <property name="HAS_NEW"                value="false"></property>
         <property name="HAS_LOAD"               value="true"></property>
@@ -39,7 +39,7 @@
         <property name="HAS_LANGUAGE"           value="false"></property>
         <property name="HAS_ABOUT"              value="false"></property>
 
-        <!-- PROGRAM ICON FILES - FILE TOOLBAR -->        
+        <!-- PROGRAM ICON FILES - FILE TOOLBAR -->
         <property name="NEW_BUTTON_ICON"        value="New.png"></property>
         <property name="LOAD_BUTTON_ICON"       value="Load.png"></property>
         <property name="CLOSE_BUTTON_ICON"      value="Close.png"></property>
@@ -48,16 +48,16 @@
         <property name="EXPORT_BUTTON_ICON"     value="Export.png"></property>
         <property name="EXIT_BUTTON_ICON"       value="Exit.png"></property>
 
-        <!-- PROGRAM ICON FILES - CUT/COPY/PASTE TOOLBAR -->        
+        <!-- PROGRAM ICON FILES - CUT/COPY/PASTE TOOLBAR -->
         <property name="CUT_BUTTON_ICON"        value="Cut.png"></property>
         <property name="COPY_BUTTON_ICON"       value="Copy.png"></property>
         <property name="PASTE_BUTTON_ICON"      value="Paste.png"></property>
 
-        <!-- PROGRAM ICON FILES - UNDO/REDO TOOLBAR -->        
+        <!-- PROGRAM ICON FILES - UNDO/REDO TOOLBAR -->
         <property name="UNDO_BUTTON_ICON"       value="Undo.png"></property>
         <property name="REDO_BUTTON_ICON"       value="Redo.png"></property>
-        
-        <!-- PROGRAM ICON FILES - FILE TOOLBAR -->        
+
+        <!-- PROGRAM ICON FILES - FILE TOOLBAR -->
         <property name="LANGUAGE_BUTTON_ICON"   value="Language.png"></property>
         <property name="HELP_BUTTON_ICON"       value="Help.png"></property>
         <property name="ABOUT_BUTTON_ICON"      value="About.png"></property>
@@ -73,7 +73,7 @@
         <property name="MV_MOVE_DOWN_BUTTON_ICON"       value="MoveDown.png"></property>
 
         <!-- THIS IS THE FILE WE'LL USE TO MAKE OUR EXPORTED WEB FILE -->
-        <property name="MV_EXPORT_TEMPLATE_FILE_NAME"  value="MapViewerTemplate.html"></property>     
+        <property name="MV_EXPORT_TEMPLATE_FILE_NAME"  value="MapViewerTemplate.html"></property>
 
         <!-- ENGLISH IS THE DEFAULT -->
         <property name="DEFAULT_LANGUAGE"               value="English"></property>

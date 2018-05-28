@@ -8,6 +8,7 @@ package djf.ui.dialogs;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_HEADER_LABEL;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_HEADER_LABEL_TEXT;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL;
+import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL_TEXT;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_OKBUTTON;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_WIDTH_BUTTON;
 import djf.AppTemplate;
@@ -54,7 +55,7 @@ public class MapMakerChangeDiemensionDialog extends Stage{
         Scene scene = new Scene(gridPane);
         this.setScene(scene);
 
-//        app.getGUIModule().initStylesheet(this);
+       app.getGUIModule().initStylesheet(this);
 //        scene.getStylecheets().add(CLASS_RVMM_DIALOG_GRID);
 
     }
@@ -100,7 +101,7 @@ public class MapMakerChangeDiemensionDialog extends Stage{
         headerLabel.setText(headerText);
         setTitle(headerText);
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
-        
+        heightLabel.setText(props.getProperty(MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL_TEXT));
         heightTextField.setText("");
         widthTextField.setText("");
         
