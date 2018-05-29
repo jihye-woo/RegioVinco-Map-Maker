@@ -15,9 +15,7 @@ import djf.modules.AppFoolproofModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppRecentWorkModule;
 import static djf.modules.AppLanguageModule.*;
-import djf.ui.dialogs.MapMakerChangeDiemensionDialog;
 import djf.ui.dialogs.MapMakerDialog;
-import djf.ui.dialogs.MapMakerEditDialog;
 import jtps.jTPS;
 import jtps.jTPS_Transaction;
 import properties_manager.InvalidXMLFileFormatException;
@@ -65,6 +63,8 @@ public abstract class AppTemplate extends Application {
      * Directory where user work is saved by default.
      */
     public static final String PATH_WORK = "./work/";
+    public static final String PATH_RAWMAPDATA = "./raw_map_data/";
+    
     public static final String PATH_ICONS = "./images/icons/";
     public static final String PATH_MAP = "./images/";
     

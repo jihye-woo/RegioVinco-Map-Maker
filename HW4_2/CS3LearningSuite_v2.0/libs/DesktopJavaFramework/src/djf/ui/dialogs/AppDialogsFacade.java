@@ -4,7 +4,7 @@ import djf.AppPropertyType;
 import static djf.AppPropertyType.*;
 import djf.AppTemplate;
 import static djf.AppTemplate.PATH_WORK;
-import static djf.AppTemplate.PATH_MAP;
+import static djf.AppTemplate.PATH_RAWMAPDATA;
 import djf.modules.AppRecentWorkModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppLanguageModule.LanguageException;
@@ -15,7 +15,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Optional;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
@@ -112,7 +111,7 @@ public class AppDialogsFacade {
     
     public static File showOpenDialog(Stage window, AppPropertyType openTitleProp) {
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_MAP));
+        fc.setInitialDirectory(new File(PATH_RAWMAPDATA));
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
         File selectedFile = fc.showOpenDialog(window);    

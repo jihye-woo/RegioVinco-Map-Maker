@@ -154,7 +154,7 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
             mapPane.setTranslateX(mapPane.getTranslateX()+transX);
             mapPane.setTranslateY(mapPane.getTranslateY()+transY);
             app.getGUIModule().getGUINode(MV_RESET_ZOOM_BUTTON).setDisable(false);
-             app.getFileModule().markAsEdited(true);
+            app.getFileModule().markAsEdited(true);
         });
         mapPane.setOnMouseReleased(e->{
             mapPane.setCursor(Cursor.DEFAULT);

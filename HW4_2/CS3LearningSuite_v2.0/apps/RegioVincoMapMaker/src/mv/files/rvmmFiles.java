@@ -89,7 +89,7 @@ public class rvmmFiles implements AppFileComponent {
 	
         int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
         JsonArray jsonSubregionsArray = json.getJsonArray(JSON_SUBREGIONS);
-
+        
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
             JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
             int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
