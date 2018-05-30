@@ -30,7 +30,6 @@ public class MapViewerData implements AppDataComponent {
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
-    ArrayList<ImageView> images;
     // LINE THICKNESS AT SCALE 1.0
     final double DEFAULT_LINE_THICKNESS = 0.1;
 
@@ -42,7 +41,6 @@ public class MapViewerData implements AppDataComponent {
         app = initApp;
         subregions = new HashMap();
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
-        images = new ArrayList<ImageView>();
     }    
   
     public ObservableList<Polygon> getSubregion(int id) {
@@ -122,5 +120,4 @@ public class MapViewerData implements AppDataComponent {
         double newLatCoord = (latCoord + 90) * unitDegree;
         return paneHeight - newLatCoord;
     }
-    
 }

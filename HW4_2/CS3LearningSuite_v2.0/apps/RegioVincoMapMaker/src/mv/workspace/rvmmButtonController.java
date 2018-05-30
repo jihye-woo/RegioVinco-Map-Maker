@@ -51,35 +51,38 @@ public class rvmmButtonController {
       
       public rvmmButtonController(RegioVincoMapMakerApp initApp){
           app = initApp;
-          data = new rvmmData((RegioVincoMapMakerApp) app);
+          data = (rvmmData) app.getDataComponent();
+//          data = new rvmmData((RegioVincoMapMakerApp) app);
       }
       
-      public void processAddImage(Pane leftArea, ImageView selectedImage){
-          File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
-          ImageView imageView;
-          imageView = new ImageView(file.toURI().toString());
-            if(imageView !=null){
-                leftArea.getChildren().add(imageView);
-                imageView.setOnMousePressed(e1->{
-                    imageView.setCursor(Cursor.HAND);
-                    locationX = e1.getX();
-                    locationY = e1.getY();
-                    imageView.setOnMouseExited(e3->{
-                        imageView.setCursor(Cursor.DEFAULT);
-                    });
-                });
-                imageView.setOnMouseDragged(e2->{
-                    double deltaX = e2.getX()-locationX;
-                    double deltaY = e2.getY()-locationY;
-                    imageView.setTranslateX(imageView.getTranslateX()+deltaX);
-                    imageView.setTranslateY(imageView.getTranslateY()+deltaY);
-                });
-                imageView.setOnMouseClicked(e3->{
-                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
-                    changeSelectedImage(imageView, selectedImage);
-                });
-            }
-      }
+//      public void processAddImage(Pane leftArea, ImageView selectedImage){
+//          File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
+//          ImageView imageView;
+//          imageView = new ImageView(file.toURI().toString());
+//            if(imageView !=null){
+//                leftArea.getChildren().add(imageView);
+//                data.addImageInList(imageView);
+//                data.addImagePath(file.toURI().toString());
+//                imageView.setOnMousePressed(e1->{
+//                    imageView.setCursor(Cursor.HAND);
+//                    locationX = e1.getX();
+//                    locationY = e1.getY();
+//                    imageView.setOnMouseExited(e3->{
+//                        imageView.setCursor(Cursor.DEFAULT);
+//                    });
+//                });
+//                imageView.setOnMouseDragged(e2->{
+//                    double deltaX = e2.getX()-locationX;
+//                    double deltaY = e2.getY()-locationY;
+//                    imageView.setTranslateX(imageView.getTranslateX()+deltaX);
+//                    imageView.setTranslateY(imageView.getTranslateY()+deltaY);
+//                });
+//                imageView.setOnMouseClicked(e3->{
+//                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
+//                    changeSelectedImage(imageView, selectedImage);
+//                });
+//            }
+//      }
       
       private void changeSelectedImage(ImageView currentImage, ImageView selectedBefore){
           if(selectedBefore !=null ){
@@ -89,13 +92,12 @@ public class rvmmButtonController {
           // need highlighting
       }
       private void removeSelectedImage(ImageView selectedImage){
-          selectedImage.getStyleClass().clear();
-          selectedImage = null;
+          data.removeImageInList(selectedImage);
       }
       
       public void processRemoveImage(Pane leftArea, ImageView selectedImage){
           if(leftArea.getChildren().contains(selectedImage)){
-            leftArea.getChildren().remove(selectedImage);
+           leftArea.getChildren().remove(selectedImage);
           }
       }
       

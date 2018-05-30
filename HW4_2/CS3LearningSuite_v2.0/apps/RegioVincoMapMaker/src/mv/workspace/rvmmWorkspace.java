@@ -1,5 +1,6 @@
 package mv.workspace;
 
+import djf.AppPropertyType;
 import djf.components.AppWorkspaceComponent;
 import djf.AppTemplate;
 import static djf.modules.AppGUIModule.ENABLED;
@@ -13,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -85,6 +87,7 @@ import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXPORT;
 
 import static mv.MapMakerPropertyType.*;
 import mv.data.rvmmData;
+import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
 import static mv.workspace.style.MapViewerStyle.*;
 
 /**
@@ -97,16 +100,12 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     
     double locationX;
     double locationY;
-    rvmmData data;
-    
     ImageView selectedImage = new ImageView();
-    
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
         super(app);
         // LAYOUT THE APP
         initLayout();
-        data = new rvmmData(app);
     }
     
     // THIS HELPER METHOD INITIALIZES ALL THE CONTROLS IN THE WORKSPACE
@@ -115,6 +114,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         // THIS WILL BUILD ALL OF OUR JavaFX COMPONENTS FOR US
         AppNodesBuilder workspaceBuilder = app.getGUIModule().getNodesBuilder();
+        rvmmData data = (rvmmData)app.getDataComponent();
         // Controller
         AppFileController controller = new AppFileController((AppTemplate)app);
         rvmmDialogController dialogController = new rvmmDialogController((AppTemplate) app);
@@ -191,12 +191,36 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button addImage = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_ADDIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         addImage.setOnAction(e->{
-            buttonController.processAddImage(leftArea, selectedImage);
+             File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
+          ImageView imageView;
+          imageView = new ImageView(file.toURI().toString());
+            if(imageView !=null){
+                leftArea.getChildren().add(imageView);
+                data.addImageInList(imageView);
+                data.addImagePath(file.toURI().toString());
+                imageView.setOnMousePressed(e1->{
+                    imageView.setCursor(Cursor.HAND);
+                    locationX = e1.getX();
+                    locationY = e1.getY();
+                    imageView.setOnMouseExited(e3->{
+                        imageView.setCursor(Cursor.DEFAULT);
+                    });
+                });
+                imageView.setOnMouseDragged(e2->{
+                    double deltaX = e2.getX()-locationX;
+                    double deltaY = e2.getY()-locationY;
+                    imageView.setTranslateX(imageView.getTranslateX()+deltaX);
+                    imageView.setTranslateY(imageView.getTranslateY()+deltaY);
+                });
+                imageView.setOnMouseClicked(e3->{
+                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
+                });
+            }
         });
         Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        removeImage.setOnAction(e->{
-            buttonController.processRemoveImage(leftArea, selectedImage);
-        });
+//        removeImage.setOnAction(e->{
+//            buttonController.processRemoveImage(leftArea, selectedImage);
+//        });
         
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button bottomleft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_BOTTOMLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);

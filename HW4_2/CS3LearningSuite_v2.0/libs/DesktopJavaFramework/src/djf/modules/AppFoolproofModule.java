@@ -29,7 +29,7 @@ public class AppFoolproofModule {
     public void updateControls(Object foolproofMode) {
         String key = foolproofMode.toString();
         FoolproofDesign settings = foolproofSettings.get(key);
-        settings.updateControls();
+//        settings.updateControls();
     }
     
     public void updateAll() {

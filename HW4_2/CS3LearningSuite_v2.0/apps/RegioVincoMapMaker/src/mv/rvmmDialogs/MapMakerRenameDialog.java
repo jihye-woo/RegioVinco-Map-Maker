@@ -11,12 +11,17 @@ import static djf.AppPropertyType.RENAME_DIALOG_NEW_LABEL;
 import static djf.AppPropertyType.RENAME_DIALOG_NEW_LABEL_TEXT;
 import static djf.AppPropertyType.RENAME_DIALOG_OKBUTTON;
 import djf.AppTemplate;
-import static djf.AppTemplate.PATH_WORK;
 import djf.modules.AppLanguageModule;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,7 +33,6 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
 
 /**
@@ -40,8 +44,6 @@ public class MapMakerRenameDialog extends Stage{
     GridPane gridPane;
     
     Label headerLabel = new Label();
-    Label oldLabel = new Label();
-    TextField oldNameTextField = new TextField();
     Label newLabel = new Label();
     TextField newNameTextField = new TextField();
     Button okButton = new Button();
@@ -86,11 +88,6 @@ public class MapMakerRenameDialog extends Stage{
         gridPane.setHgap(50);
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
-        okButton.setOnAction(e->{
-            File f = new File(PATH_WORK+"/"+newNameTextField.getText());
-            f.mkdirs();
-            this.hide();
-        });
     }
     
     public void showRenameDialog(){
@@ -101,6 +98,26 @@ public class MapMakerRenameDialog extends Stage{
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
         newLabel.setText(props.getProperty(RENAME_DIALOG_NEW_LABEL_TEXT));
         newNameTextField.setText("");
+        okButton.setOnAction(e->{
+            if(!newNameTextField.getText().equals("")){
+                File currentFile = app.getFileModule().getWorkFile();
+                try {
+                    app.getFileComponent().saveData(app.getDataComponent(), currentFile.getAbsolutePath());
+                } catch (IOException ex) {
+                    Logger.getLogger(MapMakerRenameDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                int index = app.getFileModule().getWorkFile().getPath().lastIndexOf("/");
+                File newNameFile = new File(app.getFileModule().getWorkFile().getPath().substring(index)+newNameTextField.getText().lastIndexOf("."), newNameTextField.getText());
+                newNameFile.mkdirs();
+                try {
+                    Files.copy(currentFile.toPath(), newNameFile.toPath(), REPLACE_EXISTING);
+                    currentFile.delete();
+                } catch (IOException ex) {
+                    Logger.getLogger(MapMakerRenameDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            this.hide();
+        });
         
         showAndWait();
     }

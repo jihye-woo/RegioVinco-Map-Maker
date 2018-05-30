@@ -61,7 +61,7 @@ public abstract class AppTemplate extends Application {
     /**
      * Directory where user work is saved by default.
      */
-    public static final String PATH_WORK = "./work/";
+    public static final String PATH_WORK =  "./work/";
     public static final String PATH_RAWMAPDATA = "./raw_map_data/";
     
     public static final String PATH_ICONS = "./images/icons/";

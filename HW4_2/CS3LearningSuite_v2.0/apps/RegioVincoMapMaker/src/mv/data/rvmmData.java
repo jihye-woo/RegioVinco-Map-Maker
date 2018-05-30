@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -38,6 +39,8 @@ public class rvmmData implements AppDataComponent {
     boolean haveflags;
     boolean haveleaders;
     HashMap<String, Color> subRegionToColorMappings;
+    ArrayList<ImageView> images;
+    ArrayList<String> imagesPath;
     
     /**
      * Constructor can only be called after the workspace
@@ -47,8 +50,13 @@ public class rvmmData implements AppDataComponent {
         app = initApp;
         subregions = new HashMap();
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
+        images = new ArrayList<ImageView>();
+        imagesPath = new ArrayList<String>();
     }
-  
+    public RegioVincoMapMakerApp getApp(){
+        return app;
+    }
+    
     public String getRegionName(){
         return regionName;
     }
@@ -75,9 +83,6 @@ public class rvmmData implements AppDataComponent {
     public HashMap<String, Color> getSubRegionToColorMappings(){
         return subRegionToColorMappings;
     }
-    public RegioVincoMapMakerApp getApp(){
-        return app;
-    }
     
     @Override
     public void reset() {
@@ -95,7 +100,6 @@ public class rvmmData implements AppDataComponent {
 //        boolean haveCapital= false; 
 //        boolean haveflags= false; 
 //        boolean haveleaders= false; 
-//        
     }
     
     public void setRegionName(String newName){
@@ -153,6 +157,28 @@ public class rvmmData implements AppDataComponent {
         double unitDegree = paneHeight/180;
         double newLatCoord = (latCoord + 90) * unitDegree;
         return paneHeight - newLatCoord;
+    }
+    public ArrayList<ImageView> getImagesList(){
+        return images;
+    }
+    public ArrayList<String> getImagesPath(){
+        return imagesPath;
+    }
+    public void addImageInList(ImageView image){
+        images.add(image);
+    }
+    public void addImagePath(String path){
+        imagesPath.add(path);
+    }
+    public void removeImageInList(ImageView image){
+        if(images.contains(image)){
+            images.remove(image);
+        }
+    }
+    public void removeImagePath(String path){
+        if(imagesPath.contains(path)){
+            imagesPath.remove(path);
+        }
     }
     
 }
