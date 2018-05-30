@@ -3,7 +3,7 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package djf.ui.dialogs;
+package mv.rvmmDialogs;
 
 import static djf.AppPropertyType.CREATENEW_DIALOG_DATACHOICE_BUTTON;
 import static djf.AppPropertyType.CREATENEW_DIALOG_DATACHOICE_LABEL;
@@ -15,6 +15,7 @@ import static djf.AppPropertyType.CREATENEW_DIALOG_PARENTS_LABEL;
 import static djf.AppPropertyType.CREATENEW_DIALOG_REGIONAME_LABEL;
 import djf.AppTemplate;
 import djf.modules.AppLanguageModule;
+import djf.ui.dialogs.AppDialogsFacade;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
@@ -31,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import static mv.rvmmDialogs.helperDialog.showOpenDirectoryChooserDialog;
 
 import properties_manager.PropertiesManager;
 
@@ -62,7 +64,6 @@ public class MapMakerDialog extends Stage{
         this.setScene(scene);
 
         app.getGUIModule().initStylesheet(this);
-
     }
     
     protected void initGridNode(Node node, Object nodeId, String styleClass, int col, int row, int colSpan, int rowSpan, boolean isLanguageDependent) {
@@ -96,7 +97,7 @@ public class MapMakerDialog extends Stage{
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
         ParentRegionChoice.setOnAction(e->{
-            File file = AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
+        File file = showOpenDirectoryChooserDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
             if(file !=null){
                 ParentRegionChoiceLabel.setText(file.getName());
             }

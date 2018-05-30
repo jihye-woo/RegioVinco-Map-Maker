@@ -183,4 +183,8 @@ public class AppFileModule {
         // RESET THE UI CONTROLS
         app.getFoolproofModule().updateAll();
     }
+
+    public void saveWork(File saveFile, String filePath) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

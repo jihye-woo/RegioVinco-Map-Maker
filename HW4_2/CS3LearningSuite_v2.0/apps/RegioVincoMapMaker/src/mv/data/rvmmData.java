@@ -19,13 +19,12 @@ import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_SELECTED;
  *
  * @author McKillaGorilla
  */
-public class MapViewerData implements AppDataComponent {
+public class rvmmData implements AppDataComponent {
     // THE APP ITSELF
     RegioVincoMapMakerApp app;
 
     // THE PANE WHERE WE'RE PUTTING ALL THE POLYGONS
     Pane map;
-
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
@@ -33,25 +32,48 @@ public class MapViewerData implements AppDataComponent {
     // LINE THICKNESS AT SCALE 1.0
     final double DEFAULT_LINE_THICKNESS = 0.1;
 
+    // for save
+    String regionName;
+    boolean haveCapital;
+    boolean haveflags;
+    boolean haveleaders;
+    HashMap<String, Color> subRegionToColorMappings;
+    
     /**
      * Constructor can only be called after the workspace
      * has been initialized because it retrieves the map pane.
      */
-    public MapViewerData(RegioVincoMapMakerApp initApp) {
+    public rvmmData(RegioVincoMapMakerApp initApp) {
         app = initApp;
         subregions = new HashMap();
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
-    }    
+    }
   
+    public String getRegionName(){
+        return regionName;
+    }
+    public boolean getHaveCapital(){
+        return haveCapital;
+    }
+    public boolean getHaveflags(){
+        return haveflags;
+    }
+    public boolean getHaveLeaders(){
+        return haveleaders;
+    }
     public ObservableList<Polygon> getSubregion(int id) {
         return subregions.get(id);
     }
     public int numOfSubregion(){
         return subregions.size();
     }
-
+//    public int getNumOfImages(){
+//    }
     public Pane getMap(){
         return map;
+    }
+    public HashMap<String, Color> getSubRegionToColorMappings(){
+        return subRegionToColorMappings;
     }
     public RegioVincoMapMakerApp getApp(){
         return app;
@@ -67,7 +89,19 @@ public class MapViewerData implements AppDataComponent {
         Rectangle ocean = (Rectangle)map.getChildren().get(0);
         map.getChildren().clear();
         map.getChildren().add(ocean);
+        
+//        subRegionToColorMappings.clear();
+//        String regionName = "";
+//        boolean haveCapital= false; 
+//        boolean haveflags= false; 
+//        boolean haveleaders= false; 
+//        
     }
+    
+    public void setRegionName(String newName){
+        regionName = newName;
+    }
+    
     /**
      * For adding polygons to the map.
     */

@@ -3,7 +3,7 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package rvmmDialogs;
+package mv.rvmmDialogs;
 
 import static djf.AppPropertyType.EDITSUB_DIALOG_CAPTIAL_LABEL;
 import static djf.AppPropertyType.EDITSUB_DIALOG_FALG_IMAGE;

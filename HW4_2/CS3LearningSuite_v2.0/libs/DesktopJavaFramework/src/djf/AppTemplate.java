@@ -15,7 +15,6 @@ import djf.modules.AppFoolproofModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppRecentWorkModule;
 import static djf.modules.AppLanguageModule.*;
-import djf.ui.dialogs.MapMakerDialog;
 import jtps.jTPS;
 import jtps.jTPS_Transaction;
 import properties_manager.InvalidXMLFileFormatException;

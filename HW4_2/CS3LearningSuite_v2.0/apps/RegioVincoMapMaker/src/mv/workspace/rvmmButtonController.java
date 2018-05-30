@@ -6,18 +6,31 @@
 package mv.workspace;
 
 import djf.AppPropertyType;
+import static djf.AppPropertyType.APP_FILE_FOOLPROOF_SETTINGS;
+import static djf.AppPropertyType.APP_TITLE;
+import static djf.AppPropertyType.SAVE_ERROR_CONTENT;
+import static djf.AppPropertyType.SAVE_ERROR_TITLE;
+import static djf.AppPropertyType.SAVE_SUCCESS_CONTENT;
+import static djf.AppPropertyType.SAVE_SUCCESS_TITLE;
 import djf.AppTemplate;
+import static djf.AppTemplate.PATH_WORK;
+import djf.components.AppDataComponent;
+import djf.modules.AppFileModule;
 import djf.ui.dialogs.AppDialogsFacade;
 import java.io.File;
+import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
-import static rvmmDialogs.helperDialog.showOpenParentsDialog;
+import mv.RegioVincoMapMakerApp;
+import mv.data.rvmmData;
+import mv.files.rvmmFiles;
+import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_SELECTEDIMAGE;
+import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
+import properties_manager.PropertiesManager;
 
 /**
  *
@@ -33,22 +46,27 @@ public class rvmmButtonController {
     double dY =0;
     double locationX = 0;
     double locationY = 0;
+    rvmmData data;
     
       
-      public rvmmButtonController(AppTemplate initApp){
+      public rvmmButtonController(RegioVincoMapMakerApp initApp){
           app = initApp;
+          data = new rvmmData((RegioVincoMapMakerApp) app);
       }
       
-      public ImageView processAddImage(Pane leftArea){
+      public void processAddImage(Pane leftArea, ImageView selectedImage){
           File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
           ImageView imageView;
           imageView = new ImageView(file.toURI().toString());
-          if(imageView !=null){
+            if(imageView !=null){
                 leftArea.getChildren().add(imageView);
                 imageView.setOnMousePressed(e1->{
-                    leftArea.setCursor(Cursor.HAND);
+                    imageView.setCursor(Cursor.HAND);
                     locationX = e1.getX();
                     locationY = e1.getY();
+                    imageView.setOnMouseExited(e3->{
+                        imageView.setCursor(Cursor.DEFAULT);
+                    });
                 });
                 imageView.setOnMouseDragged(e2->{
                     double deltaX = e2.getX()-locationX;
@@ -56,11 +74,48 @@ public class rvmmButtonController {
                     imageView.setTranslateX(imageView.getTranslateX()+deltaX);
                     imageView.setTranslateY(imageView.getTranslateY()+deltaY);
                 });
-                imageView.setOnMouseExited(e3->{
-                    leftArea.setCursor(Cursor.DEFAULT);
+                imageView.setOnMouseClicked(e3->{
+                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
+                    changeSelectedImage(imageView, selectedImage);
                 });
             }
-          return imageView;
+      }
+      
+      public void processSaveRequest() {
+        // WE'LL NEED THIS TO GET CUSTOM STUFF
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        try {
+            // MAYBE WE ALREADY KNOW THE FILE
+            AppFileModule fileSettings = app.getFileModule();
+            if (fileSettings.wasSaved()) {
+                fileSettings.saveWork();
+            }
+            else{
+                 String filePath = PATH_WORK + "/" + data.getRegionName();
+                 File saveFile = new File(filePath);
+                 fileSettings.saveWork(saveFile, filePath);
+            }
+            
+        } catch (IOException ioe) {
+            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
+        }
+      }
+      private void changeSelectedImage(ImageView currentImage, ImageView selectedBefore){
+          if(selectedBefore !=null ){
+            selectedBefore.getStyleClass().clear();
+          }
+          currentImage = selectedBefore;
+          // need highlighting
+      }
+      private void removeSelectedImage(ImageView selectedImage){
+          selectedImage.getStyleClass().clear();
+          selectedImage = null;
+      }
+      
+      public void processRemoveImage(Pane leftArea, ImageView selectedImage){
+          if(leftArea.getChildren().contains(selectedImage)){
+            leftArea.getChildren().remove(selectedImage);
+          }
       }
       
       public void processResetViewport(Pane mapPane, Button resetviewport){

@@ -160,6 +160,10 @@
 .rvmm_table{
     
 }
+.rvmm_selected_image {
+    -fx-border-color:  LIGHTCORAL;  
+    -fx-border-width: 10px;  
+}
 .mv_map {
     -fx-fill: 
         linear-gradient(to bottom, green, chartreuse);

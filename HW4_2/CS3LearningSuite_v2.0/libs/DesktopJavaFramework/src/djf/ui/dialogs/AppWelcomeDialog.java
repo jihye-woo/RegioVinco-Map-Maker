@@ -5,6 +5,8 @@ import static djf.AppPropertyType.APP_LOGO;
 import static djf.AppPropertyType.APP_PATH_IMAGES;
 import static djf.AppPropertyType.LOAD_ERROR_CONTENT;
 import static djf.AppPropertyType.LOAD_ERROR_TITLE;
+import static djf.AppPropertyType.NEW_SUCCESS_CONTENT;
+import static djf.AppPropertyType.NEW_SUCCESS_TITLE;
 import static djf.AppPropertyType.WELCOME_DIALOG_NEW_BUTTON_TEXT;
 import static djf.AppPropertyType.WELCOME_DIALOG_RECENT_WORK_LABEL;
 import static djf.AppPropertyType.WELCOME_DIALOG_TITLE;
@@ -58,7 +60,8 @@ public class AppWelcomeDialog extends Stage {
                 
         // WE'LL NEED THIS
         PropertiesManager props = PropertiesManager.getPropertiesManager();
-        // LEFT PANE
+
+        // LEFT PANE 
         recentlyEditedPane = new VBox();
         String recentWorkText = props.getProperty(WELCOME_DIALOG_RECENT_WORK_LABEL);
         recentWorkLabel = new Label(recentWorkText);
@@ -103,14 +106,11 @@ public class AppWelcomeDialog extends Stage {
         }        
         String createNewText = props.getProperty(WELCOME_DIALOG_NEW_BUTTON_TEXT);
         createNewButton = new Button(createNewText);
-        
         createNewButton.setOnAction(e->{
-            MapMakerDialog mmd = new MapMakerDialog(app);
-            mmd.showAddMapMakerDialog();
-               this.hide();
+            this.hide();
             app.getGUIModule().getWindow().show();
             app.getFileModule().newWork();
-//            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), NEW_SUCCESS_TITLE, NEW_SUCCESS_CONTENT);
+            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), NEW_SUCCESS_TITLE, NEW_SUCCESS_CONTENT);
         });
         newPane = new HBox();
         newPane.setAlignment(Pos.CENTER);

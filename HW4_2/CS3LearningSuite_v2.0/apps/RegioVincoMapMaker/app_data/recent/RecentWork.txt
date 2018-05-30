@@ -1,1 +1,3 @@
+San Marino-raw_map_data/San Marino.json
+Slovakia-raw_map_data/Slovakia.json
 Andorra-work/Andorra.json/

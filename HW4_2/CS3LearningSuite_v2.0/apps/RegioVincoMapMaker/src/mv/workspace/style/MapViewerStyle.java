@@ -47,4 +47,8 @@ public class MapViewerStyle {
     public static final String CLASS_RVMM_DIALOG_HEADERPANE = "rvmm_dialog_headerpane";
     public static final String CLASS_RVMM_DIALOG_OK = "rvmm_dialog_ok";
     
+    // image
+    public static final String CLASS_RVMM_SELECTEDIMAGE = "rvmm_selected_image";
+    
+    
 }

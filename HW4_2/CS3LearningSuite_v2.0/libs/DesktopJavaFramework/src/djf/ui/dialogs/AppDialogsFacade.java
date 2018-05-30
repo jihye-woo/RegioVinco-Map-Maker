@@ -4,7 +4,6 @@ import djf.AppPropertyType;
 import static djf.AppPropertyType.*;
 import djf.AppTemplate;
 import static djf.AppTemplate.PATH_WORK;
-import static djf.AppTemplate.PATH_RAWMAPDATA;
 import djf.modules.AppRecentWorkModule;
 import djf.modules.AppLanguageModule;
 import djf.modules.AppLanguageModule.LanguageException;
@@ -30,7 +29,6 @@ import properties_manager.PropertiesManager;
  * @author McKillaGorilla
  */
 public class AppDialogsFacade {
-    
     public static void showAboutDialog(AppTemplate app) {
         AppWebDialog dialog = new AppWebDialog(app);
         try {
@@ -49,7 +47,6 @@ public class AppDialogsFacade {
         String filePath = props.getProperty(APP_EXPORT_PAGE);
         dialog.showWebDialog(filePath);
     }
-    
     public static void showHelpDialog(AppTemplate app) {
         AppWebDialog dialog = new AppWebDialog(app);
         try {
@@ -93,28 +90,12 @@ public class AppDialogsFacade {
         messageDialog.getDialogPane().setContent(label);
         messageDialog.showAndWait();
     }
-    
-    public static void showCreatDialog(Stage window, AppTemplate app){
-        FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_WORK));
-        File selectedFile = fc.showOpenDialog(window);
-        FileChooser parentRegion = new FileChooser();
-        FileChooser dataFile = new FileChooser();
-        parentRegion.setInitialDirectory(new File(PATH_WORK));
-        dataFile.setInitialDirectory(new File(PATH_WORK));
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
-	parentRegion.setTitle(props.getProperty(LOAD_PARENTREGION_TITLE));
-	dataFile.setTitle(props.getProperty(LOAD_DATAFILE_TITLE));
-        File selectedParentFile = parentRegion.showOpenDialog(window);
-        File selecteddataFile = dataFile.showOpenDialog(window);  
-    }
-    
     public static File showOpenDialog(Stage window, AppPropertyType openTitleProp) {
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File(PATH_RAWMAPDATA));
+        fc.setInitialDirectory(new File(PATH_WORK));
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
-        File selectedFile = fc.showOpenDialog(window);    
+        File selectedFile = fc.showOpenDialog(window);        
         return selectedFile;
     }
     public static File showSaveDialog(Stage window, AppPropertyType saveTitleProp) {
@@ -180,7 +161,6 @@ public class AppDialogsFacade {
         AppWelcomeDialog wd = new AppWelcomeDialog(app);
         wd.showAndWait();
         
-        
         // AND RETURN THE USER SELECTION
         return wd.selectedWorkName;
     }
@@ -198,9 +178,4 @@ public class AppDialogsFacade {
         Optional<ButtonType> result = confirmationDialog.showAndWait();
         return result.get();
     }
-    
-    
-//    public static 
-    
-    
 }

@@ -107,7 +107,7 @@ public class MapViewerFiles implements AppFileComponent {
              subregions.add(subregions_polygons_obj);
         }
         
-        JsonObject mapViewerDataJSO = Json.createObjectBuilder()
+        JsonObject mapViewerDataJSON = Json.createObjectBuilder()
                 .add(JSON_NUMBER_OF_SUBREGIONS, mapViewerData.numOfSubregion())
                 .add(JSON_SCALE_X, mapViewerData.getMap().getScaleX())
                 .add(JSON_SCALE_Y, mapViewerData.getMap().getScaleY())

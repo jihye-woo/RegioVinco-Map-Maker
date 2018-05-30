@@ -13,8 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -85,36 +83,9 @@ import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_CHANGE;
 import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXIT;
 import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXPORT;
 
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXTEND;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_FITVIEWPORT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_LOAD;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_REDO;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_REMOVEIMAGE;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_RESETVIEWPORT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_SAVE;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_TEXT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_TOPLEFT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_UNDO;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_CHECKBOX1;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_CHECKBOX1_LABEL;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_CHECKBOX2;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_CHECKBOX2_LABEL;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_COLORPICKER;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_COLORPICKER_LABEL;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_SLIDER;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_SLIDER_LABEL;
-import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_HBOX;
-import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_ICON;
-import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_OCEAN;
-import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_VBOX_LABEL;
-import static mv.workspace.style.MapViewerStyle.CLASS_RFMM_BOTTOMBOX;
-import static mv.workspace.style.MapViewerStyle.CLASS_RFMM_BOTTOMBOX2;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_BOTTOMBOX_LABEL;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_CHECKBOX;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_TABLE;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_TABLECOL;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_TOOLBAR;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_TOOLBAR_MAIN;
+import static mv.MapMakerPropertyType.*;
+import mv.data.rvmmData;
+import static mv.workspace.style.MapViewerStyle.*;
 
 /**
  * @author McKillaGorilla
@@ -126,11 +97,16 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     
     double locationX;
     double locationY;
+    rvmmData data;
+    
+    ImageView selectedImage = new ImageView();
+    
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
         super(app);
         // LAYOUT THE APP
         initLayout();
+        data = new rvmmData(app);
     }
     
     // THIS HELPER METHOD INITIALIZES ALL THE CONTROLS IN THE WORKSPACE
@@ -142,7 +118,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         // Controller
         AppFileController controller = new AppFileController((AppTemplate)app);
         rvmmDialogController dialogController = new rvmmDialogController((AppTemplate) app);
-        rvmmButtonController buttonController = new rvmmButtonController((AppTemplate) app);
+        rvmmButtonController buttonController = new rvmmButtonController((RegioVincoMapMakerApp) app);
         // AND THIS WILL BE USED TO CLIP THE MAP SO WE CAN ZOOM
         BorderPane outerMapPane = new BorderPane();
         Rectangle clippingRectangle = new Rectangle();
@@ -152,6 +128,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         s1.setMin(0);
         Pane mapPane = new Pane();
         File imagefile;
+      
        
         Pane leftArea = new Pane();
         VBox rightArea = workspaceBuilder.buildVBox(RVMM_RIGHTAREA, null, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -183,10 +160,13 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button load = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_LOAD, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         load.setOnAction(e->{
-            AppFileController fileController = new AppFileController(app);
-            fileController.processLoadRequest();
+            controller.processLoadRequest();
         });
         Button save = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_SAVE, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        save.setOnAction(e->{
+            controller.processSaveRequest();
+        });
+        
         Button export =workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXPORT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button exit = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXIT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button undo = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_UNDO, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -211,11 +191,13 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button addImage = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_ADDIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         addImage.setOnAction(e->{
-            ImageView imageToAdd = new ImageView();
-            imageToAdd = buttonController.processAddImage(leftArea);
+            buttonController.processAddImage(leftArea, selectedImage);
+        });
+        Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        removeImage.setOnAction(e->{
+            buttonController.processRemoveImage(leftArea, selectedImage);
         });
         
-        Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button bottomleft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_BOTTOMLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button change = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_CHANGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -225,9 +207,8 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             dialogController.processChangeDimensions();
         });
         
-         mapPane.setOnMousePressed(e->{
+        mapPane.setOnMousePressed(e->{
             System.out.println(e.getX());
-            mapPane.setCursor(Cursor.CROSSHAIR);
             originalX = e.getX();
             originalY = e.getY();
         });
@@ -238,9 +219,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             mapPane.setTranslateX(mapPane.getTranslateX()+transX);
             mapPane.setTranslateY(mapPane.getTranslateY()+transY);
             app.getFileModule().markAsEdited(true);
-        });
-         mapPane.setOnMouseReleased(e->{
-            mapPane.setCursor(Cursor.DEFAULT);
         });
         mapPane.setOnScroll(e->{
             double scroll = e.getDeltaY();

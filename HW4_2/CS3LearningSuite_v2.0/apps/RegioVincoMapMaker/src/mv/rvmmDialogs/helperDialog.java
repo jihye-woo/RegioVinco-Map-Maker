@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rvmmDialogs;
+package mv.rvmmDialogs;
 
 import djf.AppPropertyType;
 import static djf.AppPropertyType.LOAD_WORK_TITLE;
 import static djf.AppTemplate.PATH_MAP;
+import static djf.AppTemplate.PATH_RAWMAPDATA;
 import java.io.File;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
@@ -25,5 +27,12 @@ public class helperDialog {
 	fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
         File selectedFile = fc.showOpenDialog(window);    
         return selectedFile;
+    }
+    
+    public static File showOpenDirectoryChooserDialog(Stage window, AppPropertyType openTitleProp){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(new File(PATH_RAWMAPDATA));
+        File selectedDirectory = directoryChooser.showDialog(window);
+        return selectedDirectory;
     }
 }

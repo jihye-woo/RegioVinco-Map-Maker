@@ -14,10 +14,10 @@ import java.io.File;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import properties_manager.PropertiesManager;
-import rvmmDialogs.MapMakerChangeDiemensionDialog;
-import rvmmDialogs.MapMakerDialog;
-import rvmmDialogs.MapMakerEditDialog;
-import rvmmDialogs.MapMakerRenameDialog;
+import mv.rvmmDialogs.MapMakerChangeDiemensionDialog;
+import mv.rvmmDialogs.MapMakerDialog;
+import mv.rvmmDialogs.MapMakerEditDialog;
+import mv.rvmmDialogs.MapMakerRenameDialog;
 
 /**
  *

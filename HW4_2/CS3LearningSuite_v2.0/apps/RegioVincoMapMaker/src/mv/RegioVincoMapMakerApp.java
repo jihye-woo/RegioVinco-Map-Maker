@@ -7,7 +7,7 @@ import djf.components.AppFileComponent;
 import djf.components.AppWorkspaceComponent;
 import djf.modules.AppFileModule;
 import java.util.Locale;
-import mv.data.MapViewerData;
+import mv.data.rvmmData;
 import mv.files.rvmmFiles;
 import mv.clipboard.MapViewerClipboard;
 import mv.workspace.rvmmWorkspace;
@@ -35,7 +35,7 @@ public class RegioVincoMapMakerApp extends AppTemplate {
 
     @Override
     public AppDataComponent buildDataComponent(AppTemplate app) {
-        return new MapViewerData(this);
+        return new rvmmData(this);
     }
 
     @Override
