@@ -97,10 +97,10 @@ import static mv.workspace.style.MapViewerStyle.*;
 public class rvmmWorkspace extends AppWorkspaceComponent {
     double originalX;
     double originalY;
-    
     double locationX;
     double locationY;
     ImageView selectedImage = new ImageView();
+    
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
         super(app);
@@ -114,7 +114,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         // THIS WILL BUILD ALL OF OUR JavaFX COMPONENTS FOR US
         AppNodesBuilder workspaceBuilder = app.getGUIModule().getNodesBuilder();
-        rvmmData data = (rvmmData)app.getDataComponent();
         // Controller
         AppFileController controller = new AppFileController((AppTemplate)app);
         rvmmDialogController dialogController = new rvmmDialogController((AppTemplate) app);
@@ -129,7 +128,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         Pane mapPane = new Pane();
         File imagefile;
       
-       
         Pane leftArea = new Pane();
         VBox rightArea = workspaceBuilder.buildVBox(RVMM_RIGHTAREA, null, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox1 = workspaceBuilder.buildHBox(MV_MAP_HBOX1, rightArea, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -196,6 +194,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
           imageView = new ImageView(file.toURI().toString());
             if(imageView !=null){
                 leftArea.getChildren().add(imageView);
+                rvmmData data = (rvmmData) app.getDataComponent();
                 data.addImageInList(imageView);
                 data.addImagePath(file.toURI().toString());
                 imageView.setOnMousePressed(e1->{

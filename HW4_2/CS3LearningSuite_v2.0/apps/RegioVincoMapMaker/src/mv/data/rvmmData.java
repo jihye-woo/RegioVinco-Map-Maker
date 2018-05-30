@@ -41,7 +41,6 @@ public class rvmmData implements AppDataComponent {
     HashMap<String, Color> subRegionToColorMappings;
     ArrayList<ImageView> images;
     ArrayList<String> imagesPath;
-    
     /**
      * Constructor can only be called after the workspace
      * has been initialized because it retrieves the map pane.

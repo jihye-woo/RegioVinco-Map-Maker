@@ -51,8 +51,7 @@ public class rvmmButtonController {
       
       public rvmmButtonController(RegioVincoMapMakerApp initApp){
           app = initApp;
-          data = (rvmmData) app.getDataComponent();
-//          data = new rvmmData((RegioVincoMapMakerApp) app);
+          data = new rvmmData((RegioVincoMapMakerApp) app);
       }
       
 //      public void processAddImage(Pane leftArea, ImageView selectedImage){

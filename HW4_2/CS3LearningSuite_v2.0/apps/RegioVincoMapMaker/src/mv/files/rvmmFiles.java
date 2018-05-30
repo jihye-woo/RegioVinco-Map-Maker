@@ -155,7 +155,7 @@ public class rvmmFiles implements AppFileComponent {
             imagesArray.add(imagesData);
         }
         
-        JsonObject mapViewerDataJSO = Json.createObjectBuilder()
+        JsonObject mapViewerDataJSON = Json.createObjectBuilder()
                 .add(JSON_NUMBER_OF_SUBREGIONS, rvmmdata.numOfSubregion())
                 .add(JSON_SCALE_X, rvmmdata.getMap().getScaleX())
                 .add(JSON_SCALE_Y, rvmmdata.getMap().getScaleY())
@@ -174,13 +174,13 @@ public class rvmmFiles implements AppFileComponent {
 	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
 	StringWriter sw = new StringWriter();
 	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.writeObject(mapViewerDataJSO);
+	jsonWriter.writeObject(mapViewerDataJSON);
 	jsonWriter.close();
 
 	// INIT THE WRITER
 	OutputStream os = new FileOutputStream(filePath);
 	JsonWriter jsonFileWriter = Json.createWriter(os);
-	jsonFileWriter.writeObject(mapViewerDataJSO);
+	jsonFileWriter.writeObject(mapViewerDataJSON);
 	String prettyPrinted = sw.toString();
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
@@ -190,7 +190,6 @@ public class rvmmFiles implements AppFileComponent {
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
         rvmmData mapData = (rvmmData)data;
-        mapData.reset();
         
 	JsonObject json = loadJSONFile(filePath);
 	

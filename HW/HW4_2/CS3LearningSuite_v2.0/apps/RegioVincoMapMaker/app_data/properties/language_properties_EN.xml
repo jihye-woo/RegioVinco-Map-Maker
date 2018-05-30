@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This XML file provides all the text to be used when the application
+    is to be displayed in English.
+-->
+<properties>
+    <property_list>
+
+        <!-- ENGLISH LANGUAGE SETTINGS FOR DESKTOP JAVA FRAMEWORK CONTROLS -->
+
+        <!-- WELCOME DIALOG TEXT -->
+        <property name="WELCOME_DIALOG_TITLE"               value="Welcome to the Map Viewer"></property>
+
+        <!-- GENERIC APP ERROR MESSAGES -->
+        <property name="APP_ERROR_TITLE"            value="Application Error"></property>
+        <property name="APP_ERROR_CONTENT"          value="An Error Occured in the Application"></property>
+
+        <!-- PROPERTIES ERROR MESSAGES -->
+        <property name="PROPERTIES_ERROR_TITLE"     value="Properties File Error"></property>
+        <property name="PROPERTIES_ERROR_CONTENT"   value="There was an Error Loading a Properties File"></property>
+
+        <!-- FILE TOOLBAR TOOLTIPS -->
+        <property name="LOAD_BUTTON_TOOLTIP"        value="Load Map"></property>
+        <property name="CLOSE_BUTTON_TOOLTIP"       value="Close Map"></property>
+        <property name="SAVE_BUTTON_TOOLTIP"        value="Save Map"></property>
+        <property name="EXPORT_BUTTON_TOOLTIP"      value="Export Map"></property>
+        <property name="EXIT_BUTTON_TOOLTIP"        value="Exit"></property>
+
+        <!-- LOAD FEEDBACK DIALOGS -->
+        <property name="LOAD_PARENTREGION_TITLE"   value="Choose Parent Region Directory"></property>
+        <property name="LOAD_DATAFILE_TITLE"   value="Choose Data File"></property>
+        <property name="LOAD_WORK_TITLE"        value="Load Work"></property>
+        <property name="LOAD_SUCCESS_TITLE"     value="Load Complete"></property>
+        <property name="LOAD_SUCCESS_CONTENT"   value="The File has Loaded Successfully and can now be edited."></property>
+        <property name="LOAD_ERROR_TITLE"       value="Loading Error"></property>
+        <property name="LOAD_ERROR_CONTENT"     value="Loading has Failed. Likely there is a File Formating problem."></property>
+
+        <!-- SAVE FEEDBACK DIALOGS -->
+        <property name="SAVE_WORK_TITLE"        value="Save Work"></property>
+        <property name="SAVE_SUCCESS_TITLE"     value="Save Complete"></property>
+        <property name="SAVE_SUCCESS_CONTENT"   value="The file is saved."></property>
+        <property name="SAVE_ERROR_TITLE"       value="Save Error"></property>
+        <property name="SAVE_ERROR_CONTENT"     value="Saving has Failed. Likely due to a file access problem."></property>
+        <property name="SAVE_VERIFY_TITLE"	value="Save unsaved work?"></property>
+        <property name="SAVE_VERIFY_CONTENT"	value="Would you like to save your unsaved work first?"></property>
+
+        <!-- ENGLISH LANGUAGE SETTINGS SPECIFICALLY FOR TDLM CONTROLS -->
+
+        <!-- LANGUAGE-DEPENDENT TEXT FOR WORKSPACE CONTROLS -->
+        <property name="MV_LABEL_TEXT"      value="The World"></property>
+        <property name="MV_LABEL_TOOLTIP"    value="The Map Viewer Header Tooltip!!!"></property>
+
+        <property name="WORK_FILE_EXT"          value="mv"></property>
+	       <property name="WORK_FILE_EXT_DESC"     value="Map Viewer Files"></property>
+
+
+         <!-- table view - bottom labels -->
+        <property name="RVMM_BOTTOM1_1LABEL_TEXT"       value="Background Gradient"></property>
+        <property name="RVMM_BOTTOM1_2LABEL_TEXT"       value="Focus Angle"></property>
+        <property name="RVMM_BOTTOM1_3LABEL_TEXT"       value="Center X"></property>
+        <property name="RVMM_BOTTOM1_4LABEL_TEXT"       value="Radius"></property>
+        <property name="RVMM_BOTTOM1_5LABEL_TEXT"       value="Stop 0 Color"></property>
+
+        <property name="RVMM_BOTTOM2_1LABEL_TEXT"       value="Proportional"></property>
+        <property name="RVMM_BOTTOM2_2LABEL_TEXT"       value="Focus Distance"></property>
+        <property name="RVMM_BOTTOM2_3LABEL_TEXT"       value="Center Y"></property>
+        <property name="RVMM_BOTTOM2_4LABEL_TEXT"       value="Cycle Method"></property>
+        <property name="RVMM_BOTTOM2_5LABEL_TEXT"       value="Stop 1 Color"></property>
+
+        <!-- TOOLBAR -->
+        <property name="RVMM_TOOLBAR_CHECKBOX1_LABEL_TEXT"       value="Toggle Frame"></property>
+        <property name="RVMM_TOOLBAR_CHECKBOX2_LABEL_TEXT"       value="Move Polygon Mode"></property>
+        <property name="RVMM_TOOLBAR_COLORPICKER_LABEL_TEXT"       value="Border Color"></property>
+        <property name="RVMM_TOOLBAR_SLIDER_LABEL_TEXT"       value="Border Thickness"></property>
+
+        <!-- Creat New Map Dialogs -->
+        <property name="CREATENEW_DIALOG_HEADER_LABEL_TEXT"       value="Create New Map"></property>
+        <property name="CREATENEW_DIALOG_REGIONAME_LABEL_TEXT"       value="Region Name"></property>
+        <property name="CREATENEW_DIALOG_PARENTS_LABEL_TEXT"       value="Parent Regopm Directory Not Choose"></property>
+        <property name="CREATENEW_DIALOG_DATACHOICE_LABEL_TEXT"       value="Data File Not Chosen"></property>
+        <property name="CREATENEW_DIALOG_PARENTS_BUTTON_TEXT"       value="Choose Parent Region Directory"></property>
+        <property name="CREATENEW_DIALOG_DATACHOICE_BUTTON_TEXT"       value="Choose Data File"></property>
+        <property name="CREATENEW_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
+
+
+          <!-- Change Map Dimensions Dialogs -->
+        <property name="MAP_DIMENSIONS_DIALOG_HEADER_LABEL_TEXT"       value="Change Map Dimensions"></property>
+        <property name="MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL_TEXT"       value="Height"></property>
+        <property name="MAP_DIMENSIONS_DIALOG_WIDTH_BUTTON_TEXT"       value="Width"></property>
+        <property name="MAP_DIMENSIONS_DIALOG_OKBUTTON_TEXT"       value="OK"></property>
+
+        <!-- View/Edit Subregion -->
+        <property name="EDITSUB_DIALOG_HEADER_LABEL_TEXT"          value="View / Edit Subregion"></property>
+        <property name="EDITSUB_DIALOG_PREV_BUTTON_TEXT"            value="Previous"></property>
+        <property name="EDITSUB_DIALOG_NEXT_BUTTON_TEXT"            value="Next"></property>
+        <property name="EDITSUB_DIALOG_SUBREIONNAME_LABEL_TEXT"      value="Subregion"></property>
+        <property name="EDITSUB_DIALOG_CAPTIAL_LABEL_TEXT"          value="Capital"></property>
+        <property name="EDITSUB_DIALOG_LEADER_LABEL_TEXT"            value="Leader's Name"></property>
+        <property name="EDITSUB_DIALOG_FLAG_LABEL_TEXT"              value="Flag"></property>
+        <property name="EDITSUB_DIALOG_OKBUTTON_TEXT"             value="OK"></property>
+
+
+
+
+
+
+    </property_list>
+
+    <!-- TDLM COMBO BOX CHOICES -->
+    <property_options_list>
+        <property_options name="LANGUAGE_OPTIONS">
+            <option>English</option>
+        </property_options>
+    </property_options_list>
+</properties>
