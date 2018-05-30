@@ -124,13 +124,13 @@ public class MapViewerFiles implements AppFileComponent {
 	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
 	StringWriter sw = new StringWriter();
 	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.writeObject(mapViewerDataJSO);
+	jsonWriter.writeObject(mapViewerDataJSON);
 	jsonWriter.close();
 
 	// INIT THE WRITER
 	OutputStream os = new FileOutputStream(filePath);
 	JsonWriter jsonFileWriter = Json.createWriter(os);
-	jsonFileWriter.writeObject(mapViewerDataJSO);
+	jsonFileWriter.writeObject(mapViewerDataJSON);
 	String prettyPrinted = sw.toString();
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
@@ -169,7 +169,7 @@ public class MapViewerFiles implements AppFileComponent {
         }
         
         
-// GO THROUGH ALL THE SUBREGIONS
+    // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
             // MAKE A POLYGON LIST FOR THIS SUBREGION
             JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);

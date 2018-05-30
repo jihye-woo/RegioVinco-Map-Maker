@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -29,7 +30,7 @@ public class MapViewerData implements AppDataComponent {
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
-    
+    ArrayList<ImageView> images;
     // LINE THICKNESS AT SCALE 1.0
     final double DEFAULT_LINE_THICKNESS = 0.1;
 
@@ -41,6 +42,7 @@ public class MapViewerData implements AppDataComponent {
         app = initApp;
         subregions = new HashMap();
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
+        images = new ArrayList<ImageView>();
     }    
   
     public ObservableList<Polygon> getSubregion(int id) {

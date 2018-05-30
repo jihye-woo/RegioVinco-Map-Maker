@@ -7,8 +7,11 @@ package mv.rvmmDialogs;
 
 import djf.AppPropertyType;
 import static djf.AppPropertyType.LOAD_WORK_TITLE;
+import static djf.AppPropertyType.WORK_FILE_EXT;
+import static djf.AppPropertyType.WORK_FILE_EXT_DESC;
 import static djf.AppTemplate.PATH_MAP;
 import static djf.AppTemplate.PATH_RAWMAPDATA;
+import static djf.AppTemplate.PATH_WORK;
 import java.io.File;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -36,3 +39,4 @@ public class helperDialog {
         return selectedDirectory;
     }
 }
+

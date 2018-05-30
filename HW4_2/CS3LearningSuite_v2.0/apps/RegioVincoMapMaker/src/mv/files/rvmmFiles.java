@@ -90,6 +90,8 @@ public class rvmmFiles implements AppFileComponent {
       public void saveData(AppDataComponent data, String filePath) throws IOException {
 	// GET THE DATA
 	rvmmData rvmmdata = (rvmmData)data;
+        String nameOfMap = rvmmdata.getRegionName();
+        filePath = PATH_WORK + nameOfMap;
         File f = new File(filePath);
         f.mkdirs();
         

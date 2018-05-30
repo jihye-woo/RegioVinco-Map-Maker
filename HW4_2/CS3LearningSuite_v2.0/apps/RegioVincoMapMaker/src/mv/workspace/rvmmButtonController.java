@@ -81,25 +81,6 @@ public class rvmmButtonController {
             }
       }
       
-      public void processSaveRequest() {
-        // WE'LL NEED THIS TO GET CUSTOM STUFF
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
-        try {
-            // MAYBE WE ALREADY KNOW THE FILE
-            AppFileModule fileSettings = app.getFileModule();
-            if (fileSettings.wasSaved()) {
-                fileSettings.saveWork();
-            }
-            else{
-                 String filePath = PATH_WORK + "/" + data.getRegionName();
-                 File saveFile = new File(filePath);
-                 fileSettings.saveWork(saveFile, filePath);
-            }
-            
-        } catch (IOException ioe) {
-            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
-        }
-      }
       private void changeSelectedImage(ImageView currentImage, ImageView selectedBefore){
           if(selectedBefore !=null ){
             selectedBefore.getStyleClass().clear();

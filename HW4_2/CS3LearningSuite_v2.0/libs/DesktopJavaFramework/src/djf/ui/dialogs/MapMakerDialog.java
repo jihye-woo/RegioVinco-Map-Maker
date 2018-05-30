@@ -3,7 +3,7 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package mv.rvmmDialogs;
+package djf.ui.dialogs;
 
 import djf.AppPropertyType;
 import static djf.AppPropertyType.CREATENEW_DIALOG_DATACHOICE_BUTTON;
@@ -19,8 +19,6 @@ import static djf.AppPropertyType.SAVE_ERROR_TITLE;
 import djf.AppTemplate;
 import static djf.AppTemplate.PATH_WORK;
 import djf.modules.AppLanguageModule;
-import djf.ui.controllers.AppFileController;
-import djf.ui.dialogs.AppDialogsFacade;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
@@ -42,8 +40,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import static mv.rvmmDialogs.helperDialog.showOpenDirectoryChooserDialog;
-
 import properties_manager.PropertiesManager;
 
 /**
@@ -70,7 +66,6 @@ public class MapMakerDialog extends Stage{
     File fileForDirectory;
     File fileForData;
     File f;
-    AppFileController controller;
     
     public MapMakerDialog(AppTemplate initApp){
         app = initApp;
@@ -80,7 +75,7 @@ public class MapMakerDialog extends Stage{
 
         Scene scene = new Scene(gridPane);
         this.setScene(scene);
-        controller = new AppFileController(app);
+
         app.getGUIModule().initStylesheet(this);
     }
     
@@ -108,16 +103,49 @@ public class MapMakerDialog extends Stage{
         initGridNode(okButton,                CREATENEW_DIALOG_OKBUTTON,            CLASS_RVMM_DIALOG_OK,          2, 4, 1, 1, true);
         
         app.getGUIModule().addGUINode(CREATENEW_DIALOG_PARENTS_BUTTON, ParentRegionChoice);
-        okButton.setDisable(true);
+        
         gridPane.setPadding(new Insets(30, 20, 20, 20));
         gridPane.setVgap(5);
         gridPane.setHgap(50);
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
+        regionNameTextField.setOnAction(e->{
+            if(!(regionNameTextField.getText().trim().equals(""))){
+                textfieldNotEmpty = true;
+            }
+            else{
+                textfieldNotEmpty = false;
+            }
+        });
+        
+        
+        
+        ParentRegionChoice.setOnAction((ActionEvent e)->{
+            fileForDirectory = showOpenDirectoryChooserDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
+                if(fileForDirectory !=null){
+                    filePath =  fileForDirectory.getAbsolutePath();
+                    ParentRegionChoiceLabel.setText(filePath);
+                    parentchoosen = true;
+                }
+                okButtonUpdate();
+        });
+        
+        dataChoice.setOnAction(e->{
+           fileForData = AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_DATACHOICE_BUTTON);
+                if(fileForData !=null && parentchoosen == true){
+                    dataChoiceLabel.setText(fileForData.getName());
+                    filePath = fileForData.getName();
+                    datachoosen = true;
+                }
+                okButtonUpdate();
+        });
     }
     public void okButtonUpdate(){
-        if(datachoosen && parentchoosen){
-              okButton.setDisable(false);
+        if(datachoosen && parentchoosen && textfieldNotEmpty){
+            filePath = fileForDirectory.getAbsolutePath();
+            f = new File(filePath, regionNameTextField.getText());
+            f.mkdirs();
+            okButton.setDisable(false);
         }
         else{
              okButton.setDisable(true);
@@ -133,44 +161,17 @@ public class MapMakerDialog extends Stage{
         regionNameLabel.setText("Region Name");
         ParentRegionChoice.setText("Choose Parent Region Directory");
         ParentRegionChoiceLabel.setText("Parent Region Directory Not Chosen");
-        okButton.setText("OK");
-        
-        ParentRegionChoice.setOnAction((ActionEvent e)->{
-            fileForDirectory = showOpenDirectoryChooserDialog(this, CREATENEW_DIALOG_PARENTS_BUTTON);
-                if(fileForDirectory !=null){
-                    ParentRegionChoiceLabel.setText(fileForDirectory.getAbsolutePath());
-                    parentchoosen = true;
-                }
-                okButtonUpdate();
-        });
         dataChoice.setText("Choose Data File");
         dataChoiceLabel.setText("Data File Not Chosen");
-        dataChoice.setOnAction(e->{
-           fileForData = AppDialogsFacade.showOpenDialog(this, CREATENEW_DIALOG_DATACHOICE_BUTTON);
-                if(fileForData !=null && parentchoosen == true){
-                    dataChoiceLabel.setText(fileForData.getName());
-                    dataChoiceLabel.setText(fileForData.getAbsolutePath());
-                    datachoosen = true;
-                }
-                okButtonUpdate();
-        });
+        okButton.setText("OK");
         okButton.setOnAction((ActionEvent e)->{
-                try {
-                    int index = fileForData.getAbsolutePath().lastIndexOf("/");
-                    String fileName = fileForData.getAbsolutePath().substring(index + 1);
-                    if(regionNameTextField.getText()!=null){
-                       fileName = regionNameTextField.getText();
-                    }
-                    filePath =  fileForDirectory.getAbsolutePath()+ "/"+ fileName;
-                    f = new File(filePath, fileName +".json");
-                    f.mkdirs();
-                    Files.copy(fileForData.toPath(), f.toPath(), REPLACE_EXISTING);
-                    app.getFileModule().loadWork(f);
-                } catch (IOException ex) {
-    //                AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
-                }
-            hide();
+            try {
+                Files.copy(fileForData.toPath(), f.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                 AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
+            }
         });
+        regionNameTextField.setText("");
         showAndWait();
     }
       public static File showOpenDirectoryChooserDialog(Stage window, AppPropertyType openTitleProp){
@@ -179,4 +180,5 @@ public class MapMakerDialog extends Stage{
         File selectedDirectory = directoryChooser.showDialog(window);
         return selectedDirectory;
     }
+    
 }
