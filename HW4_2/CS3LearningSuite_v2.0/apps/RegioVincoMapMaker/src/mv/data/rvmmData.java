@@ -1,6 +1,7 @@
 package mv.data;
 
 import djf.components.AppDataComponent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.collections.FXCollections;
@@ -8,13 +9,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
-import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP_SELECTED;
 
 /**
  *
@@ -26,6 +25,7 @@ public class rvmmData implements AppDataComponent {
 
     // THE PANE WHERE WE'RE PUTTING ALL THE POLYGONS
     Pane map;
+    Pane leftMap;
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
@@ -35,9 +35,9 @@ public class rvmmData implements AppDataComponent {
 
     // for save
     String regionName;
-    boolean haveCapital;
-    boolean haveflags;
-    boolean haveleaders;
+    boolean haveCapital=true;
+    boolean haveflags=true;
+    boolean haveleaders=true;
     HashMap<String, Color> subRegionToColorMappings;
     ArrayList<ImageView> images;
     ArrayList<String> imagesPath;
@@ -51,6 +51,11 @@ public class rvmmData implements AppDataComponent {
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
         images = new ArrayList<ImageView>();
         imagesPath = new ArrayList<String>();
+        
+        File f = app.getFileModule().getWorkFile();
+        if(f != null){
+            regionName = f.getName().substring(f.getName().lastIndexOf("."));
+        }
     }
     public RegioVincoMapMakerApp getApp(){
         return app;
@@ -78,6 +83,12 @@ public class rvmmData implements AppDataComponent {
 //    }
     public Pane getMap(){
         return map;
+    }
+    public void setLeftMap(Pane left){
+        leftMap = left;
+    }
+    public Pane getLeftMap(){
+        return leftMap;
     }
     public HashMap<String, Color> getSubRegionToColorMappings(){
         return subRegionToColorMappings;
@@ -179,5 +190,6 @@ public class rvmmData implements AppDataComponent {
             imagesPath.remove(path);
         }
     }
+    
     
 }

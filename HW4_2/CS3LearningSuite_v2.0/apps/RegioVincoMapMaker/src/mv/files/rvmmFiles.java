@@ -1,11 +1,14 @@
 package mv.files;
 
+import static djf.AppPropertyType.APP_EXPORT_PAGE;
 import djf.components.AppDataComponent;
 import djf.components.AppFileComponent;
 import djf.modules.AppFileModule;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,10 +22,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javax.imageio.ImageIO;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -33,7 +41,9 @@ import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
 import mv.data.rvmmData;
+import properties_manager.PropertiesManager;
 
 /**
  *
@@ -97,17 +107,17 @@ public class rvmmFiles implements AppFileComponent {
 	// GET THE DATA
 	rvmmData rvmmdata = (rvmmData)data;
         AppFileModule appfilemodule = rvmmdata.getApp().getFileModule();
-//        if(filePath.contains("raw_map_data")){
-//            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
-//            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
-//
-//            Path path = Paths.get("../RegioVincoMapMaker/work/"+fileName);
-//            String pathForSave = path.toFile().getCanonicalPath();
-//            File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
-//            f.mkdirs();
-//            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
-//            filePath = f.getAbsolutePath();
-//        }
+        if(filePath.contains("raw_map_data")){
+            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
+            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
+
+            Path path = Paths.get("../RegioVincoMapMaker/work/"+fileName);
+            String pathForSave = path.toFile().getCanonicalPath();
+            File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
+            f.mkdirs();
+            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
+            filePath = f.getAbsolutePath();
+        }
         ArrayList<ImageView> images = rvmmdata.getImagesList();
         ArrayList<String> imagesPath = rvmmdata.getImagesPath();
         
@@ -267,18 +277,29 @@ public class rvmmFiles implements AppFileComponent {
     @Override
     public void exportData(AppDataComponent data, String savedFileName) throws IOException {
         rvmmData rvmmdata = (rvmmData)data;
-        
+        AppFileModule appfilemodule = rvmmdata.getApp().getFileModule();
+       if(!(savedFileName.contains("export"))){
+            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
+            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
+            Path path = Paths.get("../RegioVincoMapMaker/export/"+fileName);
+            String pathForSave = path.toFile().getCanonicalPath();
+            File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
+            f.mkdirs();
+            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
+            savedFileName = f.getAbsolutePath();
+        }
         JsonArrayBuilder subregions = Json.createArrayBuilder();
+        Color c = Color.color(0,0,0);
         
-        
-        for(int i=0;i<rvmmdata.getSubRegionToColorMappings().size(); i++){
+        for(int i=0;i<rvmmdata.numOfSubregion(); i++){
         JsonObject subregions_object = Json.createObjectBuilder()
                 .add(JSON_SUBREGIONS_NAME, rvmmdata.getRegionName())
                 .add(JSON_SUBREGIONS_CAPTIAL,  rvmmdata.getHaveCapital())
                 .add(JSON_SUBREGIONS_LEADER,  rvmmdata.getHaveLeaders())
-                .add(JSON_SUBREGIONS_RED,  rvmmdata.getSubRegionToColorMappings().get(rvmmdata.getRegionName()).getRed())
-                .add(JSON_SUBREGIONS_GREEN, rvmmdata.getSubRegionToColorMappings().get(rvmmdata.getRegionName()).getGreen())
-                .add(JSON_SUBREGIONS_BLUE, rvmmdata.getSubRegionToColorMappings().get(rvmmdata.getRegionName()).getBlue()).build();
+                .add(JSON_SUBREGIONS_RED,  c.getRed())
+                .add(JSON_SUBREGIONS_GREEN, c.getGreen())
+                .add(JSON_SUBREGIONS_BLUE, c.getBlue())
+                .build();
                 subregions.add(subregions_object);
         }
                 
@@ -300,7 +321,8 @@ public class rvmmFiles implements AppFileComponent {
 	jsonWriter.close();
 
         // NOW BUILD THE JSON ARRAY FOR THE LIST
-	
+	savedFileName = savedFileName.substring(0,savedFileName.length()-5)+".rvm";
+        
 	// INIT THE WRITER
 	OutputStream os = new FileOutputStream(savedFileName);
 	JsonWriter jsonFileWriter = Json.createWriter(os);
@@ -309,6 +331,24 @@ public class rvmmFiles implements AppFileComponent {
 	PrintWriter pw = new PrintWriter(savedFileName);
 	pw.write(prettyPrinted);
 	pw.close();
+        
+        Pane mapPane = (Pane) rvmmdata.getApp().getGUIModule().getGUINode(RVMM_LEFT_MAP);
+//        Pane mapPane = (Pane) rvmmdata.getApp().getWorkspaceComponent().getWorkspace().getChildren().get(0);
+        savedFileName = savedFileName.substring(0, savedFileName.length()-5);
+        SnapshotParameters sp = new SnapshotParameters();
+        WritableImage imageToWirte = new WritableImage(802, 536);
+        WritableImage snapshot = (WritableImage) mapPane.snapshot(sp, imageToWirte);
+        File exportedImage = new File(savedFileName.substring(0,savedFileName.length())+".png");
+            
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", exportedImage);
+        } catch (IOException e) {
+            e.getMessage();
+        }
+        
+        Pane exportMap = rvmmdata.getMap();
+        
+        ImageIO.write(SwingFXUtils.fromFXImage(imageToWirte, null), "png", exportedImage);
     }
     
   

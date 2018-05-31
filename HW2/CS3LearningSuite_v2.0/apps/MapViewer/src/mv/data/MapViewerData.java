@@ -41,6 +41,7 @@ public class MapViewerData implements AppDataComponent {
         app = initApp;
         subregions = new HashMap();
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
+        
     }    
   
     public ObservableList<Polygon> getSubregion(int id) {

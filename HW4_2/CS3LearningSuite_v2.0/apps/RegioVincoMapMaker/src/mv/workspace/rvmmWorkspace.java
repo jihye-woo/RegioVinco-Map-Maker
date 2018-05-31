@@ -166,6 +166,9 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         
         Button export =workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXPORT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        export.setOnAction(e->{
+            controller.processExportRequest();
+        });
         Button exit = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXIT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button undo = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_UNDO, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button redo = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REDO, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -347,6 +350,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         mapPane.getChildren().add(ocean);
         ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
         app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
+        app.getGUIModule().addGUINode(RVMM_LEFT_MAP, leftArea);
         
         mapPane.minWidthProperty().bind(outerMapPane.widthProperty());
         mapPane.maxWidthProperty().bind(outerMapPane.widthProperty());
@@ -360,6 +364,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         
         
+//        d.
          // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();
         ((BorderPane)workspace).setTop(topToolBar);

@@ -278,6 +278,8 @@ public class MapViewerWorkspace extends AppWorkspaceComponent {
         mvController.processMoveUp(mapPane, moveUp);
         mvController.processMoveDown(mapPane, moveDown);
         
+        
+        
     }
     
     @Override
