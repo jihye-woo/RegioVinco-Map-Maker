@@ -8,6 +8,9 @@ package mv.workspace;
 import djf.AppPropertyType;
 import static djf.AppPropertyType.APP_FILE_FOOLPROOF_SETTINGS;
 import static djf.AppPropertyType.APP_TITLE;
+import static djf.AppPropertyType.LOAD_ERROR_CONTENT;
+import static djf.AppPropertyType.LOAD_ERROR_TITLE;
+import static djf.AppPropertyType.LOAD_WORK_TITLE;
 import static djf.AppPropertyType.SAVE_ERROR_CONTENT;
 import static djf.AppPropertyType.SAVE_ERROR_TITLE;
 import static djf.AppPropertyType.SAVE_SUCCESS_CONTENT;
@@ -145,4 +148,5 @@ public class rvmmButtonController {
                 mapPane.setScaleY(newScale);
             }
     }
+  
 }

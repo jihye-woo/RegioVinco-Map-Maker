@@ -1,10 +1,10 @@
 
 {
     "NUMBER_OF_SUBREGIONS":9,
-    "SCALE_X":1254.5881079979754,
-    "SCALE_Y":1254.5881079979754,
-    "TRANSLATE_X":27439.315463790907,
-    "TRANSLATE_Y":177013.3878655974,
+    "SCALE_X":1.0,
+    "SCALE_Y":1.0,
+    "TRANSLATE_X":0.0,
+    "TRANSLATE_Y":0.0,
     "SUBREGIONS":[
         {
             "NUMBER_OF_SUBREGION_POLYGONS":1,
@@ -22363,17 +22363,12 @@
             ]
         }
     ],
-    "number_of_image":2,
+    "number_of_image":1,
     "image":[
         {
-            "image_translateX":66.66666666666671,
-            "image_translateY":181.33333333333334,
+            "image_translateX":178.66666666666666,
+            "image_translateY":162.0,
             "image_path":"./images/Albania%20Flag.png"
-        },
-        {
-            "image_translateX":437.33333333333337,
-            "image_translateY":157.33333333334303,
-            "image_path":"./images/MapViewerLogo.png"
         }
     ]
 }

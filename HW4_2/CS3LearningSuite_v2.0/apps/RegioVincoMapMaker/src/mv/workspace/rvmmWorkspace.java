@@ -9,7 +9,10 @@ import static djf.modules.AppGUIModule.HAS_KEY_HANDLER;
 import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -87,6 +90,7 @@ import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXPORT;
 
 import static mv.MapMakerPropertyType.*;
 import mv.data.rvmmData;
+import mv.files.rvmmFiles;
 import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
 import static mv.workspace.style.MapViewerStyle.*;
 

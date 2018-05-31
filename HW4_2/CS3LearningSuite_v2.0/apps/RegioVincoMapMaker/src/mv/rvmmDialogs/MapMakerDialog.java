@@ -165,11 +165,12 @@ public class MapMakerDialog extends Stage{
                     f = new File(filePath, fileName +".json");
                     f.mkdirs();
                     Files.copy(fileForData.toPath(), f.toPath(), REPLACE_EXISTING);
-                    app.getFileModule().loadWork(f);
+                     app.getFileComponent().loadData(app.getDataComponent(), f.getAbsolutePath());
                 } catch (IOException ex) {
     //                AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
                 }
             hide();
+           
         });
         showAndWait();
     }

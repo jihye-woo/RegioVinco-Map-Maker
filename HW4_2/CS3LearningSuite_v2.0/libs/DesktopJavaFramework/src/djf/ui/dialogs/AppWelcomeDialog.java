@@ -107,10 +107,11 @@ public class AppWelcomeDialog extends Stage {
         String createNewText = props.getProperty(WELCOME_DIALOG_NEW_BUTTON_TEXT);
         createNewButton = new Button(createNewText);
         createNewButton.setOnAction(e->{
+//            MapMakerDialog.showAddMapMakerDialog();
             this.hide();
             app.getGUIModule().getWindow().show();
             app.getFileModule().newWork();
-            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), NEW_SUCCESS_TITLE, NEW_SUCCESS_CONTENT);
+//            AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), NEW_SUCCESS_TITLE, NEW_SUCCESS_CONTENT);
         });
         newPane = new HBox();
         newPane.setAlignment(Pos.CENTER);

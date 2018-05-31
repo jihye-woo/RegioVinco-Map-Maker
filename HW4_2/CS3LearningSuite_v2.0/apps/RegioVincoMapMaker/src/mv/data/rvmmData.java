@@ -29,7 +29,6 @@ public class rvmmData implements AppDataComponent {
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
-    
     // LINE THICKNESS AT SCALE 1.0
     final double DEFAULT_LINE_THICKNESS = 0.1;
 
@@ -40,6 +39,7 @@ public class rvmmData implements AppDataComponent {
     boolean haveleaders=true;
     HashMap<String, Color> subRegionToColorMappings;
     ArrayList<ImageView> images;
+    ArrayList<Double> locationOfImages;
     ArrayList<String> imagesPath;
     /**
      * Constructor can only be called after the workspace
@@ -51,7 +51,7 @@ public class rvmmData implements AppDataComponent {
         map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
         images = new ArrayList<ImageView>();
         imagesPath = new ArrayList<String>();
-        
+        locationOfImages = new ArrayList<Double>();
         File f = app.getFileModule().getWorkFile();
         if(f != null){
             regionName = f.getName().substring(f.getName().lastIndexOf("."));

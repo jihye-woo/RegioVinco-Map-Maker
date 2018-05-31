@@ -37,10 +37,12 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
+import static mv.MapMakerPropertyType.MV_MAP_PANE;
 import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
 import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
@@ -63,8 +65,6 @@ public class rvmmFiles implements AppFileComponent {
     static final String JSON_SUBREGIONS_GREEN = "green";
     static final String JSON_SUBREGIONS_BLUE = "blue";
     static final String JSON_POLYGON_POINT = "polygon_points";
-    
-    
     
     static final String JSON_IMAGE = "image";
     static final String JSON_NUM_OF_IMAGE = "number_of_image";
@@ -196,22 +196,101 @@ public class rvmmFiles implements AppFileComponent {
 	pw.write(prettyPrinted);
 	pw.close();
     }
-    
     @Override
-    public void loadData(AppDataComponent data, String filePath) throws IOException {
+    public void loadSavedData(AppDataComponent data, String filePath) throws IOException{
         rvmmData mapData = (rvmmData)data;
+        mapData.reset();
         
+        ArrayList<Double> locationOfImages = new ArrayList<Double>();
+        
+        // LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
 	
+        // THIS IS THE TOTAL NUMBER OF SUBREGIONS, EACH WITH
+        // SOME NUMBER OF POLYGONS
         int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
-        
         JsonArray jsonSubregionsArray = json.getJsonArray(JSON_SUBREGIONS);
         
+        double mapScaleX = getDataAsDouble(json, JSON_SCALE_X);
+        mapData.getMap().setScaleX(mapScaleX);
+        double mapScaleY = getDataAsDouble(json, JSON_SCALE_Y);
+        mapData.getMap().setScaleY(mapScaleY);
+        
+        double mapTranslatesX = getDataAsDouble(json, JSON_TRANSLATE_X);
+        mapData.getMap().setTranslateX(mapTranslatesX);
+        double mapTranslatesY = getDataAsDouble(json, JSON_TRANSLATE_Y);
+        mapData.getMap().setTranslateY(mapTranslatesY);
+        
+        
+    // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
+            // MAKE A POLYGON LIST FOR THIS SUBREGION
             JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
             int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
             ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
+            // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
             for (int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
+                // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
+                JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
+                JsonObject polysinfo = jsonPolygon.getJsonObject(polygonIndex);
+                double red = getDataAsDouble(polysinfo, JSON_SUBREGIONS_RED);
+                double green = getDataAsDouble(polysinfo, JSON_SUBREGIONS_GREEN);
+                double blue = getDataAsDouble(polysinfo, JSON_SUBREGIONS_BLUE);
+                Color c = Color.color(red,green,blue);
+                JsonArray pointsArray = jsonPolygon.getJsonArray(polygonIndex);
+                ArrayList<Double> polygonPointsList = new ArrayList();
+                for (int pointIndex = 0; pointIndex < pointsArray.size(); pointIndex++) {
+                    JsonObject point = pointsArray.getJsonObject(pointIndex);
+                    double pointX = point.getJsonNumber(JSON_POLYGON_POINT_X).doubleValue();
+                    double pointY = point.getJsonNumber(JSON_POLYGON_POINT_Y).doubleValue();
+                    polygonPointsList.add(pointX);
+                    polygonPointsList.add(pointY);
+                }
+                subregionPolygonPoints.add(polygonPointsList);
+            }
+            mapData.addSubregion(subregionPolygonPoints);
+        }
+        int numOfImages = getDataAsInt(json, JSON_NUM_OF_IMAGE);
+        JsonArray jsonimagesArray = json.getJsonArray(JSON_IMAGE);
+        
+        if(!mapData.getImagesList().isEmpty()){
+            for(int i=0; i<numOfImages; i++){
+            JsonObject image = jsonimagesArray.getJsonObject(i);
+             double imageTranslateX = image.getJsonNumber(JSON_IMAGE_TRANSLATEX).doubleValue();
+             double imageTranslateY = image.getJsonNumber(JSON_IMAGE_TRANSLATEY).doubleValue();
+             JsonString imagePath =  image.getJsonString(JSON_IMAGE_PATH);
+             mapData.getImagesList().get(i).setTranslateX(imageTranslateX);
+             mapData.getImagesList().get(i).setTranslateY(imageTranslateY);
+             mapData.getImagesPath().add(imagePath.getString());
+            }
+        }
+    }
+    
+    
+      
+      
+    @Override
+    public void loadData(AppDataComponent data, String filePath) throws IOException {
+        rvmmData mapData = (rvmmData)data;
+        mapData.reset();
+        
+        // LOAD THE JSON FILE WITH ALL THE DATA
+	JsonObject json = loadJSONFile(filePath);
+	
+        // THIS IS THE TOTAL NUMBER OF SUBREGIONS, EACH WITH
+        // SOME NUMBER OF POLYGONS
+        int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
+        JsonArray jsonSubregionsArray = json.getJsonArray(JSON_SUBREGIONS);
+
+        // GO THROUGH ALL THE SUBREGIONS
+        for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
+            // MAKE A POLYGON LIST FOR THIS SUBREGION
+            JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
+            int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
+            ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
+            // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
+            for (int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
+                // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
                 JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
                 JsonArray pointsArray = jsonPolygon.getJsonArray(polygonIndex);
                 ArrayList<Double> polygonPointsList = new ArrayList();
@@ -226,10 +305,8 @@ public class rvmmFiles implements AppFileComponent {
             }
             mapData.addSubregion(subregionPolygonPoints);
         }
-        File f = new File(".");
-        mapData.setRegionName(f.getName());
-    }
-    
+        
+    }    
     public String getRelativePath(String path){
         String lastPath = path.substring(0, path.lastIndexOf("/"));
         lastPath = lastPath.substring(0,path.lastIndexOf("/"));
@@ -293,9 +370,9 @@ public class rvmmFiles implements AppFileComponent {
         
         for(int i=0;i<rvmmdata.numOfSubregion(); i++){
         JsonObject subregions_object = Json.createObjectBuilder()
-                .add(JSON_SUBREGIONS_NAME, rvmmdata.getRegionName())
-                .add(JSON_SUBREGIONS_CAPTIAL,  rvmmdata.getHaveCapital())
-                .add(JSON_SUBREGIONS_LEADER,  rvmmdata.getHaveLeaders())
+                .add(JSON_SUBREGIONS_NAME, "")
+                .add(JSON_SUBREGIONS_CAPTIAL,  "")
+                .add(JSON_SUBREGIONS_LEADER,  "")
                 .add(JSON_SUBREGIONS_RED,  c.getRed())
                 .add(JSON_SUBREGIONS_GREEN, c.getGreen())
                 .add(JSON_SUBREGIONS_BLUE, c.getBlue())
@@ -332,16 +409,28 @@ public class rvmmFiles implements AppFileComponent {
 	pw.write(prettyPrinted);
 	pw.close();
         
-        Pane mapPane = (Pane) rvmmdata.getApp().getGUIModule().getGUINode(RVMM_LEFT_MAP);
+//        Pane mapPane = (Pane) rvmmdata.getApp().getGUIModule().getGUINode(MV_MAP_PANE);
 //        Pane mapPane = (Pane) rvmmdata.getApp().getWorkspaceComponent().getWorkspace().getChildren().get(0);
-        savedFileName = savedFileName.substring(0, savedFileName.length()-5);
+        Pane mapPane = (Pane) rvmmdata.getMap();
+        savedFileName = savedFileName.substring(0, savedFileName.length()-4);
         SnapshotParameters sp = new SnapshotParameters();
         WritableImage imageToWirte = new WritableImage(802, 536);
         WritableImage snapshot = (WritableImage) mapPane.snapshot(sp, imageToWirte);
         File exportedImage = new File(savedFileName.substring(0,savedFileName.length())+".png");
-            
+        
+        String html = "<html><body><h2>"+ savedFileName +"</h2> <img src=\""+savedFileName+".png\"> </body> </html>";
+        String htmlPath = savedFileName +".html";
+        
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", exportedImage);
+            File htmlFile = new File(htmlPath);
+            FileWriter fw = new FileWriter(htmlFile);
+            BufferedWriter out = new BufferedWriter(fw);
+            out.write(html);
+            out.close();
+            PropertiesManager props = PropertiesManager.getPropertiesManager();
+            props.addProperty(APP_EXPORT_PAGE, htmlPath);
+            props.setPropertiesDataPath(htmlPath);
         } catch (IOException e) {
             e.getMessage();
         }
