@@ -73,7 +73,7 @@ public class AppFileModule {
         return workFile != null;
     }
     
-    public void newWork() {
+    public void newWork(){
         // RESET THE DATA
         app.getDataComponent().reset();
         
@@ -138,7 +138,6 @@ public class AppFileModule {
     public void saveWork(File selectedFile) throws IOException {
         // MAKE THE PROVIDED FILE THE WORK FILE
         workFile = selectedFile;
-        
         // AND NOW SAVE
         saveWork();
     }
@@ -183,6 +182,7 @@ public class AppFileModule {
         // RESET THE UI CONTROLS
         app.getFoolproofModule().updateAll();
     }
+    
 
     public void saveWork(File saveFile, String filePath) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

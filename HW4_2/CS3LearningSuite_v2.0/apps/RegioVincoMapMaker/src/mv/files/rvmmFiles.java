@@ -44,6 +44,7 @@ import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
 import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
+import mv.data.imageContainer;
 import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
 
@@ -67,6 +68,7 @@ public class rvmmFiles implements AppFileComponent {
     static final String JSON_POLYGON_POINT = "polygon_points";
     
     static final String JSON_IMAGE = "image";
+    static final String JSON_IMAGE_NAME = "image_name"; 
     static final String JSON_NUM_OF_IMAGE = "number_of_image";
     static final String JSON_IMAGE_TRANSLATEX = "image_translateX";
     static final String JSON_IMAGE_TRANSLATEY = "image_translateY";
@@ -107,19 +109,18 @@ public class rvmmFiles implements AppFileComponent {
 	// GET THE DATA
 	rvmmData rvmmdata = (rvmmData)data;
         AppFileModule appfilemodule = rvmmdata.getApp().getFileModule();
-        if(filePath.contains("raw_map_data")){
-            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
-            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
-
-            Path path = Paths.get("../RegioVincoMapMaker/work/"+fileName);
-            String pathForSave = path.toFile().getCanonicalPath();
-            File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
-            f.mkdirs();
-            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
-            filePath = f.getAbsolutePath();
-        }
-        ArrayList<ImageView> images = rvmmdata.getImagesList();
-        ArrayList<String> imagesPath = rvmmdata.getImagesPath();
+//        if(filePath.contains("raw_map_data")){
+//            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
+//            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
+//
+//            Path path = Paths.get("../RegioVincoMapMaker/work/"+fileName);
+//            String pathForSave = path.toFile().getCanonicalPath();
+//            File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
+//            f.mkdirs();
+//            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
+//            filePath = f.getAbsolutePath();
+//        }
+        ArrayList<imageContainer> images = rvmmdata.getImages();
         
 	// NOW BUILD THE JSON ARRAY FOR THE LIST
 	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -155,17 +156,17 @@ public class rvmmFiles implements AppFileComponent {
                      .build();
              subregions.add(subregions_polygons_obj);
         }
+        Pane leftArea = (Pane) rvmmdata.getMap().getParent();
         
         for(int i=0; i<images.size();i++){
             JsonObject imagesData = Json.createObjectBuilder()
-                    .add(JSON_IMAGE_TRANSLATEX, images.get(i).getTranslateX())
-                    .add(JSON_IMAGE_TRANSLATEY, images.get(i).getTranslateY())
-                    .add(JSON_IMAGE_PATH, getRelativePath(imagesPath.get(i)))
+                    .add(JSON_IMAGE_TRANSLATEX, leftArea.getChildren().get(i+1).getTranslateX())
+                    .add(JSON_IMAGE_TRANSLATEY, leftArea.getChildren().get(i+1).getTranslateY())
+                    .add(JSON_IMAGE_PATH, getRelativePath(images.get(i).getImagePath()))
                     .build();
             imagesArray.add(imagesData);
         }
-        
-        JsonObject mapViewerDataJSON = Json.createObjectBuilder()
+        JsonObject rvmmDataJSON = Json.createObjectBuilder()
                 .add(JSON_NUMBER_OF_SUBREGIONS, rvmmdata.numOfSubregion())
                 .add(JSON_SCALE_X, rvmmdata.getMap().getScaleX())
                 .add(JSON_SCALE_Y, rvmmdata.getMap().getScaleY())
@@ -184,28 +185,28 @@ public class rvmmFiles implements AppFileComponent {
 	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
 	StringWriter sw = new StringWriter();
 	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.writeObject(mapViewerDataJSON);
+	jsonWriter.writeObject(rvmmDataJSON);
 	jsonWriter.close();
 
 	// INIT THE WRITER
 	OutputStream os = new FileOutputStream(filePath);
 	JsonWriter jsonFileWriter = Json.createWriter(os);
-	jsonFileWriter.writeObject(mapViewerDataJSON);
+	jsonFileWriter.writeObject(rvmmDataJSON);
 	String prettyPrinted = sw.toString();
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
 	pw.close();
     }
-    @Override
-    public void loadSavedData(AppDataComponent data, String filePath) throws IOException{
+    
+    public void SavedData(AppDataComponent data, String filePath) throws IOException{
         rvmmData mapData = (rvmmData)data;
         mapData.reset();
         
         ArrayList<Double> locationOfImages = new ArrayList<Double>();
-        
         // LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
-	
+        mapData.setFilePath(filePath);
+        
         // THIS IS THE TOTAL NUMBER OF SUBREGIONS, EACH WITH
         // SOME NUMBER OF POLYGONS
         int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
@@ -221,7 +222,6 @@ public class rvmmFiles implements AppFileComponent {
         double mapTranslatesY = getDataAsDouble(json, JSON_TRANSLATE_Y);
         mapData.getMap().setTranslateY(mapTranslatesY);
         
-        
     // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
             // MAKE A POLYGON LIST FOR THIS SUBREGION
@@ -229,7 +229,7 @@ public class rvmmFiles implements AppFileComponent {
             int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
             ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
             // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
-            for (int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
+            for(int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
                 // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
                 JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
                 JsonObject polysinfo = jsonPolygon.getJsonObject(polygonIndex);
@@ -237,7 +237,7 @@ public class rvmmFiles implements AppFileComponent {
                 double green = getDataAsDouble(polysinfo, JSON_SUBREGIONS_GREEN);
                 double blue = getDataAsDouble(polysinfo, JSON_SUBREGIONS_BLUE);
                 Color c = Color.color(red,green,blue);
-                JsonArray pointsArray = jsonPolygon.getJsonArray(polygonIndex);
+                JsonArray pointsArray = polysinfo.getJsonArray(JSON_POLYGON_POINT);
                 ArrayList<Double> polygonPointsList = new ArrayList();
                 for (int pointIndex = 0; pointIndex < pointsArray.size(); pointIndex++) {
                     JsonObject point = pointsArray.getJsonObject(pointIndex);
@@ -250,25 +250,24 @@ public class rvmmFiles implements AppFileComponent {
             }
             mapData.addSubregion(subregionPolygonPoints);
         }
+        
         int numOfImages = getDataAsInt(json, JSON_NUM_OF_IMAGE);
         JsonArray jsonimagesArray = json.getJsonArray(JSON_IMAGE);
-        
-        if(!mapData.getImagesList().isEmpty()){
+        ArrayList<imageContainer> imageData = mapData.getImages();
             for(int i=0; i<numOfImages; i++){
             JsonObject image = jsonimagesArray.getJsonObject(i);
              double imageTranslateX = image.getJsonNumber(JSON_IMAGE_TRANSLATEX).doubleValue();
              double imageTranslateY = image.getJsonNumber(JSON_IMAGE_TRANSLATEY).doubleValue();
-             JsonString imagePath =  image.getJsonString(JSON_IMAGE_PATH);
-             mapData.getImagesList().get(i).setTranslateX(imageTranslateX);
-             mapData.getImagesList().get(i).setTranslateY(imageTranslateY);
-             mapData.getImagesPath().add(imagePath.getString());
+            JsonString imagePath =  image.getJsonString(JSON_IMAGE_PATH);
+            String absolPath = filePath;
+            for(i=0; i<3;i++){
+               int lastIndex = absolPath.lastIndexOf("\\");
+               absolPath = absolPath.substring(0,lastIndex);
             }
-        }
+            
+            mapData.addImage(absolPath+imagePath.getString(), imageTranslateX, imageTranslateY);
+            }
     }
-    
-    
-      
-      
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
         rvmmData mapData = (rvmmData)data;
@@ -308,9 +307,9 @@ public class rvmmFiles implements AppFileComponent {
         
     }    
     public String getRelativePath(String path){
-        String lastPath = path.substring(0, path.lastIndexOf("/"));
-        lastPath = lastPath.substring(0,path.lastIndexOf("/"));
-        return "."+path.substring(lastPath.lastIndexOf("/"));
+        String lastPath = path.substring(0, path.lastIndexOf("\\"));
+        lastPath = lastPath.substring(0,path.lastIndexOf("\\"));
+        return path.substring(lastPath.lastIndexOf("\\"));
         
     }
     
@@ -328,7 +327,6 @@ public class rvmmFiles implements AppFileComponent {
         double newY = ((paneHeight- y)/unitDegree)-90;
         return newY;
     }
-    
     
     public double getDataAsDouble(JsonObject json, String dataName) {
 	JsonValue value = json.get(dataName);
@@ -355,9 +353,9 @@ public class rvmmFiles implements AppFileComponent {
     public void exportData(AppDataComponent data, String savedFileName) throws IOException {
         rvmmData rvmmdata = (rvmmData)data;
         AppFileModule appfilemodule = rvmmdata.getApp().getFileModule();
+        int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
+        String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
        if(!(savedFileName.contains("export"))){
-            int index = appfilemodule.getWorkFile().getName().lastIndexOf(".");
-            String fileName = appfilemodule.getWorkFile().getName().substring(0,index);
             Path path = Paths.get("../RegioVincoMapMaker/export/"+fileName);
             String pathForSave = path.toFile().getCanonicalPath();
             File f = new File(pathForSave, appfilemodule.getWorkFile().getName());
@@ -381,7 +379,7 @@ public class rvmmFiles implements AppFileComponent {
         }
                 
         JsonObject rvmmViewerDataJSO = Json.createObjectBuilder()
-                .add(JSON_MAP_NAME,rvmmdata.getRegionName())
+                .add(JSON_MAP_NAME, fileName)
                 .add(JSON_CAPITALS, rvmmdata.getHaveCapital())
                 .add(JSON_FLAGS, rvmmdata.getHaveflags())
                 .add(JSON_LEADERS, rvmmdata.getHaveLeaders())
@@ -409,8 +407,6 @@ public class rvmmFiles implements AppFileComponent {
 	pw.write(prettyPrinted);
 	pw.close();
         
-//        Pane mapPane = (Pane) rvmmdata.getApp().getGUIModule().getGUINode(MV_MAP_PANE);
-//        Pane mapPane = (Pane) rvmmdata.getApp().getWorkspaceComponent().getWorkspace().getChildren().get(0);
         Pane mapPane = (Pane) rvmmdata.getMap();
         savedFileName = savedFileName.substring(0, savedFileName.length()-4);
         SnapshotParameters sp = new SnapshotParameters();
@@ -439,13 +435,15 @@ public class rvmmFiles implements AppFileComponent {
         
         ImageIO.write(SwingFXUtils.fromFXImage(imageToWirte, null), "png", exportedImage);
     }
-    
   
-    
-    
     @Override
     public void importData(AppDataComponent data, String filePath) throws IOException {
         
+    }
+
+    @Override
+    public void loadSavedData(AppDataComponent data, String filePath) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

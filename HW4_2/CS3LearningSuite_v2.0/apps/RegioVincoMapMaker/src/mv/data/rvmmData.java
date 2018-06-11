@@ -1,19 +1,29 @@
 package mv.data;
 
 import djf.components.AppDataComponent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Cursor;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
+import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
+import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_SELECTEDIMAGE;
 
 /**
  *
@@ -22,25 +32,26 @@ import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
 public class rvmmData implements AppDataComponent {
     // THE APP ITSELF
     RegioVincoMapMakerApp app;
-
+    
+    String filePath;
+    
+    double locationX; double locationY;
     // THE PANE WHERE WE'RE PUTTING ALL THE POLYGONS
-    Pane map;
-    Pane leftMap;
+    Pane map; Pane leftArea;
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
     // LINE THICKNESS AT SCALE 1.0
-    final double DEFAULT_LINE_THICKNESS = 0.1;
-
+    final double DEFAULT_LINE_THICKNESS = 0.05;
+    
     // for save
-    String regionName;
     boolean haveCapital=true;
     boolean haveflags=true;
     boolean haveleaders=true;
     HashMap<String, Color> subRegionToColorMappings;
-    ArrayList<ImageView> images;
-    ArrayList<Double> locationOfImages;
-    ArrayList<String> imagesPath;
+    ArrayList<imageContainer> images;
+    ImageView selectedImage;
+    
     /**
      * Constructor can only be called after the workspace
      * has been initialized because it retrieves the map pane.
@@ -48,21 +59,11 @@ public class rvmmData implements AppDataComponent {
     public rvmmData(RegioVincoMapMakerApp initApp) {
         app = initApp;
         subregions = new HashMap();
-        map = (Pane)app.getGUIModule().getGUINode(MV_MAP_PANE);
-        images = new ArrayList<ImageView>();
-        imagesPath = new ArrayList<String>();
-        locationOfImages = new ArrayList<Double>();
-        File f = app.getFileModule().getWorkFile();
-        if(f != null){
-            regionName = f.getName().substring(f.getName().lastIndexOf("."));
-        }
+        map = (Pane) app.getGUIModule().getGUINode(MV_MAP_PANE);
+        images = new ArrayList<imageContainer>();
     }
     public RegioVincoMapMakerApp getApp(){
         return app;
-    }
-    
-    public String getRegionName(){
-        return regionName;
     }
     public boolean getHaveCapital(){
         return haveCapital;
@@ -79,20 +80,19 @@ public class rvmmData implements AppDataComponent {
     public int numOfSubregion(){
         return subregions.size();
     }
-//    public int getNumOfImages(){
-//    }
     public Pane getMap(){
         return map;
-    }
-    public void setLeftMap(Pane left){
-        leftMap = left;
-    }
-    public Pane getLeftMap(){
-        return leftMap;
     }
     public HashMap<String, Color> getSubRegionToColorMappings(){
         return subRegionToColorMappings;
     }
+    public void setFilePath(String currentFilePath){
+        filePath = currentFilePath;
+    }
+    public String getFilePath(){
+        return filePath;
+    }
+    
     
     @Override
     public void reset() {
@@ -101,24 +101,25 @@ public class rvmmData implements AppDataComponent {
         subregionId = 0;
         
         // AND THE POLYGONS THEMSELVES
+        leftArea = (Pane) map.getParent();
+        map = (Pane) leftArea.getChildren().get(0);
         Rectangle ocean = (Rectangle)map.getChildren().get(0);
+        leftArea.getChildren().clear();
+        leftArea.getChildren().add(map);
         map.getChildren().clear();
         map.getChildren().add(ocean);
-        
+       
+        images.clear();
 //        subRegionToColorMappings.clear();
 //        String regionName = "";
-//        boolean haveCapital= false; 
-//        boolean haveflags= false; 
-//        boolean haveleaders= false; 
-    }
-    
-    public void setRegionName(String newName){
-        regionName = newName;
+//        boolean haveCapital= false;
+//        boolean haveflags= false;
+//        boolean haveleaders= false;
     }
     
     /**
      * For adding polygons to the map.
-    */
+     */
     public void addSubregion(ArrayList<ArrayList<Double>> rawPolygons) {
         ObservableList<Polygon> subregionPolygons = FXCollections.observableArrayList();
         for (int i = 0; i < rawPolygons.size(); i++) {
@@ -142,7 +143,7 @@ public class rvmmData implements AppDataComponent {
         subregions.put(subregionId, subregionPolygons);
         subregionId++;
     }
-
+    
     /**
      * This calculates and returns the x pixel value that corresponds to the
      * xCoord longitude argument.
@@ -154,7 +155,7 @@ public class rvmmData implements AppDataComponent {
         double newLongCoord = (longCoord + 180) * unitDegree;
         return newLongCoord;
     }
-
+    
     /**
      * This calculates and returns the y pixel value that corresponds to the
      * yCoord latitude argument.
@@ -168,27 +169,67 @@ public class rvmmData implements AppDataComponent {
         double newLatCoord = (latCoord + 90) * unitDegree;
         return paneHeight - newLatCoord;
     }
-    public ArrayList<ImageView> getImagesList(){
+    
+    public void addImage(String imagePath, double x, double y){
+        BufferedImage bimage;
+        File file = new File(imagePath);
+        imageContainer imagecon;
+        try {
+            bimage = ImageIO.read(file);
+            ImageIO.write(bimage, "png", file);
+            Image image = SwingFXUtils.toFXImage(bimage, null);
+            ImageView iv = new ImageView(image);
+            iv.setTranslateX(x);
+            iv.setTranslateY(y);
+            leftArea = (Pane) map.getParent();
+            leftArea.getChildren().add(iv);
+            imagecon= new imageContainer(image, imagePath, x, y);
+            images.add(imagecon);
+            iv.setOnMousePressed(e1->{
+                iv.setCursor(Cursor.HAND);
+                locationX = e1.getX();
+                locationY = e1.getY();
+                iv.setOnMouseExited(e3->{
+                    iv.setCursor(Cursor.DEFAULT);
+                });
+            });
+            iv.setOnMouseDragged(e2->{
+                double deltaX = e2.getX()-locationX;
+                double deltaY = e2.getY()-locationY;
+                double movedlocationX = iv.getTranslateX()+deltaX;
+                double movedlocationY = iv.getTranslateY()+deltaY;
+                iv.setTranslateX(movedlocationX);
+                iv.setTranslateY(movedlocationY);
+                imagecon.setLocationX(x);
+                imagecon.setLocationY(y);
+            });
+            iv.setOnMouseClicked(e3->{
+                selectedImage(iv);
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(rvmmData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void removeImage(imageContainer image){
+        images.remove(image);
+    }
+    
+    public ArrayList<imageContainer> getImages(){
         return images;
     }
-    public ArrayList<String> getImagesPath(){
-        return imagesPath;
-    }
-    public void addImageInList(ImageView image){
-        images.add(image);
-    }
-    public void addImagePath(String path){
-        imagesPath.add(path);
-    }
-    public void removeImageInList(ImageView image){
-        if(images.contains(image)){
-            images.remove(image);
+    
+    public void selectedImage(ImageView currentImage){
+        if(selectedImage!= null){
+            selectedImage.setScaleX(selectedImage.getScaleX()-0.05);
+            selectedImage.setScaleY(selectedImage.getScaleY()-0.05);
         }
-    }
-    public void removeImagePath(String path){
-        if(imagesPath.contains(path)){
-            imagesPath.remove(path);
-        }
+        selectedImage = currentImage;
+        
+        currentImage.setScaleX(currentImage.getScaleX()+0.05);
+        currentImage.setScaleY(currentImage.getScaleY()+0.05);
+        
     }
     
     

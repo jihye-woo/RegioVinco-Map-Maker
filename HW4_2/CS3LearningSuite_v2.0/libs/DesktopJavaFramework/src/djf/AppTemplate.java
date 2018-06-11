@@ -202,21 +202,9 @@ public abstract class AppTemplate extends Application {
      * for its Undo/Redo system.
      */
     public jTPS getTPS() { 
-        return tps; 
+        return tps;
     }
  
-//    public MapMakerChangeDiemensionDialog getMapMakerChangeDiemensionDialog(){
-//        return appdialogsdiemensionDialogs;
-//    }
-//    
-//    public MapMakerDialog getMapMakerDialog(){
-//        return creatnewmapdialogs;
-//    }
-//    
-//    public MapMakerEditDialog getMapMakerEditDialog(){
-//        return editdialogs;
-//    }
-    
     /**
      * This is where our Application begins its initialization, it will load
      * the custom app properties, build the modules and components, and open
@@ -288,7 +276,6 @@ public abstract class AppTemplate extends Application {
                     // BEFORE CONTINUING ON TO THE APPLICATION WINDOW
                     AppDialogsFacade.showWelcomeDialog(this);                
                 }
-                
                  primaryStage.show();
                 // NOW OPEN UP THE APPLICATION WINDOW
                

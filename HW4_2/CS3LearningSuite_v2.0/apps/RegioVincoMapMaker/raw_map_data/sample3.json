@@ -1,10 +1,10 @@
 
 {
     "NUMBER_OF_SUBREGIONS":8,
-    "SCALE_X":1.0,
-    "SCALE_Y":1.0,
-    "TRANSLATE_X":0.0,
-    "TRANSLATE_Y":0.0,
+    "SCALE_X":34.76056289457023,
+    "SCALE_Y":34.76056289457023,
+    "TRANSLATE_X":-320.8977084553332,
+    "TRANSLATE_Y":5431.019136785861,
     "SUBREGIONS":[
         {
             "NUMBER_OF_SUBREGION_POLYGONS":2,
@@ -63797,9 +63797,9 @@
     "number_of_image":1,
     "image":[
         {
-            "image_translateX":118.66666666666669,
-            "image_translateY":129.33333333333334,
-            "image_path":"./images/Albania%20Flag.png"
+            "image_translateX":150.0,
+            "image_translateY":100.0,
+            "image_path":"\\images\\Albania Flag.png"
         }
     ]
 }

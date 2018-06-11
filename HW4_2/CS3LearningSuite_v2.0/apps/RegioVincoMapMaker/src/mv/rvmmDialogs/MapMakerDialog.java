@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -117,10 +118,10 @@ public class MapMakerDialog extends Stage{
     }
     public void okButtonUpdate(){
         if(datachoosen && parentchoosen){
-              okButton.setDisable(false);
-        }
-        else{
-             okButton.setDisable(true);
+            filePath = fileForDirectory.getAbsolutePath();
+            f = new File(filePath, regionNameTextField.getText());
+            f.mkdirs();
+            okButton.disableProperty().bind(Bindings.isEmpty(regionNameTextField.textProperty()));
         }
     }
     
@@ -170,7 +171,6 @@ public class MapMakerDialog extends Stage{
     //                AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
                 }
             hide();
-           
         });
         showAndWait();
     }

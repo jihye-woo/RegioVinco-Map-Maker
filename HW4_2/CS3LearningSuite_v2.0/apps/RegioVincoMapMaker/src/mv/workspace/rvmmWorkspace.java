@@ -1,13 +1,17 @@
 package mv.workspace;
 
 import djf.AppPropertyType;
+import static djf.AppPropertyType.SAVE_ERROR_CONTENT;
+import static djf.AppPropertyType.SAVE_ERROR_TITLE;
 import djf.components.AppWorkspaceComponent;
 import djf.AppTemplate;
+import djf.modules.AppFileModule;
 import static djf.modules.AppGUIModule.ENABLED;
 import static djf.modules.AppGUIModule.FOCUS_TRAVERSABLE;
 import static djf.modules.AppGUIModule.HAS_KEY_HANDLER;
 import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
+import djf.ui.dialogs.AppDialogsFacade;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +21,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -90,7 +93,6 @@ import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXPORT;
 
 import static mv.MapMakerPropertyType.*;
 import mv.data.rvmmData;
-import mv.files.rvmmFiles;
 import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
 import static mv.workspace.style.MapViewerStyle.*;
 
@@ -104,6 +106,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     double locationX;
     double locationY;
     ImageView selectedImage = new ImageView();
+    rvmmData data;
     
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
@@ -122,6 +125,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         AppFileController controller = new AppFileController((AppTemplate)app);
         rvmmDialogController dialogController = new rvmmDialogController((AppTemplate) app);
         rvmmButtonController buttonController = new rvmmButtonController((RegioVincoMapMakerApp) app);
+        
         // AND THIS WILL BE USED TO CLIP THE MAP SO WE CAN ZOOM
         BorderPane outerMapPane = new BorderPane();
         Rectangle clippingRectangle = new Rectangle();
@@ -167,6 +171,13 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         Button save = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_SAVE, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         save.setOnAction(e->{
             controller.processSaveRequest();
+//            AppFileModule afm = app.getFileModule();
+//            data = (rvmmData) app.getDataComponent();
+//                try {
+//                    afm.saveWork(new File(data.getFilePath()));
+//                } catch (IOException ex) {
+//                    Logger.getLogger(rvmmWorkspace.class.getName()).log(Level.SEVERE, null, ex);
+//                }
         });
         
         Button export =workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXPORT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -196,37 +207,17 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button addImage = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_ADDIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         addImage.setOnAction(e->{
-             File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
+          File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
           ImageView imageView;
           imageView = new ImageView(file.toURI().toString());
-            if(imageView !=null){
-                leftArea.getChildren().add(imageView);
-                rvmmData data = (rvmmData) app.getDataComponent();
-                data.addImageInList(imageView);
-                data.addImagePath(file.toURI().toString());
-                imageView.setOnMousePressed(e1->{
-                    imageView.setCursor(Cursor.HAND);
-                    locationX = e1.getX();
-                    locationY = e1.getY();
-                    imageView.setOnMouseExited(e3->{
-                        imageView.setCursor(Cursor.DEFAULT);
-                    });
-                });
-                imageView.setOnMouseDragged(e2->{
-                    double deltaX = e2.getX()-locationX;
-                    double deltaY = e2.getY()-locationY;
-                    imageView.setTranslateX(imageView.getTranslateX()+deltaX);
-                    imageView.setTranslateY(imageView.getTranslateY()+deltaY);
-                });
-                imageView.setOnMouseClicked(e3->{
-                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
-                });
-            }
+            data = (rvmmData) app.getDataComponent();
+            data.addImage(file.getAbsolutePath(), locationX, locationY);
+//            }
         });
         Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-//        removeImage.setOnAction(e->{
-//            buttonController.processRemoveImage(leftArea, selectedImage);
-//        });
+        removeImage.setOnAction(e->{
+            buttonController.processRemoveImage(leftArea, selectedImage);
+        });
         
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Button bottomleft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_BOTTOMLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -242,7 +233,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             originalX = e.getX();
             originalY = e.getY();
         });
-        
         mapPane.setOnMouseDragged(e->{
             double transX = e.getX()-originalX;
             double transY = e.getY()-originalY;

@@ -57,45 +57,6 @@ public class rvmmButtonController {
           data = new rvmmData((RegioVincoMapMakerApp) app);
       }
       
-//      public void processAddImage(Pane leftArea, ImageView selectedImage){
-//          File file = showOpenParentsDialog(app.getGUIModule().getWindow(), AppPropertyType.APP_TITLE);
-//          ImageView imageView;
-//          imageView = new ImageView(file.toURI().toString());
-//            if(imageView !=null){
-//                leftArea.getChildren().add(imageView);
-//                data.addImageInList(imageView);
-//                data.addImagePath(file.toURI().toString());
-//                imageView.setOnMousePressed(e1->{
-//                    imageView.setCursor(Cursor.HAND);
-//                    locationX = e1.getX();
-//                    locationY = e1.getY();
-//                    imageView.setOnMouseExited(e3->{
-//                        imageView.setCursor(Cursor.DEFAULT);
-//                    });
-//                });
-//                imageView.setOnMouseDragged(e2->{
-//                    double deltaX = e2.getX()-locationX;
-//                    double deltaY = e2.getY()-locationY;
-//                    imageView.setTranslateX(imageView.getTranslateX()+deltaX);
-//                    imageView.setTranslateY(imageView.getTranslateY()+deltaY);
-//                });
-//                imageView.setOnMouseClicked(e3->{
-//                    imageView.setStyle(CLASS_RVMM_SELECTEDIMAGE);
-//                    changeSelectedImage(imageView, selectedImage);
-//                });
-//            }
-//      }
-      
-      private void changeSelectedImage(ImageView currentImage, ImageView selectedBefore){
-          if(selectedBefore !=null ){
-            selectedBefore.getStyleClass().clear();
-          }
-          currentImage = selectedBefore;
-          // need highlighting
-      }
-      private void removeSelectedImage(ImageView selectedImage){
-          data.removeImageInList(selectedImage);
-      }
       
       public void processRemoveImage(Pane leftArea, ImageView selectedImage){
           if(leftArea.getChildren().contains(selectedImage)){

@@ -22363,12 +22363,7 @@
             ]
         }
     ],
-    "number_of_image":1,
+    "number_of_image":0,
     "image":[
-        {
-            "image_translateX":178.66666666666666,
-            "image_translateY":162.0,
-            "image_path":"./images/Albania%20Flag.png"
-        }
     ]
 }

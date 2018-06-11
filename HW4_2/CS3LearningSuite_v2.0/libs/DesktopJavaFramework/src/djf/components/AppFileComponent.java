@@ -24,6 +24,7 @@ public interface AppFileComponent {
      */
     public void loadData(AppDataComponent data, String filePath) throws IOException;
 
+    public void loadSavedData(AppDataComponent data, String filePath) throws IOException;
     /**
      * This function must be overridden in the actual component and would
      * be used for exporting app data into another format.
@@ -36,5 +37,6 @@ public interface AppFileComponent {
      */
     public void importData(AppDataComponent data, String filePath) throws IOException;
  
-    public void loadSavedData(AppDataComponent data, String filePath)throws IOException;
+    
+    
 }
