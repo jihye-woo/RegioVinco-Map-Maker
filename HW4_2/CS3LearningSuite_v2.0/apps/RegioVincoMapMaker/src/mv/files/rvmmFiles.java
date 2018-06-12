@@ -162,7 +162,7 @@ public class rvmmFiles implements AppFileComponent {
             JsonObject imagesData = Json.createObjectBuilder()
                     .add(JSON_IMAGE_TRANSLATEX, leftArea.getChildren().get(i+1).getTranslateX())
                     .add(JSON_IMAGE_TRANSLATEY, leftArea.getChildren().get(i+1).getTranslateY())
-                    .add(JSON_IMAGE_PATH, getRelativePath(images.get(i).getImagePath()))
+                    .add(JSON_IMAGE_PATH, images.get(i).getImagePath())
                     .build();
             imagesArray.add(imagesData);
         }
@@ -197,8 +197,8 @@ public class rvmmFiles implements AppFileComponent {
 	pw.write(prettyPrinted);
 	pw.close();
     }
-    
-    public void SavedData(AppDataComponent data, String filePath) throws IOException{
+    @Override
+    public void loadData(AppDataComponent data, String filePath) throws IOException{
         rvmmData mapData = (rvmmData)data;
         mapData.reset();
         
@@ -268,8 +268,7 @@ public class rvmmFiles implements AppFileComponent {
             mapData.addImage(absolPath+imagePath.getString(), imageTranslateX, imageTranslateY);
             }
     }
-    @Override
-    public void loadData(AppDataComponent data, String filePath) throws IOException {
+    public void SavedData(AppDataComponent data, String filePath) throws IOException {
         rvmmData mapData = (rvmmData)data;
         mapData.reset();
         

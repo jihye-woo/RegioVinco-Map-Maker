@@ -13,7 +13,6 @@ import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_OKBUTTON;
 import static djf.AppPropertyType.MAP_DIMENSIONS_DIALOG_WIDTH_BUTTON;
 import djf.AppTemplate;
 import djf.modules.AppLanguageModule;
-import static djf.ui.style.DJFStyle.CLASS_DJF_WELCOME_BANNER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_HEADER;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_LABEL;
 import static djf.ui.style.DJFStyle.CLASS_RVMM_DIALOG_OK;
@@ -27,7 +26,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
 
 /**
@@ -47,17 +49,11 @@ public class MapMakerChangeDiemensionDialog extends Stage{
     
     public MapMakerChangeDiemensionDialog(AppTemplate initApp){
         app = initApp;
-        
         gridPane = new GridPane();
-//        gridPane.getStyleClass().add(CLASS_RVMM_DIALOG_GRID);
         initDialog();
-
         Scene scene = new Scene(gridPane);
         this.setScene(scene);
-
-       app.getGUIModule().initStylesheet(this);
-//        scene.getStylecheets().add(CLASS_RVMM_DIALOG_GRID);
-
+        app.getGUIModule().initStylesheet(this);
     }
     
     protected void initGridNode(Node node, Object nodeId, String styleClass, int col, int row, int colSpan, int rowSpan, boolean isLanguageDependent) {
@@ -70,7 +66,7 @@ public class MapMakerChangeDiemensionDialog extends Stage{
         }
         if (col >= 0)
             gridPane.add(node, col, row, colSpan, rowSpan);
-            node.getStyleClass().add(styleClass);
+        node.getStyleClass().add(styleClass);
     }
     
     private void initDialog(){
@@ -85,26 +81,35 @@ public class MapMakerChangeDiemensionDialog extends Stage{
 //        AppLanguageModule languageSettings = app.getLanguageModule();
 //        languageSettings.addLabeledControlProperty(MAP_DIMENSIONS_DIALOG_OKBUTTON + "_TEXT",    okButton.textProperty());
 //        app.getGUIModule().addGUINode(MAP_DIMENSIONS_DIALOG_OKBUTTON, okButton);
-        gridPane.setPadding(new Insets(30, 20, 20, 20));
-        gridPane.setVgap(5);
-        gridPane.setHgap(50);
-        gridPane.setHalignment(headerLabel, HPos.CENTER);
-        
-        okButton.setOnAction(e->{
-            this.hide();
-        });
+gridPane.setPadding(new Insets(30, 20, 20, 20));
+gridPane.setVgap(5);
+gridPane.setHgap(50);
+gridPane.setHalignment(headerLabel, HPos.CENTER);
+
     }
     
-    public void showAddChangeDialog(){
+    public void showChangeDiemensionDialog(){
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String headerText = props.getProperty(MAP_DIMENSIONS_DIALOG_HEADER_LABEL_TEXT);
         headerLabel.setText(headerText);
         setTitle(headerText);
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
         heightLabel.setText(props.getProperty(MAP_DIMENSIONS_DIALOG_HEIGHT_LABEL_TEXT));
-        heightTextField.setText("");
-        widthTextField.setText("");
-        
+        rvmmData data = (rvmmData) app.getDataComponent();
+        Pane leftArea = (Pane) data.getMap().getParent();
+        heightTextField.setText(Double.toString(leftArea.getWidth()));
+        widthTextField.setText(Double.toString(data.getMap().getWidth()));
+        okButton.setOnAction(e->{
+//            Rectangle clippingLeft = new Rectangle();
+//            leftArea.setClip(clippingLeft);
+//            clippingLeft.widthProperty().bind(leftArea.widthProperty());
+//            clippingLeft.heightProperty().bind(leftArea.heightProperty());
+//            clippingLeft.xProperty().set(Double.parseDouble(heightTextField.getText()));
+//            clippingLeft.yProperty().set(Double.parseDouble(widthTextField.getText()));
+//            leftArea.setTranslateX(0);
+//            leftArea.setTranslateY(0);
+            this.hide();
+        });
         showAndWait();
     }
 }

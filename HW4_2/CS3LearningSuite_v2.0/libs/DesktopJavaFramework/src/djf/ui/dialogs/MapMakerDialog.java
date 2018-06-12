@@ -188,12 +188,6 @@ public class MapMakerDialog extends Stage {
             } catch (IOException ex) {
 //                    AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
             }
-//            try {
-//                Files.copy(fileForData.toPath(), f.toPath(), REPLACE_EXISTING);
-//                sucessToCreate(createSuccess);
-//            } catch (IOException ex) {
-//                 AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
-//            }
             hide();
         });
         showAndWait();

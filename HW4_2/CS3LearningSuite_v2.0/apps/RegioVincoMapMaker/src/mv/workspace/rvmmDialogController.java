@@ -44,7 +44,7 @@ public class rvmmDialogController {
     }
     
     public void processChangeDimensions(){
-        mapMakerChangeDialogs.showAddChangeDialog();
+        mapMakerChangeDialogs.showChangeDiemensionDialog();
     }
     
     public void processEditSubregion(){

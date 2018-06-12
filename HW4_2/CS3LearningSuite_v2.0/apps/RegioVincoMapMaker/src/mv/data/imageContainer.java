@@ -19,12 +19,12 @@ public class imageContainer {
     double locationX;
     double locationY;
     String imagePath;
-    String imageName;
+//    String imageName;
     
     public imageContainer(Image images, String imagePath, double x, double y){
         this.image = new ImageView(images);
-        this.imagePath = imagePath;
-        imageName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+        imagePath = imagePath.substring(imagePath.lastIndexOf("images"));
+        this.imagePath = "\\"+imagePath;
         locationX = x;
         locationY = y;
     }
@@ -43,9 +43,9 @@ public class imageContainer {
     public double getLocationY(){
         return locationY;
     } 
-    public String getImageName(){
-        return imageName;
-    }
+//    public String getImageName(){
+//        return imageName;
+//    }
     public String getImagePath(){
         return imagePath;
     }

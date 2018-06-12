@@ -51,12 +51,9 @@ public class rvmmButtonController {
     double locationY = 0;
     rvmmData data;
     
-      
       public rvmmButtonController(RegioVincoMapMakerApp initApp){
           app = initApp;
-          data = new rvmmData((RegioVincoMapMakerApp) app);
       }
-      
       
       public void processRemoveImage(Pane leftArea, ImageView selectedImage){
           if(leftArea.getChildren().contains(selectedImage)){
@@ -69,6 +66,21 @@ public class rvmmButtonController {
           mapPane.setScaleY(1);
           mapPane.setTranslateX(0);
           mapPane.setTranslateY(0);
+      }
+      public void processSanpTopLeft(){
+            data = (rvmmData) app.getDataComponent();
+            if(data.getSelectedImage()!=null){
+                data.getSelectedImage().setTranslateX(30);
+                data.getSelectedImage().setTranslateY(30);
+            }
+      }
+      public void processSanpBottomleft(){
+            data = (rvmmData) app.getDataComponent();
+            if(data.getSelectedImage()!=null){
+                data.getSelectedImage().setTranslateX(30);
+                Pane leftArea = (Pane) data.getMap().getParent();
+                data.getSelectedImage().setTranslateY(leftArea.getHeight()-data.getSelectedImage().getImage().getHeight()-30);
+            }
       }
       
       public void processFitToPoly(Pane mapPane, Button FitToPoly){

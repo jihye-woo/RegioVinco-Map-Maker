@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -15,15 +17,12 @@ import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
-import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_SELECTEDIMAGE;
 
 /**
  *
@@ -41,14 +40,12 @@ public class rvmmData implements AppDataComponent {
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
-    // LINE THICKNESS AT SCALE 1.0
-    final double DEFAULT_LINE_THICKNESS = 0.05;
-    
+//    double LINE_THICKNESS = 0.05;
+    ColorAndThickness colorController;
     // for save
     boolean haveCapital=true;
     boolean haveflags=true;
     boolean haveleaders=true;
-    HashMap<String, Color> subRegionToColorMappings;
     ArrayList<imageContainer> images;
     ImageView selectedImage;
     
@@ -61,6 +58,7 @@ public class rvmmData implements AppDataComponent {
         subregions = new HashMap();
         map = (Pane) app.getGUIModule().getGUINode(MV_MAP_PANE);
         images = new ArrayList<imageContainer>();
+        colorController = new ColorAndThickness();
     }
     public RegioVincoMapMakerApp getApp(){
         return app;
@@ -83,17 +81,15 @@ public class rvmmData implements AppDataComponent {
     public Pane getMap(){
         return map;
     }
-    public HashMap<String, Color> getSubRegionToColorMappings(){
-        return subRegionToColorMappings;
-    }
     public void setFilePath(String currentFilePath){
         filePath = currentFilePath;
     }
     public String getFilePath(){
         return filePath;
     }
-    
-    
+    public ColorAndThickness getColorController(){
+        return colorController;
+    }
     @Override
     public void reset() {
         // CLEAR THE DATA
@@ -134,9 +130,17 @@ public class rvmmData implements AppDataComponent {
                 transformedPolygonPoints.addAll(x, y);
             }
             subregionPolygons.add(polygonToAdd);
+            
+            String GREY_STYLE ="-fx-fill: rgb("+(255-i)+","+(255-i)+","+(255-i)+")";
+            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%, coral, derive(red, -30%), derive(red, 30%));";
+            polygonToAdd.styleProperty()
+                    .bind(Bindings.when(polygonToAdd.hoverProperty())
+                            .then(new SimpleStringProperty(HOVERED_STYLE))
+                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
             polygonToAdd.getStyleClass().add(CLASS_MV_MAP);
-            polygonToAdd.setStroke(Color.BLACK);
-            polygonToAdd.setStrokeWidth(DEFAULT_LINE_THICKNESS);
+//            polygonToAdd.setStroke(colorController.LINE_COLOR);
+            polygonToAdd.strokeProperty().bind(colorController.LINE_COLOR);
+            polygonToAdd.strokeWidthProperty().bind(colorController.LINE_THICKNESS);
             polygonToAdd.setUserData(subregionId);
             map.getChildren().add(polygonToAdd);
         }
@@ -209,7 +213,6 @@ public class rvmmData implements AppDataComponent {
         } catch (IOException ex) {
             Logger.getLogger(rvmmData.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
     public void removeImage(imageContainer image){
@@ -229,7 +232,9 @@ public class rvmmData implements AppDataComponent {
         
         currentImage.setScaleX(currentImage.getScaleX()+0.05);
         currentImage.setScaleY(currentImage.getScaleY()+0.05);
-        
+    }
+    public ImageView getSelectedImage(){
+        return selectedImage;
     }
     
     

@@ -17,20 +17,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -43,54 +36,6 @@ import javafx.scene.shape.Rectangle;
 import static mv.MapMakerPropertyType.CREATEMAP_BUTTON;
 import properties_manager.PropertiesManager;
 import mv.RegioVincoMapMakerApp;
-import static mv.MapMakerPropertyType.MV_LABEL;
-import static mv.MapMakerPropertyType.MV_MAP_HBOX1;
-import static mv.MapMakerPropertyType.MV_MAP_HBOX2;
-import static mv.MapMakerPropertyType.MV_MAP_PANE;
-import static mv.MapMakerPropertyType.MV_MOVE_DOWN_BUTTON;
-import static mv.MapMakerPropertyType.MV_MOVE_UP_BUTTON;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_1LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_2LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_3LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_4LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_5LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_COLORPICKER;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_SLIDER1;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_SLIDER2;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM1_SLIDER3;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_1LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_2LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_3LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_4LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_5LABEL;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_CHECKBOX;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_COLORPICKER;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_COMBOBOX;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_SLIDER1;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM2_SLIDER2;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM_RIGHTAREA1;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM_RIGHTAREA2;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM_RIGHTAREA3;
-import static mv.MapMakerPropertyType.RVMM_BOTTOM_RIGHTAREA4;
-import static mv.MapMakerPropertyType.RVMM_MAIN_TOOLBAR;
-import static mv.MapMakerPropertyType.RVMM_RIGHTAREA;
-import static mv.MapMakerPropertyType.RVMM_SUBTOOLBAR4;
-import static mv.MapMakerPropertyType.RVMM_SUBTOOLBAR5;
-import static mv.MapMakerPropertyType.RVMM_TABLE;
-import static mv.MapMakerPropertyType.RVMM_TABLECOL1;
-import static mv.MapMakerPropertyType.RVMM_TABLECOL2;
-import static mv.MapMakerPropertyType.RVMM_TABLECOL3;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR1;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR2;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR3;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR4;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR5;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_ADDIMAGE;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_BOTTOMLEFT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_CHANGE;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXIT;
-import static mv.MapMakerPropertyType.RVMM_TOOLBAR_BUTTON_EXPORT;
-
 import static mv.MapMakerPropertyType.*;
 import mv.data.rvmmData;
 import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
@@ -135,8 +80,10 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         s1.setMin(0);
         Pane mapPane = new Pane();
         File imagefile;
-      
+        Pane leftBasedArea = new Pane();
         Pane leftArea = new Pane();
+//        leftBasedArea.getChildren().add(leftArea);
+//        leftArea.getChildren().add(leftBasedArea);
         VBox rightArea = workspaceBuilder.buildVBox(RVMM_RIGHTAREA, null, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox1 = workspaceBuilder.buildHBox(MV_MAP_HBOX1, rightArea, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Label vboxLabel = workspaceBuilder.buildLabel(MV_LABEL, hbox1, null, CLASS_MV_MAP_VBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -146,7 +93,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         SplitPane sp = new SplitPane(leftArea,rightArea);
         sp.setOrientation(Orientation.HORIZONTAL);
         sp.setDividerPositions(0.6);
-        Rectangle clipTable = new Rectangle();
+//        Rectangle clipTable = new Rectangle();
         
         //ToolBar
         Pane topToolBar = new Pane();
@@ -170,14 +117,14 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button save = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_SAVE, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         save.setOnAction(e->{
-            controller.processSaveRequest();
-//            AppFileModule afm = app.getFileModule();
-//            data = (rvmmData) app.getDataComponent();
-//                try {
-//                    afm.saveWork(new File(data.getFilePath()));
-//                } catch (IOException ex) {
-//                    Logger.getLogger(rvmmWorkspace.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+//            controller.processSaveRequest();
+            AppFileModule afm = app.getFileModule();
+            data = (rvmmData) app.getDataComponent();
+                try {
+                    afm.saveWork(new File(data.getFilePath()));
+                } catch (IOException ex) {
+                    Logger.getLogger(rvmmWorkspace.class.getName()).log(Level.SEVERE, null, ex);
+                }
         });
         
         Button export =workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXPORT, toolbar1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -220,11 +167,16 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        topLeft.setOnAction(e->{
+            buttonController.processSanpTopLeft();
+        });
         Button bottomleft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_BOTTOMLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        Button change = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_CHANGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        Button extend = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXTEND, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        
-        extend.setOnAction(e->{
+        bottomleft.setOnAction(e->{
+            buttonController.processSanpBottomleft();
+        });
+        Button changeColor = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_CHANGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        Button resize = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXTEND, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        resize.setOnAction(e->{
             dialogController.processChangeDimensions();
         });
         
@@ -264,7 +216,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             }
         });
         
-        
         //toolbar4
         Label toggleFrameBoxLabel = workspaceBuilder.buildLabel(RVMM_TOOLBAR_CHECKBOX1_LABEL, subtoolbar4, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         CheckBox toggleFrameBox = workspaceBuilder.buildCheckBox(RVMM_TOOLBAR_CHECKBOX1, subtoolbar4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -274,10 +225,15 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         //toolbar5
         Label borderColorPickerLabel = workspaceBuilder.buildLabel(RVMM_TOOLBAR_COLORPICKER_LABEL, toolbar5, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         ColorPicker borderColorPicker = workspaceBuilder.buildColorPicker(RVMM_TOOLBAR_COLORPICKER, toolbar5, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        borderColorPicker.setOnAction(e->{
+            ((rvmmData)app.getDataComponent()).getColorController().changeColor(borderColorPicker.getValue());
+        });
+        
         Label borderThicknessSliderLabel = workspaceBuilder.buildLabel(RVMM_TOOLBAR_SLIDER_LABEL, toolbar5, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Slider borderThicknessSlider = workspaceBuilder.buildSlider(RVMM_TOOLBAR_SLIDER, toolbar5, null, CLASS_RVMM_CHECKBOX, 0, 1, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        borderThicknessSlider.setMajorTickUnit(0.5);
-        
+        borderThicknessSlider.setMajorTickUnit(0.05);
+        borderThicknessSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> ((rvmmData)app.getDataComponent()).getColorController().changeThinkness(newVal.doubleValue()/mapPane.getScaleX()));
         outerMapPane.setCenter(sp);
         
         //Hbox1 -2
@@ -345,7 +301,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
         app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
         app.getGUIModule().addGUINode(RVMM_LEFT_MAP, leftArea);
-        
         mapPane.minWidthProperty().bind(outerMapPane.widthProperty());
         mapPane.maxWidthProperty().bind(outerMapPane.widthProperty());
         mapPane.minHeightProperty().bind(outerMapPane.heightProperty());
