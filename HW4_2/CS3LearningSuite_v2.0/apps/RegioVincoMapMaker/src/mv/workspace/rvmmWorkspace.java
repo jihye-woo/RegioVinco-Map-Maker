@@ -175,6 +175,9 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             buttonController.processSanpBottomleft();
         });
         Button changeColor = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_CHANGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        changeColor.setOnAction(e->{
+            buttonController.processAssginRandomColor();
+        });
         Button resize = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_EXTEND, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         resize.setOnAction(e->{
             dialogController.processChangeDimensions();
@@ -249,7 +252,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         table.setOnMouseClicked(e->{
             if(e.getButton().equals(MouseButton.PRIMARY)){
                 if(e.getClickCount()==2){
-                     dialogController.processEditSubregion();
+//                     dialogController.processEditSubregion();
                 }
             }
         });

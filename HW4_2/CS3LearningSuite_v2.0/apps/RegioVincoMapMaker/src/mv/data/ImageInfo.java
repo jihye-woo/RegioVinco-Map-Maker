@@ -14,14 +14,14 @@ import javafx.scene.image.ImageView;
  *
  * @author Jihye
  */
-public class imageContainer {
+public class ImageInfo {
     ImageView image;
     double locationX;
     double locationY;
     String imagePath;
 //    String imageName;
     
-    public imageContainer(Image images, String imagePath, double x, double y){
+    public ImageInfo(Image images, String imagePath, double x, double y){
         this.image = new ImageView(images);
         imagePath = imagePath.substring(imagePath.lastIndexOf("images"));
         this.imagePath = "\\"+imagePath;

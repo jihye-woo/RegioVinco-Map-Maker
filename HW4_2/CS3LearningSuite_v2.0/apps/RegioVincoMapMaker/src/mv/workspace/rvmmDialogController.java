@@ -5,15 +5,8 @@
 */
 package mv.workspace;
 
-import djf.AppPropertyType;
-import static djf.AppPropertyType.LOAD_WORK_TITLE;
 import djf.AppTemplate;
-import static djf.AppTemplate.PATH_MAP;
-
-import java.io.File;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import properties_manager.PropertiesManager;
+import javafx.scene.shape.Polygon;
 import mv.rvmmDialogs.MapMakerChangeDiemensionDialog;
 import mv.rvmmDialogs.MapMakerDialog;
 import mv.rvmmDialogs.MapMakerEditDialog;
@@ -47,8 +40,8 @@ public class rvmmDialogController {
         mapMakerChangeDialogs.showChangeDiemensionDialog();
     }
     
-    public void processEditSubregion(){
-        mapMakerEditDialog.showAddMapMakerEditDialog();
+    public void processEditSubregion(Polygon p){
+        mapMakerEditDialog.showMapMakerEditDialog();
     }
     
     public void processRename(){

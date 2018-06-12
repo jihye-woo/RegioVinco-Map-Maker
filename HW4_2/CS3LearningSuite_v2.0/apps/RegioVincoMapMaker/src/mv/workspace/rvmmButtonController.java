@@ -60,6 +60,10 @@ public class rvmmButtonController {
            leftArea.getChildren().remove(selectedImage);
           }
       }
+      public void processAssginRandomColor(){
+          rvmmData data = (rvmmData) app.getDataComponent();
+          data.randomizePainter();
+      }
       
       public void processResetViewport(Pane mapPane, Button resetviewport){
           mapPane.setScaleX(1);

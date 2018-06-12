@@ -1,3 +1,4 @@
+jijij-work/jijij/jijij.json
 ko-work/ko/ko.json
 hh-work/hh/hh.json
 h-work/h/h.json

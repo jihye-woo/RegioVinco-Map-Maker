@@ -44,7 +44,7 @@ import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
 import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
-import mv.data.imageContainer;
+import mv.data.ImageInfo;
 import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
 
@@ -120,7 +120,7 @@ public class rvmmFiles implements AppFileComponent {
 //            Files.copy(appfilemodule.getWorkFile().toPath(), f.toPath(), REPLACE_EXISTING);
 //            filePath = f.getAbsolutePath();
 //        }
-        ArrayList<imageContainer> images = rvmmdata.getImages();
+        ArrayList<ImageInfo> images = rvmmdata.getImages();
         
 	// NOW BUILD THE JSON ARRAY FOR THE LIST
 	JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -253,7 +253,7 @@ public class rvmmFiles implements AppFileComponent {
         
         int numOfImages = getDataAsInt(json, JSON_NUM_OF_IMAGE);
         JsonArray jsonimagesArray = json.getJsonArray(JSON_IMAGE);
-        ArrayList<imageContainer> imageData = mapData.getImages();
+        ArrayList<ImageInfo> imageData = mapData.getImages();
             for(int i=0; i<numOfImages; i++){
             JsonObject image = jsonimagesArray.getJsonObject(i);
              double imageTranslateX = image.getJsonNumber(JSON_IMAGE_TRANSLATEX).doubleValue();
@@ -379,9 +379,9 @@ public class rvmmFiles implements AppFileComponent {
                 
         JsonObject rvmmViewerDataJSO = Json.createObjectBuilder()
                 .add(JSON_MAP_NAME, fileName)
-                .add(JSON_CAPITALS, rvmmdata.getHaveCapital())
-                .add(JSON_FLAGS, rvmmdata.getHaveflags())
-                .add(JSON_LEADERS, rvmmdata.getHaveLeaders())
+                .add(JSON_CAPITALS, true)
+                .add(JSON_FLAGS, true)
+                .add(JSON_LEADERS, true)
                 .add(JSON_SUBREGIONS_DATA, subregions)
                 .build();
         

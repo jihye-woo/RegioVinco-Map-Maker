@@ -33,7 +33,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+import mv.data.rvmmData;
 
 import properties_manager.PropertiesManager;
 
@@ -61,11 +63,9 @@ public class MapMakerEditDialog extends Stage{
     
     public MapMakerEditDialog(AppTemplate initApp){
         app = initApp;
-        
         gridPane = new GridPane();
 //        gridPane.getStyleClass().add(CLASS_RVMM_DIALOG_GRID);
         initDialog();
-
         Scene scene = new Scene(gridPane);
         this.setScene(scene);
 
@@ -123,13 +123,23 @@ public class MapMakerEditDialog extends Stage{
         
     }
     
-    public void showAddMapMakerEditDialog(){
+    public void showMapMakerEditDialog(){
         PropertiesManager props = PropertiesManager.getPropertiesManager();
+        rvmmData data = (rvmmData) app.getDataComponent();
         String headerText = props.getProperty(EDITSUB_DIALOG_HEADER_LABEL_TEXT);
         headerLabel.setText(headerText);
         setTitle(headerText);
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
-        
+        regionNameTextField.setText("");
+        showAndWait();
+    }
+    public void showMapMakerEditDialogByPolygon(Polygon p){
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        rvmmData data = (rvmmData) app.getDataComponent();
+        String headerText = props.getProperty(EDITSUB_DIALOG_HEADER_LABEL_TEXT);
+        headerLabel.setText(headerText);
+        setTitle(headerText);
+        headerLabel.setAlignment(Pos.CENTER_RIGHT);
         regionNameTextField.setText("");
         showAndWait();
     }

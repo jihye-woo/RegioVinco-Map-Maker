@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
@@ -17,11 +18,13 @@ import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
+import mv.workspace.rvmmDialogController;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
 
 /**
@@ -33,20 +36,18 @@ public class rvmmData implements AppDataComponent {
     RegioVincoMapMakerApp app;
     
     String filePath;
-    
     double locationX; double locationY;
-    // THE PANE WHERE WE'RE PUTTING ALL THE POLYGONS
+    // THE PANE 
     Pane map; Pane leftArea;
     // THE POLYGONS
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions;
-//    double LINE_THICKNESS = 0.05;
-    ColorAndThickness colorController;
-    // for save
-    boolean haveCapital=true;
-    boolean haveflags=true;
-    boolean haveleaders=true;
-    ArrayList<imageContainer> images;
+    ArrayList<SubRegionInfo> infoRegions;
+//    HashMap<Color, SubRegionInfo> infoRegions;
+    // Color and Thickness
+    ColorAndThicknessInfo colorController;
+    // Images
+    ArrayList<ImageInfo> images;
     ImageView selectedImage;
     
     /**
@@ -57,20 +58,16 @@ public class rvmmData implements AppDataComponent {
         app = initApp;
         subregions = new HashMap();
         map = (Pane) app.getGUIModule().getGUINode(MV_MAP_PANE);
-        images = new ArrayList<imageContainer>();
-        colorController = new ColorAndThickness();
+        images = new ArrayList<ImageInfo>();
+        colorController = new ColorAndThicknessInfo();
+//        infoRegions= new HashMap<Color, SubRegionInfo>();
+        infoRegions = new ArrayList<SubRegionInfo>();
+    }
+    public ArrayList<SubRegionInfo> getSubRegionInfo(){
+        return infoRegions;
     }
     public RegioVincoMapMakerApp getApp(){
         return app;
-    }
-    public boolean getHaveCapital(){
-        return haveCapital;
-    }
-    public boolean getHaveflags(){
-        return haveflags;
-    }
-    public boolean getHaveLeaders(){
-        return haveleaders;
     }
     public ObservableList<Polygon> getSubregion(int id) {
         return subregions.get(id);
@@ -87,7 +84,7 @@ public class rvmmData implements AppDataComponent {
     public String getFilePath(){
         return filePath;
     }
-    public ColorAndThickness getColorController(){
+    public ColorAndThicknessInfo getColorController(){
         return colorController;
     }
     @Override
@@ -118,6 +115,8 @@ public class rvmmData implements AppDataComponent {
      */
     public void addSubregion(ArrayList<ArrayList<Double>> rawPolygons) {
         ObservableList<Polygon> subregionPolygons = FXCollections.observableArrayList();
+        ArrayList<Integer> rgbNumList = randomNumGenertator(rawPolygons.size());
+//        ArrayList<Integer> pixelsOfSubregions = new ArrayList<Integer>();
         for (int i = 0; i < rawPolygons.size(); i++) {
             ArrayList<Double> rawPolygonPoints = rawPolygons.get(i);
             Polygon polygonToAdd = new Polygon();
@@ -130,24 +129,56 @@ public class rvmmData implements AppDataComponent {
                 transformedPolygonPoints.addAll(x, y);
             }
             subregionPolygons.add(polygonToAdd);
-            
-            String GREY_STYLE ="-fx-fill: rgb("+(255-i)+","+(255-i)+","+(255-i)+")";
-            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%, coral, derive(red, -30%), derive(red, 30%));";
-            polygonToAdd.styleProperty()
-                    .bind(Bindings.when(polygonToAdd.hoverProperty())
-                            .then(new SimpleStringProperty(HOVERED_STYLE))
-                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
+            int rgbCode = rgbNumList.get(i);
+            Color color = Color.rgb(rgbCode, rgbCode, rgbCode);
+            randomizeSubregionsColor(polygonToAdd, rgbCode);
+            String nameOfSubregion = Integer.toString(subregionId);
+            colorController.setSubRegionsToColorMappings(nameOfSubregion, color);
             polygonToAdd.getStyleClass().add(CLASS_MV_MAP);
 //            polygonToAdd.setStroke(colorController.LINE_COLOR);
             polygonToAdd.strokeProperty().bind(colorController.LINE_COLOR);
             polygonToAdd.strokeWidthProperty().bind(colorController.LINE_THICKNESS);
             polygonToAdd.setUserData(subregionId);
             map.getChildren().add(polygonToAdd);
+            polygonToAdd.setOnMouseClicked(e->{
+                if(e.getClickCount() ==2){
+                    rvmmDialogController controller = new rvmmDialogController(app);
+                    controller.processEditSubregion(polygonToAdd);
+                }
+            });
         }
         subregions.put(subregionId, subregionPolygons);
         subregionId++;
     }
     
+    private ArrayList<Integer> randomNumGenertator(int sizeOfSubregions){
+        ArrayList<Integer> ranN = new ArrayList<Integer>();
+        Random r = new Random();
+        while(ranN.size() < sizeOfSubregions){
+            int rannum = r.nextInt(254)+1;
+            if(!ranN.contains(rannum)){
+                ranN.add(rannum);
+            }
+        }
+        return ranN;
+    }
+    public void randomizePainter(){
+        ArrayList<Integer> ranN = randomNumGenertator(subregions.size());
+        for(int i=0;i<subregions.size(); i++){
+            randomizeSubregionsColor(getSubregion(i).get(0), ranN.get(i));
+        }
+    }
+    public void randomizeSubregionsColor(Polygon p, int rgbCode){
+         SubRegionInfo subregionInfo = new SubRegionInfo(Color.rgb(rgbCode,rgbCode,rgbCode));
+         infoRegions.add(subregionInfo);
+         String GREY_STYLE ="-fx-fill: rgb("+rgbCode+","+rgbCode+","+rgbCode+")";
+            String HOVERED_STYLE = "-fx-fill:  rgb("+rgbCode+", 0, 0)";
+//            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
+            p.styleProperty()
+                    .bind(Bindings.when(p.hoverProperty())
+                            .then(new SimpleStringProperty(HOVERED_STYLE))
+                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
+    } 
     /**
      * This calculates and returns the x pixel value that corresponds to the
      * xCoord longitude argument.
@@ -159,6 +190,7 @@ public class rvmmData implements AppDataComponent {
         double newLongCoord = (longCoord + 180) * unitDegree;
         return newLongCoord;
     }
+    
     
     /**
      * This calculates and returns the y pixel value that corresponds to the
@@ -177,7 +209,7 @@ public class rvmmData implements AppDataComponent {
     public void addImage(String imagePath, double x, double y){
         BufferedImage bimage;
         File file = new File(imagePath);
-        imageContainer imagecon;
+        ImageInfo imagecon;
         try {
             bimage = ImageIO.read(file);
             ImageIO.write(bimage, "png", file);
@@ -187,7 +219,7 @@ public class rvmmData implements AppDataComponent {
             iv.setTranslateY(y);
             leftArea = (Pane) map.getParent();
             leftArea.getChildren().add(iv);
-            imagecon= new imageContainer(image, imagePath, x, y);
+            imagecon= new ImageInfo(image, imagePath, x, y);
             images.add(imagecon);
             iv.setOnMousePressed(e1->{
                 iv.setCursor(Cursor.HAND);
@@ -215,11 +247,11 @@ public class rvmmData implements AppDataComponent {
         }
     }
     
-    public void removeImage(imageContainer image){
+    public void removeImage(ImageInfo image){
         images.remove(image);
     }
     
-    public ArrayList<imageContainer> getImages(){
+    public ArrayList<ImageInfo> getImages(){
         return images;
     }
     
