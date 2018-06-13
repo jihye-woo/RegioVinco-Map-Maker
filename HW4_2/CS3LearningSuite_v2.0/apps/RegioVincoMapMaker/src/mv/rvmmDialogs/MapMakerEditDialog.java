@@ -60,6 +60,7 @@ public class MapMakerEditDialog extends Stage{
     Button okButton = new Button();
     Image image;
     ImageView imageView = new ImageView();
+    int polyId;
     
     public MapMakerEditDialog(AppTemplate initApp){
         app = initApp;
@@ -104,44 +105,74 @@ public class MapMakerEditDialog extends Stage{
         initGridNode(leaderTextField,         null,                                 CLASS_RVMM_DIALOG_LABEL,      2, 4, 1, 1, false);
         initGridNode(flagLabel,               EDITSUB_DIALOG_FLAG_LABEL,            CLASS_RVMM_DIALOG_LABEL,      1, 5, 1, 1, true);
         initGridNode(okButton,                EDITSUB_DIALOG_OKBUTTON,              CLASS_RVMM_DIALOG_OK,        2, 6, 1, 1, true);
-        
-//        AppLanguageModule languageSettings = app.getLanguageModule();
-//        languageSettings.addLabeledControlProperty(EDITSUB_DIALOG_PREV_BUTTON + "_TEXT",       prev.textProperty());
-//        languageSettings.addLabeledControlProperty(EDITSUB_DIALOG_NEXT_BUTTON + "_TEXT",    next.textProperty());
-//        languageSettings.addLabeledControlProperty(EDITSUB_DIALOG_OKBUTTON + "_TEXT",    okButton.textProperty());
-//        app.getGUIModule().addGUINode(EDITSUB_DIALOG_PREV_BUTTON, prev);
-//        app.getGUIModule().addGUINode(EDITSUB_DIALOG_NEXT_BUTTON, next);
-//        app.getGUIModule().addGUINode(EDITSUB_DIALOG_OKBUTTON, okButton);
         gridPane.setPadding(new Insets(30, 20, 20, 20));
         gridPane.setVgap(5);
         gridPane.setHgap(50);
         gridPane.setHalignment(headerLabel, HPos.CENTER);
         
+        
+    }
+ 
+    public void showMapMakerEditDialog(int polygonId){
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        rvmmData data = (rvmmData) app.getDataComponent();
+        String headerText = props.getProperty(EDITSUB_DIALOG_HEADER_LABEL_TEXT);
+        polyId = polygonId;
+        // gereneral setting
+        headerLabel.setText(headerText);
+        setTitle(headerText);
+        prev.setText("Prev");
+        prev.setOnAction(e->{
+            goToPrev(data.getSubRegionInfo().size());
+        });
+        next.setText("Next");
+        next.setOnAction(e->{
+            goToNext(data.getSubRegionInfo().size());
+        });
+        updataDialog(polygonId);
         okButton.setOnAction(e->{
+            data.getSubRegionInfo().get(polyId).setSubregion(regionNameTextField.getText());
+            data.getSubRegionInfo().get(polyId).setCapital(captialTextField.getText());
+            data.getSubRegionInfo().get(polyId).setLeader(leaderTextField.getText());
             this.hide();
         });
         
+        showAndWait();
+    }
+    public void goToPrev(int sizeOfSubRegion){
+        polyId--;
+        if(polyId < 0){
+            if(sizeOfSubRegion > 0){
+                polyId = sizeOfSubRegion-1;
+            }
+        }
+        updataDialog(polyId);
     }
     
-    public void showMapMakerEditDialog(){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
-        rvmmData data = (rvmmData) app.getDataComponent();
-        String headerText = props.getProperty(EDITSUB_DIALOG_HEADER_LABEL_TEXT);
-        headerLabel.setText(headerText);
-        setTitle(headerText);
-        headerLabel.setAlignment(Pos.CENTER_RIGHT);
-        regionNameTextField.setText("");
-        showAndWait();
+    public void goToNext(int sizeOfSubRegion){
+        polyId++;
+        if(polyId > sizeOfSubRegion-1){
+            polyId = 0;
+        }
+        updataDialog(polyId);
     }
-    public void showMapMakerEditDialogByPolygon(Polygon p){
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
+    public void updataDialog(int polygonId){
         rvmmData data = (rvmmData) app.getDataComponent();
-        String headerText = props.getProperty(EDITSUB_DIALOG_HEADER_LABEL_TEXT);
-        headerLabel.setText(headerText);
-        setTitle(headerText);
+        String subreigonName = data.getSubRegionInfo().get(polygonId).getSubregion();
+        String Captial = data.getSubRegionInfo().get(polygonId).getSubregion();
+        String Leader = data.getSubRegionInfo().get(polygonId).getLeader();
+        
+        data.polygonSelecting(polygonId);
+        // customize setting 
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
-        regionNameTextField.setText("");
-        showAndWait();
+        regionNameLabel.setText("Subregion Name");
+        regionNameTextField.setText(subreigonName);
+        captialLabel.setText("Captial");
+        captialTextField.setText(Captial);
+        leaderLabel.setText("Leader");
+        leaderTextField.setText(Leader);
+        okButton.setText(" OK ");
+        
     }
     
 }

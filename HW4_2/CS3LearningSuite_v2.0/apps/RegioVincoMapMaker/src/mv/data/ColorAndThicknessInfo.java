@@ -19,30 +19,31 @@ import javafx.scene.paint.Color;
  */
 public class ColorAndThicknessInfo {
     DoubleProperty LINE_THICKNESS;
+    double line_thickness;
     ObjectProperty LINE_COLOR;
-    HashMap<String, Color> subRegionToColorMappings;
+    Color line_color;
     
     public ColorAndThicknessInfo(){
         this.LINE_THICKNESS = new SimpleDoubleProperty();
         this.LINE_COLOR = new SimpleObjectProperty();
         LINE_THICKNESS.setValue(0.05);
+        line_thickness= 0.05;
+        line_color = Color.BLACK;
         LINE_COLOR.setValue(Color.BLACK);
-        subRegionToColorMappings = new HashMap<String, Color>();
     }
     
     public void changeColor(Color lineColor){
         LINE_COLOR.setValue(lineColor);
+        line_color = lineColor;
     }
     public void changeThinkness(double Thinkness){
         LINE_THICKNESS.setValue(Thinkness);
+        line_thickness = Thinkness;
     }
-    public DoubleProperty getThickness(){
-        return LINE_THICKNESS;
+    public Color getColor(){
+        return line_color;
     }
-    public HashMap<String, Color> getSubRegionToColorMappings(){
-        return subRegionToColorMappings;
-    }
-    public void setSubRegionsToColorMappings(String nameOfSubregion, Color color){
-        subRegionToColorMappings.put(nameOfSubregion, color);
+    public double getThickness(){
+        return line_thickness;
     }
 }

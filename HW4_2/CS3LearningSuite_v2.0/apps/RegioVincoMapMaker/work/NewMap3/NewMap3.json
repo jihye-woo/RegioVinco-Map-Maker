@@ -10,9 +10,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"0_MapData",
+                    "capital":"0_captial",
+                    "leader":"0_leader",
+                    "red":0.8745098114013672,
+                    "green":0.8745098114013672,
+                    "blue":0.8745098114013672,
                     "polygon_points":[
                         {
                             "X":1.5205550193787474,
@@ -222,9 +225,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"1_MapData",
+                    "capital":"1_captial",
+                    "leader":"1_leader",
+                    "red":0.03529411926865578,
+                    "green":0.03529411926865578,
+                    "blue":0.03529411926865578,
                     "polygon_points":[
                         {
                             "X":1.6106810569763752,
@@ -838,9 +844,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"2_MapData",
+                    "capital":"2_captial",
+                    "leader":"2_leader",
+                    "red":0.9764705896377563,
+                    "green":0.9764705896377563,
+                    "blue":0.9764705896377563,
                     "polygon_points":[
                         {
                             "X":1.7219419479370117,
@@ -1366,9 +1375,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"3_MapData",
+                    "capital":"3_captial",
+                    "leader":"3_leader",
+                    "red":0.7215686440467834,
+                    "green":0.7215686440467834,
+                    "blue":0.7215686440467834,
                     "polygon_points":[
                         {
                             "X":1.6631840467453003,
@@ -1866,9 +1878,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"4_MapData",
+                    "capital":"4_captial",
+                    "leader":"4_leader",
+                    "red":0.24705882370471954,
+                    "green":0.24705882370471954,
+                    "blue":0.24705882370471954,
                     "polygon_points":[
                         {
                             "X":1.4649280309677124,
@@ -2266,9 +2281,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"5_MapData",
+                    "capital":"5_captial",
+                    "leader":"5_leader",
+                    "red":0.45098039507865906,
+                    "green":0.45098039507865906,
+                    "blue":0.45098039507865906,
                     "polygon_points":[
                         {
                             "X":1.5661489963531494,
@@ -2754,9 +2772,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"6_MapData",
+                    "capital":"6_captial",
+                    "leader":"6_leader",
+                    "red":0.4431372582912445,
+                    "green":0.4431372582912445,
+                    "blue":0.4431372582912445,
                     "polygon_points":[
                         {
                             "X":1.5632439851760864,

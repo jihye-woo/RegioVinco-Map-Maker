@@ -1,8 +1,6 @@
 package mv.workspace;
 
 import djf.AppPropertyType;
-import static djf.AppPropertyType.SAVE_ERROR_CONTENT;
-import static djf.AppPropertyType.SAVE_ERROR_TITLE;
 import djf.components.AppWorkspaceComponent;
 import djf.AppTemplate;
 import djf.modules.AppFileModule;
@@ -11,23 +9,23 @@ import static djf.modules.AppGUIModule.FOCUS_TRAVERSABLE;
 import static djf.modules.AppGUIModule.HAS_KEY_HANDLER;
 import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
-import djf.ui.dialogs.AppDialogsFacade;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -37,6 +35,7 @@ import static mv.MapMakerPropertyType.CREATEMAP_BUTTON;
 import properties_manager.PropertiesManager;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.*;
+import mv.data.SubRegionInfo;
 import mv.data.rvmmData;
 import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
 import static mv.workspace.style.MapViewerStyle.*;
@@ -51,7 +50,9 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     double locationX;
     double locationY;
     ImageView selectedImage = new ImageView();
+    ObjectProperty<TableRow> selectedRow = new SimpleObjectProperty<TableRow>();
     rvmmData data;
+    boolean clickSomething = false;
     
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
@@ -82,6 +83,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         File imagefile;
         Pane leftBasedArea = new Pane();
         Pane leftArea = new Pane();
+        leftArea.getChildren().add(mapPane);
 //        leftBasedArea.getChildren().add(leftArea);
 //        leftArea.getChildren().add(leftBasedArea);
         VBox rightArea = workspaceBuilder.buildVBox(RVMM_RIGHTAREA, null, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -159,7 +161,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
           imageView = new ImageView(file.toURI().toString());
             data = (rvmmData) app.getDataComponent();
             data.addImage(file.getAbsolutePath(), locationX, locationY);
-//            }
         });
         Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         removeImage.setOnAction(e->{
@@ -242,20 +243,42 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         //Hbox1 -2
         TableView table = workspaceBuilder.buildTableView(RVMM_TABLE, rightArea, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         table.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
-        TableColumn tableCol1 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL1, table, CLASS_RVMM_TABLECOL);
-        TableColumn tableCol2 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL2, table, CLASS_RVMM_TABLECOL);
-        TableColumn tableCol3 = workspaceBuilder.buildTableColumn(RVMM_TABLECOL3, table, CLASS_RVMM_TABLECOL);
+        TableColumn tableCol1 = new TableColumn("Subregion");
+        tableCol1.setCellValueFactory(new PropertyValueFactory<>("Subregion"));
+        TableColumn tableCol2 = new TableColumn("Capital");
+        tableCol2.setCellValueFactory(new PropertyValueFactory<>("Capital"));
+        TableColumn tableCol3 = new TableColumn("Leader");
+        tableCol3.setCellValueFactory(new PropertyValueFactory<>("Leader"));
         
-        ObservableList<String> characters = FXCollections.observableArrayList("Sean");
-        table.setItems(characters);
-        
-        table.setOnMouseClicked(e->{
-            if(e.getButton().equals(MouseButton.PRIMARY)){
+        table.getColumns().addAll(tableCol1, tableCol2, tableCol3);
+        table.setRowFactory(tableView -> {
+            TableRow rows= new TableRow<>();
+            rows.setOnMouseClicked(e->{
                 if(e.getClickCount()==2){
-//                     dialogController.processEditSubregion();
+                    data = (rvmmData) app.getDataComponent();
+                    data.polygonSelecting(rows.getIndex());
+                    dialogController.processEditSubregion(rows.getIndex());
+//                    clickSomething = true;
                 }
-            }
+                if(e.getClickCount() ==1){
+                    data = (rvmmData) app.getDataComponent();
+                    data.polygonSelecting(rows.getIndex());
+                }
+            });
+//            rows.selectedProperty().addListener((obs, pastSelection, currentSelection)->{
+//                    if(currentSelection){
+//                        selectedRow.set(rows);
+//                    }
+//                    else{
+//                        data = (rvmmData) app.getDataComponent();
+//                        if(data.currentSelectedPolygon() <0){
+//                            table.getSelectionModel().clearSelection();
+//                        }
+//                    }
+//                });
+           return rows;
         });
+        
         //Hbox1 -3
         HBox hbox2 = workspaceBuilder.buildHBox(MV_MAP_HBOX2, rightArea, null, CLASS_RFMM_BOTTOMBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         VBox bottom1 = workspaceBuilder.buildVBox(RVMM_BOTTOM_RIGHTAREA1, hbox2, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -298,9 +321,15 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         options.add("CYCLE");
         ComboBox cycleMethodBox = workspaceBuilder.buildComboBox(RVMM_BOTTOM2_COMBOBOX, options, "NO_CYCLE", bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         ColorPicker pickStop1Color = workspaceBuilder.buildColorPicker(RVMM_BOTTOM2_COLORPICKER, bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        leftArea.getChildren().add(mapPane);
+    
         Rectangle ocean = new Rectangle();
         mapPane.getChildren().add(ocean);
+//        ocean.setOnMouseClicked(e->{
+//            data = (rvmmData) app.getDataComponent();
+//                if(data.currentSelectedPolygon() < 0){
+//                    table.getSelectionModel().clearSelection();
+//            }
+//        });
         ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
         app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
         app.getGUIModule().addGUINode(RVMM_LEFT_MAP, leftArea);
@@ -315,14 +344,17 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             ocean.setHeight(newValue.getHeight());
         });
         
-        
-//        d.
          // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();
         ((BorderPane)workspace).setTop(topToolBar);
         ((BorderPane)workspace).setCenter(outerMapPane);
 //        
     }
+    private ObservableList<SubRegionInfo> getListItem(){
+            data = (rvmmData) app.buildDataComponent(app);
+            ObservableList<SubRegionInfo> Info = data.getSubRegionInfo();
+            return Info;
+        }
     
     @Override
     public void processWorkspaceKeyEvent(KeyEvent ke) {
@@ -330,6 +362,10 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     }
 
     private void mouseEvent(Pane mapPane) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void processEditSubregion(int index) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

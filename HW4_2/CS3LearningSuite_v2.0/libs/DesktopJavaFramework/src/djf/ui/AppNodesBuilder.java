@@ -359,7 +359,7 @@ public class AppNodesBuilder {
             TableView tableView,
             String styleClass) {
         TableColumn column = new TableColumn();
-        tableView.getColumns().add(column);
+//        tableView.getColumns().add(column);
         column.getStyleClass().add(styleClass);
         languageSettings.addLabeledControlProperty(nodeId.toString() + "_TEXT", column.textProperty());
         return column;

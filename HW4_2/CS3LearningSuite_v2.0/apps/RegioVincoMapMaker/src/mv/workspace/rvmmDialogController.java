@@ -40,8 +40,8 @@ public class rvmmDialogController {
         mapMakerChangeDialogs.showChangeDiemensionDialog();
     }
     
-    public void processEditSubregion(Polygon p){
-        mapMakerEditDialog.showMapMakerEditDialog();
+    public void processEditSubregion(int polygonId){
+        mapMakerEditDialog.showMapMakerEditDialog(polygonId);
     }
     
     public void processRename(){

@@ -5,53 +5,70 @@
  */
 package mv.data;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 /**
  *
  * @author Jihye
  */
 public class SubRegionInfo {
-    String nameOfSubrgion;
-    Color color;
-    boolean haveCapital;
-    boolean haveFlags;
-    boolean haveLeaders;
+    SimpleStringProperty Subregion = new SimpleStringProperty();
+    SimpleStringProperty Capital = new SimpleStringProperty();
+    SimpleStringProperty Leader = new SimpleStringProperty();
+    String subregionName;
+//    Color color;
+//    boolean haveCapital = false;
+//    boolean haveFlags = false;
+//    boolean haveLeaders = false;
     
-    public SubRegionInfo(Color color){
+    public SubRegionInfo(String Subregion, String Capital, String Leader){
 //        this.polygonID = polygonID;
-        this.color = color;
-        haveCapital = false;
-        haveFlags = false;
-        haveLeaders = false;
+//        this.color = color;
+        this.Subregion.set(Subregion);
+        this.Capital.set(Capital);
+        this.Leader.set(Leader);
+        subregionName = Subregion;
     }
     // getter
-    public boolean getHaveCapital(){
-        return haveCapital;
+   
+    public String getSubregion(){
+        return Subregion.get();
     }
-    public boolean getHaveflags(){
-        return haveFlags;
+    public String getCapital(){
+        return Capital.get();
     }
-    public boolean getHaveLeaders(){
-        return haveLeaders;
+    public String getLeader(){
+        return Leader.get();
     }
-    public String nameOfSubregion(){
-        return nameOfSubrgion;
-    }
-    
+//    public boolean getHaveCapital(){
+//        return haveCapital;
+//    }
+//    public boolean getHaveflags(){
+//        return haveFlags;
+//    }
+//    public boolean getHaveLeaders(){
+//        return haveLeaders;
+//    }
     
     // setter 
-    public void setSubregionName(String nameOfSubrgion){
-        nameOfSubrgion= nameOfSubrgion;
+  
+    public void setSubregion(String Subregion){
+        this.Subregion.set(Subregion);
     }
-    public void setHaveCapital(boolean haveCapital){
-        this.haveCapital = haveCapital;
+    public void setCapital(String Capital){
+        this.Capital.set(Capital);
     }
-    public void setHaveflags(boolean haveFlags){
-        this.haveFlags = haveFlags;
+    public void setLeader(String Leader){
+        this.Leader.set(Leader);
     }
-    public void setHaveLeaders(boolean haveLeaders){
-        this.haveLeaders = haveLeaders;
-    }
+    
+//    public void setHaveCapital(boolean haveCapital){
+//        this.haveCapital = haveCapital;
+//    }
+//    public void setHaveflags(boolean haveFlags){
+//        this.haveFlags = haveFlags;
+//    }
+//    public void setHaveLeaders(boolean haveLeaders){
+//        this.haveLeaders = haveLeaders;
+//    }
 }

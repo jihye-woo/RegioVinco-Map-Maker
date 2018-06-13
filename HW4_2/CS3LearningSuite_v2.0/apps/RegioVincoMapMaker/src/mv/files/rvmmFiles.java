@@ -24,9 +24,9 @@ import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -42,8 +42,8 @@ import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
-import static mv.MapMakerPropertyType.MV_MAP_PANE;
-import static mv.MapMakerPropertyType.RVMM_LEFT_MAP;
+import static mv.MapMakerPropertyType.RVMM_TABLE;
+import static mv.MapMakerPropertyType.RVMM_TABLECOL1;
 import mv.data.ImageInfo;
 import mv.data.rvmmData;
 import properties_manager.PropertiesManager;
@@ -57,6 +57,10 @@ public class rvmmFiles implements AppFileComponent {
     static final String JSON_CAPITALS = "subregions_have_capitals";
     static final String JSON_FLAGS = "subregions_have_flags";
     static final String JSON_LEADERS = "subregions_have_leaders";
+    static final String JSON_MAP_THICKNESS = "map_thickness";
+    static final String JSON_MAP_LINE_COLOR_RED = "map_line_color_red";
+    static final String JSON_MAP_LINE_COLOR_GREEN = "map_line_color_green";
+    static final String JSON_MAP_LINE_COLOR_BLUE = "map_line_color_blue";
     static final String JSON_SUBREGIONS_DATA = "subregions";
     
     static final String JSON_SUBREGIONS_NAME = "name";
@@ -128,13 +132,10 @@ public class rvmmFiles implements AppFileComponent {
         JsonArrayBuilder subregions_polygons_list = Json.createArrayBuilder();
         JsonArrayBuilder imagesArray = Json.createArrayBuilder();
         
-        Color c = Color.color(0,0,0);
-      
         for(int i=0; i<rvmmdata.numOfSubregion(); i++){
             ObservableList<Polygon> polygons = rvmmdata.getSubregion(i);
             for(int z=0; z< polygons.size(); z++){
             JsonArrayBuilder subregions_polygons_points = Json.createArrayBuilder();
-       
             Polygon polygon = polygons.get(z);
                 for(int j =0; j<polygon.getPoints().size();j+=2){
                 JsonObject subregions_polygons_point = Json.createObjectBuilder()
@@ -142,10 +143,17 @@ public class rvmmFiles implements AppFileComponent {
                         .add(JSON_POLYGON_POINT_Y, YToLat(polygon.getPoints().get(j+1), rvmmdata.getMap())).build();
                 subregions_polygons_points.add(subregions_polygons_point);
                 }
+                String SubregionName = polygon.getUserData().toString()+"_MapData";
+                String SubregionCaptial = polygon.getUserData().toString()+"_captial";
+                String SubregionLeader = polygon.getUserData().toString() + "_leader";
+                int colorCode = rvmmdata.getColorFromName(SubregionName);
                 JsonObject plusColor = Json.createObjectBuilder()
-                        .add(JSON_SUBREGIONS_RED,  c.getRed())
-                        .add(JSON_SUBREGIONS_GREEN, c.getGreen())
-                        .add(JSON_SUBREGIONS_BLUE, c.getBlue())
+                        .add(JSON_SUBREGIONS_NAME, SubregionName)
+                        .add(JSON_SUBREGIONS_CAPTIAL, SubregionCaptial)
+                        .add(JSON_SUBREGIONS_LEADER, SubregionLeader)
+                        .add(JSON_SUBREGIONS_RED,  colorCode)
+                        .add(JSON_SUBREGIONS_GREEN, colorCode)
+                        .add(JSON_SUBREGIONS_BLUE, colorCode)
                         .add(JSON_POLYGON_POINT,subregions_polygons_points).build();
                 
                 subregions_polygons_list.add(plusColor);
@@ -172,6 +180,10 @@ public class rvmmFiles implements AppFileComponent {
                 .add(JSON_SCALE_Y, rvmmdata.getMap().getScaleY())
                 .add(JSON_TRANSLATE_X, rvmmdata.getMap().getTranslateX())
                 .add(JSON_TRANSLATE_Y, rvmmdata.getMap().getTranslateY())
+                .add(JSON_MAP_LINE_COLOR_RED, rvmmdata.getColorController().getColor().getRed())
+                .add(JSON_MAP_LINE_COLOR_GREEN, rvmmdata.getColorController().getColor().getGreen())
+                .add(JSON_MAP_LINE_COLOR_BLUE, rvmmdata.getColorController().getColor().getBlue())
+                .add(JSON_MAP_THICKNESS, rvmmdata.getColorController().getThickness())
                 .add(JSON_SUBREGIONS, subregions)
                 .add(JSON_NUM_OF_IMAGE, images.size())
                 .add(JSON_IMAGE,imagesArray)
@@ -222,6 +234,13 @@ public class rvmmFiles implements AppFileComponent {
         double mapTranslatesY = getDataAsDouble(json, JSON_TRANSLATE_Y);
         mapData.getMap().setTranslateY(mapTranslatesY);
         
+        double lineColorRed = getDataAsDouble(json,JSON_MAP_LINE_COLOR_RED);
+        double lineColorGreen = getDataAsDouble(json,JSON_MAP_LINE_COLOR_GREEN);
+        double lineColorBlue = getDataAsDouble(json,JSON_MAP_LINE_COLOR_BLUE);
+        Color lineColor = Color.color(lineColorRed, lineColorGreen, lineColorBlue);
+        mapData.getColorController().changeColor(lineColor);
+        double lineThickness = getDataAsDouble(json,JSON_MAP_THICKNESS);
+        mapData.getColorController().changeThinkness(lineThickness);
     // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
             // MAKE A POLYGON LIST FOR THIS SUBREGION
@@ -229,14 +248,21 @@ public class rvmmFiles implements AppFileComponent {
             int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
             ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
             // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
+            String subRegionName = "";
+            String SubregionCaptial ="";
+            String SubregionLeader ="";
             for(int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
                 // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
                 JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
                 JsonObject polysinfo = jsonPolygon.getJsonObject(polygonIndex);
+                subRegionName = polysinfo.getString(JSON_SUBREGIONS_NAME);
+                SubregionCaptial = polysinfo.getString(JSON_SUBREGIONS_CAPTIAL);
+                SubregionLeader = polysinfo.getString(JSON_SUBREGIONS_LEADER);
                 double red = getDataAsDouble(polysinfo, JSON_SUBREGIONS_RED);
                 double green = getDataAsDouble(polysinfo, JSON_SUBREGIONS_GREEN);
                 double blue = getDataAsDouble(polysinfo, JSON_SUBREGIONS_BLUE);
-                Color c = Color.color(red,green,blue);
+                mapData.setcolorCodeGetter(subRegionName, (int)red);
+//                mapData.setSubRegionInfo(subRegionName, SubregionCaptial, SubregionLeader, (int)red);
                 JsonArray pointsArray = polysinfo.getJsonArray(JSON_POLYGON_POINT);
                 ArrayList<Double> polygonPointsList = new ArrayList();
                 for (int pointIndex = 0; pointIndex < pointsArray.size(); pointIndex++) {
@@ -248,9 +274,11 @@ public class rvmmFiles implements AppFileComponent {
                 }
                 subregionPolygonPoints.add(polygonPointsList);
             }
-            mapData.addSubregion(subregionPolygonPoints);
+            mapData.addSubregion(subregionPolygonPoints, subRegionName, SubregionCaptial, SubregionLeader);
         }
-        
+        TableView table= (TableView) mapData.getApp().getGUIModule().getGUINode(RVMM_TABLE);
+                table.setItems(mapData.getSubRegionInfo());
+         
         int numOfImages = getDataAsInt(json, JSON_NUM_OF_IMAGE);
         JsonArray jsonimagesArray = json.getJsonArray(JSON_IMAGE);
         ArrayList<ImageInfo> imageData = mapData.getImages();
@@ -260,51 +288,48 @@ public class rvmmFiles implements AppFileComponent {
              double imageTranslateY = image.getJsonNumber(JSON_IMAGE_TRANSLATEY).doubleValue();
             JsonString imagePath =  image.getJsonString(JSON_IMAGE_PATH);
             String absolPath = filePath;
-            for(i=0; i<3;i++){
-               int lastIndex = absolPath.lastIndexOf("\\");
-               absolPath = absolPath.substring(0,lastIndex);
-            }
-            
+            int lastIndex = absolPath.lastIndexOf("RegioVincoMapMaker\\");
+            absolPath = absolPath.substring(0,lastIndex+19);
             mapData.addImage(absolPath+imagePath.getString(), imageTranslateX, imageTranslateY);
             }
     }
-    public void SavedData(AppDataComponent data, String filePath) throws IOException {
-        rvmmData mapData = (rvmmData)data;
-        mapData.reset();
-        
-        // LOAD THE JSON FILE WITH ALL THE DATA
-	JsonObject json = loadJSONFile(filePath);
-	
-        // THIS IS THE TOTAL NUMBER OF SUBREGIONS, EACH WITH
-        // SOME NUMBER OF POLYGONS
-        int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
-        JsonArray jsonSubregionsArray = json.getJsonArray(JSON_SUBREGIONS);
-
-        // GO THROUGH ALL THE SUBREGIONS
-        for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
-            // MAKE A POLYGON LIST FOR THIS SUBREGION
-            JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
-            int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
-            ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
-            // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
-            for (int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
-                // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
-                JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
-                JsonArray pointsArray = jsonPolygon.getJsonArray(polygonIndex);
-                ArrayList<Double> polygonPointsList = new ArrayList();
-                for (int pointIndex = 0; pointIndex < pointsArray.size(); pointIndex++) {
-                    JsonObject point = pointsArray.getJsonObject(pointIndex);
-                    double pointX = point.getJsonNumber(JSON_POLYGON_POINT_X).doubleValue();
-                    double pointY = point.getJsonNumber(JSON_POLYGON_POINT_Y).doubleValue();
-                    polygonPointsList.add(pointX);
-                    polygonPointsList.add(pointY);
-                }
-                subregionPolygonPoints.add(polygonPointsList);
-            }
-            mapData.addSubregion(subregionPolygonPoints);
-        }
-        
-    }    
+//    public void SavedData(AppDataComponent data, String filePath) throws IOException {
+//        rvmmData mapData = (rvmmData)data;
+//        mapData.reset();
+//        
+//        // LOAD THE JSON FILE WITH ALL THE DATA
+//	JsonObject json = loadJSONFile(filePath);
+//	
+//        // THIS IS THE TOTAL NUMBER OF SUBREGIONS, EACH WITH
+//        // SOME NUMBER OF POLYGONS
+//        int numSubregions = getDataAsInt(json, JSON_NUMBER_OF_SUBREGIONS);
+//        JsonArray jsonSubregionsArray = json.getJsonArray(JSON_SUBREGIONS);
+//
+//        // GO THROUGH ALL THE SUBREGIONS
+//        for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
+//            // MAKE A POLYGON LIST FOR THIS SUBREGION
+//            JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
+//            int numSubregionPolygons = getDataAsInt(jsonSubregion, JSON_NUMBER_OF_SUBREGION_POLYGONS);
+//            ArrayList<ArrayList<Double>> subregionPolygonPoints = new ArrayList();
+//            // GO THROUGH ALL OF THIS SUBREGION'S POLYGONS
+//            for (int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
+//                // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
+//                JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
+//                JsonArray pointsArray = jsonPolygon.getJsonArray(polygonIndex);
+//                ArrayList<Double> polygonPointsList = new ArrayList();
+//                for (int pointIndex = 0; pointIndex < pointsArray.size(); pointIndex++) {
+//                    JsonObject point = pointsArray.getJsonObject(pointIndex);
+//                    double pointX = point.getJsonNumber(JSON_POLYGON_POINT_X).doubleValue();
+//                    double pointY = point.getJsonNumber(JSON_POLYGON_POINT_Y).doubleValue();
+//                    polygonPointsList.add(pointX);
+//                    polygonPointsList.add(pointY);
+//                }
+//                subregionPolygonPoints.add(polygonPointsList);
+//            }
+//            mapData.addSubregion(subregionPolygonPoints, );
+//        }
+//        
+//    }    
     public String getRelativePath(String path){
         String lastPath = path.substring(0, path.lastIndexOf("\\"));
         lastPath = lastPath.substring(0,path.lastIndexOf("\\"));

@@ -186,7 +186,7 @@ public class MapMakerDialog extends Stage {
                     app.getFileModule().loadWork(f);
                 sucessToCreate();
             } catch (IOException ex) {
-//                    AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), SAVE_ERROR_TITLE, SAVE_ERROR_CONTENT);
+                
             }
             hide();
         });

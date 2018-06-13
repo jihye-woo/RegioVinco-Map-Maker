@@ -1,19 +1,21 @@
 
 {
     "NUMBER_OF_SUBREGIONS":8,
-    "SCALE_X":34.76056289457023,
-    "SCALE_Y":34.76056289457023,
-    "TRANSLATE_X":-320.7129064687817,
-    "TRANSLATE_Y":5421.497945639715,
+    "SCALE_X":1.0,
+    "SCALE_Y":1.0,
+    "TRANSLATE_X":0.0,
+    "TRANSLATE_Y":0.0,
     "SUBREGIONS":[
         {
             "NUMBER_OF_SUBREGION_POLYGONS":2,
             "SUBREGION_POLYGONS":[
                 {
                     "name":"0_MapData",
-                    "red":0.5803921818733215,
-                    "green":0.5803921818733215,
-                    "blue":0.5803921818733215,
+                    "capital":"0_captial",
+                    "leader":"0_leader",
+                    "red":0.21960784494876862,
+                    "green":0.21960784494876862,
+                    "blue":0.21960784494876862,
                     "polygon_points":[
                         {
                             "X":19.86818504333499,
@@ -39,9 +41,11 @@
                 },
                 {
                     "name":"0_MapData",
-                    "red":0.5803921818733215,
-                    "green":0.5803921818733215,
-                    "blue":0.5803921818733215,
+                    "capital":"0_captial",
+                    "leader":"0_leader",
+                    "red":0.21960784494876862,
+                    "green":0.21960784494876862,
+                    "blue":0.21960784494876862,
                     "polygon_points":[
                         {
                             "X":19.86818504333499,
@@ -8404,9 +8408,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"1_MapData",
-                    "red":0.4156862795352936,
-                    "green":0.4156862795352936,
-                    "blue":0.4156862795352936,
+                    "capital":"1_captial",
+                    "leader":"1_leader",
+                    "red":0.03921568766236305,
+                    "green":0.03921568766236305,
+                    "blue":0.03921568766236305,
                     "polygon_points":[
                         {
                             "X":19.619178771972713,
@@ -17945,9 +17951,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"2_MapData",
-                    "red":0.34117648005485535,
-                    "green":0.34117648005485535,
-                    "blue":0.34117648005485535,
+                    "capital":"2_captial",
+                    "leader":"2_leader",
+                    "red":0.42352941632270813,
+                    "green":0.42352941632270813,
+                    "blue":0.42352941632270813,
                     "polygon_points":[
                         {
                             "X":17.34144210815427,
@@ -21962,9 +21970,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"3_MapData",
-                    "red":0.8745098114013672,
-                    "green":0.8745098114013672,
-                    "blue":0.8745098114013672,
+                    "capital":"3_captial",
+                    "leader":"3_leader",
+                    "red":0.8901960849761963,
+                    "green":0.8901960849761963,
+                    "blue":0.8901960849761963,
                     "polygon_points":[
                         {
                             "X":20.589126586914176,
@@ -29795,9 +29805,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"4_MapData",
-                    "red":0.4274509847164154,
-                    "green":0.4274509847164154,
-                    "blue":0.4274509847164154,
+                    "capital":"4_captial",
+                    "leader":"4_leader",
+                    "red":0.0313725508749485,
+                    "green":0.0313725508749485,
+                    "blue":0.0313725508749485,
                     "polygon_points":[
                         {
                             "X":18.042848587036246,
@@ -38612,9 +38624,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"5_MapData",
-                    "red":0.08627451211214066,
-                    "green":0.08627451211214066,
-                    "blue":0.08627451211214066,
+                    "capital":"5_captial",
+                    "leader":"5_leader",
+                    "red":0.6039215922355652,
+                    "green":0.6039215922355652,
+                    "blue":0.6039215922355652,
                     "polygon_points":[
                         {
                             "X":21.310810089111328,
@@ -48705,9 +48719,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"6_MapData",
-                    "red":0.8745098114013672,
-                    "green":0.8745098114013672,
-                    "blue":0.8745098114013672,
+                    "capital":"6_captial",
+                    "leader":"6_leader",
+                    "red":0.9254902005195618,
+                    "green":0.9254902005195618,
+                    "blue":0.9254902005195618,
                     "polygon_points":[
                         {
                             "X":18.33727836608884,
@@ -56134,9 +56150,11 @@
             "SUBREGION_POLYGONS":[
                 {
                     "name":"7_MapData",
-                    "red":0.5568627715110779,
-                    "green":0.5568627715110779,
-                    "blue":0.5568627715110779,
+                    "capital":"7_captial",
+                    "leader":"7_leader",
+                    "red":0.24705882370471954,
+                    "green":0.24705882370471954,
+                    "blue":0.24705882370471954,
                     "polygon_points":[
                         {
                             "X":17.362857818603544,
@@ -63803,12 +63821,7 @@
             ]
         }
     ],
-    "number_of_image":1,
+    "number_of_image":0,
     "image":[
-        {
-            "image_translateX":383.33333333333337,
-            "image_translateY":79.99999999999994,
-            "image_path":"\\images\\The World\\Europe\\Andorra Flag.png"
-        }
     ]
 }

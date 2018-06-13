@@ -5,11 +5,18 @@
     "SCALE_Y":1.0,
     "TRANSLATE_X":0.0,
     "TRANSLATE_Y":0.0,
+    "map_line_color_red":0.0,
+    "map_line_color_green":0.0,
+    "map_line_color_blue":0.0,
+    "map_thickness":0.05,
     "SUBREGIONS":[
         {
             "NUMBER_OF_SUBREGION_POLYGONS":2,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"0_MapData",
+                    "capital":"0_captial",
+                    "leader":"0_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -37,6 +44,9 @@
                     ]
                 },
                 {
+                    "name":"0_MapData",
+                    "capital":"0_captial",
+                    "leader":"0_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -8401,6 +8411,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"1_MapData",
+                    "capital":"1_captial",
+                    "leader":"1_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -17941,6 +17954,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"2_MapData",
+                    "capital":"2_captial",
+                    "leader":"2_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -21957,6 +21973,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"3_MapData",
+                    "capital":"3_captial",
+                    "leader":"3_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -29789,6 +29808,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"4_MapData",
+                    "capital":"4_captial",
+                    "leader":"4_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -38605,6 +38627,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"5_MapData",
+                    "capital":"5_captial",
+                    "leader":"5_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -48697,6 +48722,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"6_MapData",
+                    "capital":"6_captial",
+                    "leader":"6_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -56125,6 +56153,9 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
+                    "name":"7_MapData",
+                    "capital":"7_captial",
+                    "leader":"7_leader",
                     "red":0.0,
                     "green":0.0,
                     "blue":0.0,
@@ -63794,12 +63825,7 @@
             ]
         }
     ],
-    "number_of_image":1,
+    "number_of_image":0,
     "image":[
-        {
-            "image_translateX":144.66666666666663,
-            "image_translateY":139.33333333333334,
-            "image_path":"\\images\\The World\\Europe\\Andorra Flag.png"
-        }
     ]
 }

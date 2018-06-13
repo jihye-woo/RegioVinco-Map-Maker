@@ -5,14 +5,21 @@
     "SCALE_Y":1.0,
     "TRANSLATE_X":0.0,
     "TRANSLATE_Y":0.0,
+    "map_line_color_red":0.0,
+    "map_line_color_green":0.0,
+    "map_line_color_blue":0.0,
+    "map_thickness":0.00045541034804429613,
     "SUBREGIONS":[
         {
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"0_MapData",
+                    "capital":"0_captial",
+                    "leader":"0_leader",
+                    "red":77,
+                    "green":77,
+                    "blue":77,
                     "polygon_points":[
                         {
                             "X":12.428207397460938,
@@ -1910,9 +1917,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"1_MapData",
+                    "capital":"1_captial",
+                    "leader":"1_leader",
+                    "red":173,
+                    "green":173,
+                    "blue":173,
                     "polygon_points":[
                         {
                             "X":12.474003791809167,
@@ -5434,9 +5444,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"2_MapData",
+                    "capital":"2_captial",
+                    "leader":"2_leader",
+                    "red":17,
+                    "green":17,
+                    "blue":17,
                     "polygon_points":[
                         {
                             "X":12.433288574218864,
@@ -7658,9 +7671,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"3_MapData",
+                    "capital":"3_captial",
+                    "leader":"3_leader",
+                    "red":132,
+                    "green":132,
+                    "blue":132,
                     "polygon_points":[
                         {
                             "X":12.510080337524414,
@@ -10534,9 +10550,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"4_MapData",
+                    "capital":"4_captial",
+                    "leader":"4_leader",
+                    "red":127,
+                    "green":127,
+                    "blue":127,
                     "polygon_points":[
                         {
                             "X":12.474446296691838,
@@ -13202,9 +13221,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"5_MapData",
+                    "capital":"5_captial",
+                    "leader":"5_leader",
+                    "red":84,
+                    "green":84,
+                    "blue":84,
                     "polygon_points":[
                         {
                             "X":12.474446296691838,
@@ -15510,9 +15532,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"6_MapData",
+                    "capital":"6_captial",
+                    "leader":"6_leader",
+                    "red":83,
+                    "green":83,
+                    "blue":83,
                     "polygon_points":[
                         {
                             "X":12.474446296691838,
@@ -16566,9 +16591,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"7_MapData",
+                    "capital":"7_captial",
+                    "leader":"7_leader",
+                    "red":162,
+                    "green":162,
+                    "blue":162,
                     "polygon_points":[
                         {
                             "X":12.451930046081543,
@@ -18958,9 +18986,12 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "red":0.0,
-                    "green":0.0,
-                    "blue":0.0,
+                    "name":"8_MapData",
+                    "capital":"8_captial",
+                    "leader":"8_leader",
+                    "red":158,
+                    "green":158,
+                    "blue":158,
                     "polygon_points":[
                         {
                             "X":12.50568771362316,
