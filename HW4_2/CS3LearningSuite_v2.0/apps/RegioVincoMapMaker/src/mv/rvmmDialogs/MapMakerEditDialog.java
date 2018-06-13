@@ -33,9 +33,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import mv.data.rvmmData;
+import mv.workspace.rvmmWorkspace;
 
 import properties_manager.PropertiesManager;
 
@@ -134,6 +134,8 @@ public class MapMakerEditDialog extends Stage{
             data.getSubRegionInfo().get(polyId).setSubregion(regionNameTextField.getText());
             data.getSubRegionInfo().get(polyId).setCapital(captialTextField.getText());
             data.getSubRegionInfo().get(polyId).setLeader(leaderTextField.getText());
+            rvmmWorkspace workspace = (rvmmWorkspace)app.getWorkspaceComponent();
+            workspace.getTable().refresh();
             this.hide();
         });
         
@@ -159,7 +161,7 @@ public class MapMakerEditDialog extends Stage{
     public void updataDialog(int polygonId){
         rvmmData data = (rvmmData) app.getDataComponent();
         String subreigonName = data.getSubRegionInfo().get(polygonId).getSubregion();
-        String Captial = data.getSubRegionInfo().get(polygonId).getSubregion();
+        String Captial = data.getSubRegionInfo().get(polygonId).getCapital();
         String Leader = data.getSubRegionInfo().get(polygonId).getLeader();
         
         data.polygonSelecting(polygonId);

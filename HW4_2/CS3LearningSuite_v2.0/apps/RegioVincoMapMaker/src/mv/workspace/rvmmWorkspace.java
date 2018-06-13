@@ -17,9 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -52,7 +55,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     ImageView selectedImage = new ImageView();
     ObjectProperty<TableRow> selectedRow = new SimpleObjectProperty<TableRow>();
     rvmmData data;
-    
+    TableView table;
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
         super(app);
@@ -102,15 +105,11 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         moveup.setOnAction(e->{
             data = (rvmmData) app.getDataComponent();
             int currentIndex = data.currentSelectedPolygon();
-            System.out.println(currentIndex);
-            System.out.println(data.getEachSubRegionsInfo(currentIndex).getSubregion());
             if(currentIndex > 0){
                 Collections.swap(data.getSubRegionInfo(), currentIndex, currentIndex-1);
                 data.swapHashMapValue(currentIndex, currentIndex-1);
             }
             currentIndex = data.currentSelectedPolygon();
-            System.out.println(currentIndex);
-            System.out.println(data.getEachSubRegionsInfo(currentIndex).getSubregion());
         });
         SplitPane sp = new SplitPane(leftArea,rightArea);
         sp.setOrientation(Orientation.HORIZONTAL);
@@ -245,6 +244,17 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         CheckBox toggleFrameBox = workspaceBuilder.buildCheckBox(RVMM_TOOLBAR_CHECKBOX1, subtoolbar4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Label movePolygonsModeLabel = workspaceBuilder.buildLabel(RVMM_TOOLBAR_CHECKBOX2_LABEL, subtoolbar5, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         CheckBox movePolygonsMode = workspaceBuilder.buildCheckBox(RVMM_TOOLBAR_CHECKBOX2, subtoolbar5, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        movePolygonsMode.selectedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                app.getGUIModule().getPrimaryScene().setCursor(newValue? Cursor.MOVE : Cursor.DEFAULT);
+                if(newValue){
+                    data = (rvmmData) app.getDataComponent();
+                    data.polygonSelecting(-1);
+                    
+                }
+            }
+        });
                       
         //toolbar5
         Label borderColorPickerLabel = workspaceBuilder.buildLabel(RVMM_TOOLBAR_COLORPICKER_LABEL, toolbar5, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -261,7 +271,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         outerMapPane.setCenter(sp);
         
         //Hbox1 -2
-        TableView table = workspaceBuilder.buildTableView(RVMM_TABLE, rightArea, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        table = workspaceBuilder.buildTableView(RVMM_TABLE, rightArea, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         table.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         TableColumn tableCol1 = new TableColumn("Subregion");
         tableCol1.setCellValueFactory(new PropertyValueFactory<>("Subregion"));
@@ -330,12 +340,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     
         Rectangle ocean = new Rectangle();
         mapPane.getChildren().add(ocean);
-//        ocean.setOnMouseClicked(e->{
-//            data = (rvmmData) app.getDataComponent();
-//                if(data.currentSelectedPolygon() < 0){
-//                    table.getSelectionModel().clearSelection();
-//            }
-//        });
         ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
         app.getGUIModule().addGUINode(MV_MAP_PANE, mapPane);
         app.getGUIModule().addGUINode(RVMM_LEFT_MAP, leftArea);
@@ -355,6 +359,9 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         ((BorderPane)workspace).setTop(topToolBar);
         ((BorderPane)workspace).setCenter(outerMapPane);
 //        
+    }
+    public TableView getTable(){
+        return table;
     }
     private ObservableList<SubRegionInfo> getListItem(){
             data = (rvmmData) app.buildDataComponent(app);

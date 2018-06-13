@@ -1,10 +1,10 @@
 
 {
     "NUMBER_OF_SUBREGIONS":7,
-    "SCALE_X":537.9534656454672,
-    "SCALE_Y":537.9534656454672,
-    "TRANSLATE_X":30341.02184317007,
-    "TRANSLATE_Y":73485.80524598589,
+    "SCALE_X":268.9767328227336,
+    "SCALE_Y":268.9767328227336,
+    "TRANSLATE_X":15084.886974707422,
+    "TRANSLATE_Y":36795.96899794885,
     "map_line_color_red":0.0,
     "map_line_color_green":0.0,
     "map_line_color_blue":0.0,
@@ -848,7 +848,7 @@
             "NUMBER_OF_SUBREGION_POLYGONS":1,
             "SUBREGION_POLYGONS":[
                 {
-                    "name":"2_MapData",
+                    "name":"2",
                     "capital":"2_captial",
                     "leader":"2_leader",
                     "red":173,
@@ -3143,8 +3143,8 @@
     "number_of_image":1,
     "image":[
         {
-            "image_translateX":134.0,
-            "image_translateY":109.33333333333334,
+            "image_translateX":72.70015803016854,
+            "image_translateY":118.66666666668428,
             "image_path":"\\images\\The World\\Europe\\Belgium Flag.png"
         }
     ]

@@ -11,13 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -26,6 +27,7 @@ import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
 import mv.workspace.rvmmDialogController;
+import mv.workspace.rvmmWorkspace;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
 
 /**
@@ -96,23 +98,36 @@ public class rvmmData implements AppDataComponent {
         return colorController;
     }
     // current polygon Id Selection
-    public boolean polygonSelecting(int selectedPolygon){
+    public void polygonSelecting(int selectedPolygon){
         Polygon p;
-        boolean selectionChanged = false;
-        if(selectedPolygon != selectedPolygonID){
+        if(selectedPolygon < 0){
+            if(selectedPolygonID >= 0){
+                p = getSubregion(selectedPolygonID).get(0);
+                int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
+                p.getStyleClass().add(CLASS_MV_MAP);
+                p.setFill(Color.grayRgb(colorCode));
+                selectedPolygonID = -1;
+            }
+        }
+        else if(selectedPolygon != selectedPolygonID){
             if(selectedPolygonID != -1){
             p = getSubregion(selectedPolygonID).get(0);
             int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
               String GREY_STYLE ="-fx-fill: rgb("+colorCode+","+colorCode+","+colorCode+")";
-              p.setStyle(GREY_STYLE);
+              p.getStyleClass().add(CLASS_MV_MAP);
+              p.setFill(Color.grayRgb(colorCode));
             }
             selectedPolygonID = selectedPolygon;
-            selectionChanged = true;
             p = getSubregion(selectedPolygonID).get(0);
-            String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
-            p.setStyle(clickedStyle);
+//            String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
+            p.getStyleClass().clear();
+            p.setFill(Color.RED);
         }
-        return selectionChanged;
+        
+        if(selectedPolygonID >=0){
+            rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
+            workspace.getTable().getSelectionModel().select(subregionId);
+        }
     }
     
     public int currentSelectedPolygon(){
@@ -141,11 +156,6 @@ public class rvmmData implements AppDataComponent {
         map.getChildren().add(ocean);
        
         images.clear();
-//        subRegionToColorMappings.clear();
-//        String regionName = "";
-//        boolean haveCapital= false;
-//        boolean haveflags= false;
-//        boolean haveleaders= false;
     }
     
     /**
@@ -167,30 +177,26 @@ public class rvmmData implements AppDataComponent {
             }
             subregionPolygons.add(polygonToAdd);
             polygonToAdd.setFill(Color.grayRgb(colorCode));
-//            int rgbCode = rgbNumList.get(i);
-//            Color color = Color.rgb(rgbCode, rgbCode, rgbCode);
-//            randomizeSubregionsColor(polygonToAdd, rgbCode);
-//            String nameOfSubregion = Integer.toString(subregionId)+"_MapData";
-//            infoRegions.add(new SubRegionInfo(nameOfSubregion, nameOfSubregion+"_captial", nameOfSubregion+"_leader"));
-//            colorController.setSubRegionsToColorMappings(nameOfSubregion, color);
             polygonToAdd.getStyleClass().add(CLASS_MV_MAP);
             polygonToAdd.strokeProperty().bind(colorController.LINE_COLOR);
             polygonToAdd.strokeWidthProperty().bind(colorController.LINE_THICKNESS);
             polygonToAdd.setUserData(subregionId);
             map.getChildren().add(polygonToAdd);
             polygonToAdd.setOnMouseClicked(e->{
-                if(e.getClickCount() ==2){
-                    rvmmDialogController controller = new rvmmDialogController(app);
-                    controller.processEditSubregion((int)polygonToAdd.getUserData());
-                    selectedPolygonID = (int)polygonToAdd.getUserData();
+                if(e.getButton().equals(MouseButton.PRIMARY)){
+                    int id = (int)polygonToAdd.getUserData();
+                    polygonSelecting(id);
+                    rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
+                    workspace.getTable().getSelectionModel().select(id);
+                    if(e.getClickCount() ==2){
+                        rvmmDialogController controller = new rvmmDialogController(app);
+                        controller.processEditSubregion((int)polygonToAdd.getUserData());
+                    }
                 }
             });
-            
         }
         SubRegionInfo info = new SubRegionInfo(subRegionName, SubregionCaptial, SubregionLeader);
         info.setColor(colorCode);
-//        SimpleStringProperty spp = new SimpleStringProperty(subRegionName);
-//        setcolorCodeGetter(subRegionName, colorCode);
         infoRegions.add(subregionId, info);
         subregions.put(subregionId, subregionPolygons);
         subregionId++;
@@ -210,22 +216,20 @@ public class rvmmData implements AppDataComponent {
     public void randomizePainter(){
         ArrayList<Integer> ranN = randomNumGenertator(subregions.size());
         for(int i=0;i<subregions.size(); i++){
-            randomizeSubregionsColor(getSubregion(i).get(0), ranN.get(i));
+            setColorAndHover(getSubregion(i).get(0), ranN.get(i));
         }
     }
-    public void randomizeSubregionsColor(Polygon p, int rgbCode){
+    public void setColorAndHover(Polygon p, int rgbCode){
         String subregionName = getEachSubRegionsInfo((int)p.getUserData()).getSubregion();
         infoRegions.get((int)p.getUserData()).setColor(rgbCode);
-//        colorCodeGetter.put(subregionName, rgbCode);
         p.setFill(Color.grayRgb(rgbCode));
-        String GREY_STYLE ="-fx-fill: rgb("+rgbCode+","+rgbCode+","+rgbCode+")";
-//            String HOVERED_STYLE = "-fx-fill:  rgb("+rgbCode+", 0, 0)";
-            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
-            p.styleProperty()
-                    .bind(Bindings.when(p.hoverProperty())
-                            .then(new SimpleStringProperty(HOVERED_STYLE))
-                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
-    } 
+//        String GREY_STYLE ="-fx-fill: rgb("+rgbCode+","+rgbCode+","+rgbCode+")";
+//            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%,  blue , derive(blue, -30%), derive(blue, 30%));";
+//            p.styleProperty()
+//                    .bind(Bindings.when(p.hoverProperty())
+//                            .then(new SimpleStringProperty(HOVERED_STYLE))
+//                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
+    }
     /**
      * This calculates and returns the x pixel value that corresponds to the
      * xCoord longitude argument.

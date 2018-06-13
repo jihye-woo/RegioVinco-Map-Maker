@@ -170,7 +170,7 @@
 }*/
 .mv_map:hover{
     -fx-fill: 
-        radial-gradient(radius 180%, coral, derive(red, -30%), derive(red, 30%));
+        radial-gradient(radius 180%, skyblue, derive(blue, -30%), derive(blue, 30%));
 }
 .mv_map_clip_pane {
     -fx-border: 1 1 1 1;
