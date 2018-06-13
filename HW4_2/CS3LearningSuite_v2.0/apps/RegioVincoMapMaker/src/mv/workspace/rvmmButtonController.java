@@ -5,35 +5,15 @@
  */
 package mv.workspace;
 
-import djf.AppPropertyType;
-import static djf.AppPropertyType.APP_FILE_FOOLPROOF_SETTINGS;
-import static djf.AppPropertyType.APP_TITLE;
-import static djf.AppPropertyType.LOAD_ERROR_CONTENT;
-import static djf.AppPropertyType.LOAD_ERROR_TITLE;
-import static djf.AppPropertyType.LOAD_WORK_TITLE;
-import static djf.AppPropertyType.SAVE_ERROR_CONTENT;
-import static djf.AppPropertyType.SAVE_ERROR_TITLE;
-import static djf.AppPropertyType.SAVE_SUCCESS_CONTENT;
-import static djf.AppPropertyType.SAVE_SUCCESS_TITLE;
 import djf.AppTemplate;
-import static djf.AppTemplate.PATH_WORK;
-import djf.components.AppDataComponent;
-import djf.modules.AppFileModule;
-import djf.ui.dialogs.AppDialogsFacade;
-import java.io.File;
-import java.io.IOException;
 import javafx.collections.ObservableList;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import mv.RegioVincoMapMakerApp;
+import mv.data.ImageInfo;
 import mv.data.rvmmData;
-import mv.files.rvmmFiles;
-import static mv.workspace.style.MapViewerStyle.CLASS_RVMM_SELECTEDIMAGE;
-import static mv.rvmmDialogs.helperDialog.showOpenParentsDialog;
-import properties_manager.PropertiesManager;
 
 /**
  *
@@ -55,10 +35,13 @@ public class rvmmButtonController {
           app = initApp;
       }
       
-      public void processRemoveImage(Pane leftArea, ImageView selectedImage){
-          if(leftArea.getChildren().contains(selectedImage)){
-           leftArea.getChildren().remove(selectedImage);
+      public void processRemoveImage(ImageView selectedImage){
+          data = (rvmmData) app.getDataComponent();
+          ImageInfo imageInformation = data.getImageInfo(selectedImage);
+          if(imageInformation != null){
+              data.removeImage(imageInformation);
           }
+          
       }
       public void processAssginRandomColor(){
           rvmmData data = (rvmmData) app.getDataComponent();

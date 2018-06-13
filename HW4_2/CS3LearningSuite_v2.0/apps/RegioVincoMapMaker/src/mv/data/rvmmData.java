@@ -287,7 +287,7 @@ public class rvmmData implements AppDataComponent {
             leftArea = (Pane) map.getParent();
             leftArea.getChildren().add(iv);
             imagecon= new ImageInfo(image, imagePath, x, y);
-            images.add(imagecon);
+            images.add(leftArea.getChildren().indexOf(iv)-1, imagecon);
             iv.setOnMousePressed(e1->{
                 iv.setCursor(Cursor.HAND);
                 locationX = e1.getX();
@@ -315,11 +315,27 @@ public class rvmmData implements AppDataComponent {
     }
     
     public void removeImage(ImageInfo image){
-        images.remove(image);
+        ImageView removeImage = selectedImage;
+        deselectImage();
+        leftArea = (Pane) map.getParent();
+        if(images.contains(image)){
+            images.remove(image);
+        }
+        if(removeImage != null && leftArea.getChildren().contains(removeImage)){
+            leftArea.getChildren().remove(removeImage);
+        }
+        
     }
     
     public ArrayList<ImageInfo> getImages(){
         return images;
+    }
+    public ImageInfo getImageInfo(ImageView iv){
+        leftArea = (Pane) map.getParent();
+        if(leftArea.getChildren().contains(iv)){
+            return images.get(leftArea.getChildren().indexOf(iv)-1);
+        }
+        return null;
     }
     
     public void selectedImage(ImageView currentImage){

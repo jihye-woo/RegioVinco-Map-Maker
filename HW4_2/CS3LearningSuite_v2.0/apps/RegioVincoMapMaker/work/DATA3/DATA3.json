@@ -3140,12 +3140,7 @@
             ]
         }
     ],
-    "number_of_image":1,
+    "number_of_image":0,
     "image":[
-        {
-            "image_translateX":72.70015803016854,
-            "image_translateY":118.66666666668428,
-            "image_path":"\\images\\The World\\Europe\\Belgium Flag.png"
-        }
     ]
 }

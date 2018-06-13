@@ -55,7 +55,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     double originalY;
     double locationX;
     double locationY;
-    ImageView selectedImage = new ImageView();
+//    ImageView selectedImage = new ImageView();
     ObjectProperty<TableRow> selectedRow = new SimpleObjectProperty<TableRow>();
     rvmmData data;
     TableView table;
@@ -189,7 +189,8 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         });
         Button removeImage= workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_REMOVEIMAGE, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         removeImage.setOnAction(e->{
-            buttonController.processRemoveImage(leftArea, selectedImage);
+            data = (rvmmData) app.getDataComponent();
+            buttonController.processRemoveImage(data.getSelectedImage());
         });
         
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -366,6 +367,7 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             ocean.setWidth(newValue.getHeight()*2);
             ocean.setHeight(newValue.getHeight());
         });
+        
         
          // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();
