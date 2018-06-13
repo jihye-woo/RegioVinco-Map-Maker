@@ -111,8 +111,15 @@ public class rvmmData implements AppDataComponent {
             p.setStyle(clickedStyle);
         }
     }
+    
     public int currentSelectedPolygon(){
         return selectedPolygonID;
+    }
+    public void swapHashMapValue(int currentKey, int targetKey){
+        ObservableList<Polygon> instantValue = getSubregion(targetKey);
+        subregions.replace(targetKey, subregions.get(currentKey));
+        subregions.replace(currentKey, instantValue);
+        polygonSelecting(targetKey);
     }
     @Override
     public void reset() {

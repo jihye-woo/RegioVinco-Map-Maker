@@ -12,6 +12,7 @@ import djf.ui.controllers.AppFileController;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
@@ -51,7 +52,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     ImageView selectedImage = new ImageView();
     ObjectProperty<TableRow> selectedRow = new SimpleObjectProperty<TableRow>();
     rvmmData data;
-    boolean clickSomething = false;
     
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
@@ -90,7 +90,23 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         Label vboxLabel = workspaceBuilder.buildLabel(MV_LABEL, hbox1, null, CLASS_MV_MAP_VBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         hbox1.setAlignment(Pos.CENTER);
         Button movedown = workspaceBuilder.buildIconButton(MV_MOVE_DOWN_BUTTON, hbox1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        movedown.setOnAction(e->{
+            data = (rvmmData) app.getDataComponent();
+            int currentIndex = data.currentSelectedPolygon();
+            if(currentIndex < data.numOfSubregion()-2){
+                Collections.swap(data.getSubRegionInfo(), currentIndex, currentIndex+1);
+                 data.swapHashMapValue(currentIndex, currentIndex+1);
+            }
+        });
         Button moveup = workspaceBuilder.buildIconButton(MV_MOVE_UP_BUTTON, hbox1, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        moveup.setOnAction(e->{
+            data = (rvmmData) app.getDataComponent();
+            int currentIndex = data.currentSelectedPolygon();
+            if(currentIndex > 0){
+                Collections.swap(data.getSubRegionInfo(), currentIndex, currentIndex-1);
+                data.swapHashMapValue(currentIndex, currentIndex-1);
+            }
+        });
         SplitPane sp = new SplitPane(leftArea,rightArea);
         sp.setOrientation(Orientation.HORIZONTAL);
         sp.setDividerPositions(0.6);
@@ -261,7 +277,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
                     }
                 }
             });
-            
            return rows;
         });
         
