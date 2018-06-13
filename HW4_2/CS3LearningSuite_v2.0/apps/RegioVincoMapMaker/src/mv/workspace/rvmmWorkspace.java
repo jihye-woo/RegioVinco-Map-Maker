@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -25,7 +24,7 @@ import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -254,16 +253,13 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         table.setRowFactory(tableView -> {
             TableRow rows= new TableRow<>();
             rows.setOnMouseClicked(e->{
-                if(e.getClickCount()==2){
+                if(e.getButton().equals(MouseButton.PRIMARY)){
                     data = (rvmmData) app.getDataComponent();
                     data.polygonSelecting(rows.getIndex());
-                    dialogController.processEditSubregion(rows.getIndex());
-//                    clickSomething = true;
+                    if(e.getClickCount()==2){
+                        dialogController.processEditSubregion(rows.getIndex());
+                    }
                 }
-//                else if(e.getClickCount() ==1){
-//                    data = (rvmmData) app.getDataComponent();
-//                    data.polygonSelecting(rows.getIndex());
-//                }
             });
             
            return rows;
