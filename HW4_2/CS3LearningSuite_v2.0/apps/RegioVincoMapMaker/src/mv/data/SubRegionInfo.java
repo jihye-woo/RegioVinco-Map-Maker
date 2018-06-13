@@ -16,6 +16,8 @@ public class SubRegionInfo {
     SimpleStringProperty Capital = new SimpleStringProperty();
     SimpleStringProperty Leader = new SimpleStringProperty();
     String subregionName;
+    int colorCode;
+    rvmmData data;
 //    Color color;
 //    boolean haveCapital = false;
 //    boolean haveFlags = false;
@@ -40,6 +42,22 @@ public class SubRegionInfo {
     public String getLeader(){
         return Leader.get();
     }
+    public void setColor(int colorCode){
+        this.colorCode = colorCode;
+    }
+    public int getColor(){
+        return colorCode;
+    }
+    
+    public SimpleStringProperty getSubregionProperty(){
+        return Subregion;
+    }
+    public SimpleStringProperty getCapitalProperty(){
+        return Capital;
+    }
+    public SimpleStringProperty getLeaderProperty(){
+        return Leader;
+    }
 //    public boolean getHaveCapital(){
 //        return haveCapital;
 //    }
@@ -49,7 +67,6 @@ public class SubRegionInfo {
 //    public boolean getHaveLeaders(){
 //        return haveLeaders;
 //    }
-    
     // setter 
   
     public void setSubregion(String Subregion){

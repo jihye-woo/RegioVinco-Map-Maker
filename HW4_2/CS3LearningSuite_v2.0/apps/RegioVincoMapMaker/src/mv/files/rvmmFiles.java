@@ -21,6 +21,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
@@ -143,10 +144,11 @@ public class rvmmFiles implements AppFileComponent {
                         .add(JSON_POLYGON_POINT_Y, YToLat(polygon.getPoints().get(j+1), rvmmdata.getMap())).build();
                 subregions_polygons_points.add(subregions_polygons_point);
                 }
-                String SubregionName = polygon.getUserData().toString()+"_MapData";
-                String SubregionCaptial = polygon.getUserData().toString()+"_captial";
-                String SubregionLeader = polygon.getUserData().toString() + "_leader";
-                int colorCode = rvmmdata.getColorFromName(SubregionName);
+                int polyId = (int)polygon.getUserData();
+                String SubregionName = rvmmdata.getEachSubRegionsInfo(polyId).getSubregion();
+                String SubregionCaptial = rvmmdata.getEachSubRegionsInfo(polyId).getCapital();
+                String SubregionLeader = rvmmdata.getEachSubRegionsInfo(polyId).getLeader();
+                int colorCode = rvmmdata.getEachSubRegionsInfo(polyId).getColor();
                 JsonObject plusColor = Json.createObjectBuilder()
                         .add(JSON_SUBREGIONS_NAME, SubregionName)
                         .add(JSON_SUBREGIONS_CAPTIAL, SubregionCaptial)
@@ -251,6 +253,7 @@ public class rvmmFiles implements AppFileComponent {
             String subRegionName = "";
             String SubregionCaptial ="";
             String SubregionLeader ="";
+            double red = 0;
             for(int polygonIndex = 0; polygonIndex < numSubregionPolygons; polygonIndex++) {
                 // GET EACH POLYGON (IN LONG/LAT GEOGRAPHIC COORDINATES)
                 JsonArray jsonPolygon = jsonSubregion.getJsonArray(JSON_SUBREGION_POLYGONS);
@@ -258,10 +261,9 @@ public class rvmmFiles implements AppFileComponent {
                 subRegionName = polysinfo.getString(JSON_SUBREGIONS_NAME);
                 SubregionCaptial = polysinfo.getString(JSON_SUBREGIONS_CAPTIAL);
                 SubregionLeader = polysinfo.getString(JSON_SUBREGIONS_LEADER);
-                double red = getDataAsDouble(polysinfo, JSON_SUBREGIONS_RED);
+                red = getDataAsDouble(polysinfo, JSON_SUBREGIONS_RED);
                 double green = getDataAsDouble(polysinfo, JSON_SUBREGIONS_GREEN);
                 double blue = getDataAsDouble(polysinfo, JSON_SUBREGIONS_BLUE);
-                mapData.setcolorCodeGetter(subRegionName, (int)red);
 //                mapData.setSubRegionInfo(subRegionName, SubregionCaptial, SubregionLeader, (int)red);
                 JsonArray pointsArray = polysinfo.getJsonArray(JSON_POLYGON_POINT);
                 ArrayList<Double> polygonPointsList = new ArrayList();
@@ -274,7 +276,7 @@ public class rvmmFiles implements AppFileComponent {
                 }
                 subregionPolygonPoints.add(polygonPointsList);
             }
-            mapData.addSubregion(subregionPolygonPoints, subRegionName, SubregionCaptial, SubregionLeader);
+            mapData.addSubregion(subregionPolygonPoints, subRegionName, SubregionCaptial, SubregionLeader, (int)red);
         }
         TableView table= (TableView) mapData.getApp().getGUIModule().getGUINode(RVMM_TABLE);
                 table.setItems(mapData.getSubRegionInfo());

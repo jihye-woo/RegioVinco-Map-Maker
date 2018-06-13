@@ -1,5 +1,5 @@
-DATA2-work/NewMap2/DATA2/DATA2.json
 DATA3-work/DATA3/DATA3.json
+DATA2-work/NewMap2/DATA2/DATA2.json
 DATA1_3-work/DATA1_3/DATA1_3.json
 DATA1_2-work/DATA1_2/DATA1_2.json
 DATA1_1-work/DATA1_1/DATA1_1.json

@@ -11,11 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
-import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -25,7 +25,6 @@ import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
-import static mv.MapMakerPropertyType.RVMM_TABLE;
 import mv.workspace.rvmmDialogController;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
 
@@ -45,7 +44,7 @@ public class rvmmData implements AppDataComponent {
     int subregionId;
     HashMap<Integer, ObservableList<Polygon>> subregions; // id
     ObservableList<SubRegionInfo> infoRegions; //id
-    HashMap<String, Integer> colorCodeGetter; //name -> color
+//    HashMap<String, Integer> colorCodeGetter; //name -> color
     // Color and Thickness
     ColorAndThicknessInfo colorController;
     // Images
@@ -63,17 +62,12 @@ public class rvmmData implements AppDataComponent {
         images = new ArrayList<ImageInfo>();
         colorController = new ColorAndThicknessInfo();
         infoRegions = FXCollections.observableArrayList();
-        colorCodeGetter = new HashMap<String, Integer>();
+//        colorCodeGetter = new HashMap<String, Integer>();
         selectedPolygonID = -1;
     }
-    public void setcolorCodeGetter(String subRegionName, int colorCode){
-        colorCodeGetter.put(subRegionName, colorCode);
-        
-    }
-    public int getColorFromName(String subRegionName){
-        return colorCodeGetter.get(subRegionName);
-    }
-  
+//    public void setcolorCodeGetter(String subRegionName, int colorCode){
+//        colorCodeGetter.put(subRegionName, colorCode);
+//    }
     public ObservableList<SubRegionInfo> getSubRegionInfo(){
         return infoRegions;
     }
@@ -104,16 +98,18 @@ public class rvmmData implements AppDataComponent {
     // current polygon Id Selection
     public void polygonSelecting(int selectedPolygon){
         Polygon p;
-        if(selectedPolygonID != -1){
+        if(selectedPolygon != selectedPolygonID){
+            if(selectedPolygonID != -1){
             p = getSubregion(selectedPolygonID).get(0);
-            int colorCode = colorCodeGetter.get(getEachSubRegionsInfo((int)p.getUserData()).getSubregion());
+            int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
               String GREY_STYLE ="-fx-fill: rgb("+colorCode+","+colorCode+","+colorCode+")";
               p.setStyle(GREY_STYLE);
+            }
+            selectedPolygonID = selectedPolygon;
+            p = getSubregion(selectedPolygonID).get(0);
+            String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
+            p.setStyle(clickedStyle);
         }
-        selectedPolygonID = selectedPolygon;
-        p = getSubregion(selectedPolygonID).get(0);
-        String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
-        p.setStyle(clickedStyle);
     }
     public int currentSelectedPolygon(){
         return selectedPolygonID;
@@ -145,7 +141,7 @@ public class rvmmData implements AppDataComponent {
     /**
      * For adding polygons to the map.
      */
-    public void addSubregion(ArrayList<ArrayList<Double>> rawPolygons,String subRegionName, String SubregionCaptial, String SubregionLeader) {
+    public void addSubregion(ArrayList<ArrayList<Double>> rawPolygons,String subRegionName, String SubregionCaptial, String SubregionLeader, int colorCode) {
         ObservableList<Polygon> subregionPolygons = FXCollections.observableArrayList();
         ArrayList<Integer> rgbNumList = randomNumGenertator(rawPolygons.size());
         for (int i = 0; i < rawPolygons.size(); i++) {
@@ -160,7 +156,6 @@ public class rvmmData implements AppDataComponent {
                 transformedPolygonPoints.addAll(x, y);
             }
             subregionPolygons.add(polygonToAdd);
-            int colorCode = colorCodeGetter.get(subRegionName);
             polygonToAdd.setFill(Color.grayRgb(colorCode));
 //            int rgbCode = rgbNumList.get(i);
 //            Color color = Color.rgb(rgbCode, rgbCode, rgbCode);
@@ -183,6 +178,9 @@ public class rvmmData implements AppDataComponent {
             
         }
         SubRegionInfo info = new SubRegionInfo(subRegionName, SubregionCaptial, SubregionLeader);
+        info.setColor(colorCode);
+//        SimpleStringProperty spp = new SimpleStringProperty(subRegionName);
+//        setcolorCodeGetter(subRegionName, colorCode);
         infoRegions.add(subregionId, info);
         subregions.put(subregionId, subregionPolygons);
         subregionId++;
@@ -206,7 +204,9 @@ public class rvmmData implements AppDataComponent {
         }
     }
     public void randomizeSubregionsColor(Polygon p, int rgbCode){
-        colorCodeGetter.put(getEachSubRegionsInfo((int)p.getUserData()).getSubregion(), rgbCode);
+        String subregionName = getEachSubRegionsInfo((int)p.getUserData()).getSubregion();
+        infoRegions.get((int)p.getUserData()).setColor(rgbCode);
+//        colorCodeGetter.put(subregionName, rgbCode);
         p.setFill(Color.grayRgb(rgbCode));
         String GREY_STYLE ="-fx-fill: rgb("+rgbCode+","+rgbCode+","+rgbCode+")";
 //            String HOVERED_STYLE = "-fx-fill:  rgb("+rgbCode+", 0, 0)";

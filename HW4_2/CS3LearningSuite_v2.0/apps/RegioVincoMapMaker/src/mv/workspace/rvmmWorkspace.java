@@ -260,22 +260,12 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
                     dialogController.processEditSubregion(rows.getIndex());
 //                    clickSomething = true;
                 }
-                if(e.getClickCount() ==1){
-                    data = (rvmmData) app.getDataComponent();
-                    data.polygonSelecting(rows.getIndex());
-                }
+//                else if(e.getClickCount() ==1){
+//                    data = (rvmmData) app.getDataComponent();
+//                    data.polygonSelecting(rows.getIndex());
+//                }
             });
-//            rows.selectedProperty().addListener((obs, pastSelection, currentSelection)->{
-//                    if(currentSelection){
-//                        selectedRow.set(rows);
-//                    }
-//                    else{
-//                        data = (rvmmData) app.getDataComponent();
-//                        if(data.currentSelectedPolygon() <0){
-//                            table.getSelectionModel().clearSelection();
-//                        }
-//                    }
-//                });
+            
            return rows;
         });
         
