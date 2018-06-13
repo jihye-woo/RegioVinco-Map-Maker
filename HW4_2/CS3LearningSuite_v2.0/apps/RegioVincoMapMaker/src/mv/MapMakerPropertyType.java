@@ -93,7 +93,8 @@ public enum MapMakerPropertyType {
 
     // FOOLPROOF SETTINGS
     MV_FOOLPROOF_SETTINGS,
-        
+    change_polygon,change_polygon_title,
+    Move_Polygon, Move_polygon_title,
     // THIS IS THE EXPORT TEMPLATE FILE NAME
     MV_EXPORT_TEMPLATE_FILE_NAME
 }

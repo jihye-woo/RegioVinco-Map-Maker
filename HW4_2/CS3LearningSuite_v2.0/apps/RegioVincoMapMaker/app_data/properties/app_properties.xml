@@ -99,7 +99,10 @@
         <property name="CREATEMAP_BUTTON_ICON"       value="create.png"></property>
         <property name="WELCOME_DIALOG_NEW_BUTTON_TEXT"       value="Creat A New Map"></property>
         <property name="WELCOME_DIALOG_RECENT_WORK_LABEL"       value="RECENT WORK"></property>
-
+        <property name="change_polygon"                         value ="Click to Change Polygon's Subregion"></property>
+        <property name="change_polygon_title"                         value ="Change Polygon's Subregion"></property>
+        <property name="Move_Polygon"       value ="Move to the Polygon to the New Polygon"></property>
+        <property name="Move_polygon_title"                         value ="Move Polygon's Subregion"></property>
                 <!-- Creat New Map Dialogs -->
                 <property name="CREATENEW_DIALOG_HEADER_LABEL_TEXT"       value="Create New Map"></property>
                 <property name="CREATENEW_DIALOG_REGIONAME_LABEL_TEXT"       value="Region Name"></property>
@@ -141,6 +144,7 @@
 
 
                 <property name="MV_MAP_PANE"                             value="The World.png"></property>
+
 
         <!-- ENGLISH IS THE DEFAULT -->
         <property name="DEFAULT_LANGUAGE"               value="English"></property>

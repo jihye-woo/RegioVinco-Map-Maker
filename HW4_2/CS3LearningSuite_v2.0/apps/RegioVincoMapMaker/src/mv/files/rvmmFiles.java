@@ -47,6 +47,7 @@ import static mv.MapMakerPropertyType.RVMM_TABLE;
 import static mv.MapMakerPropertyType.RVMM_TABLECOL1;
 import mv.data.ImageInfo;
 import mv.data.rvmmData;
+import mv.workspace.rvmmWorkspace;
 import properties_manager.PropertiesManager;
 
 /**
@@ -214,6 +215,7 @@ public class rvmmFiles implements AppFileComponent {
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException{
         rvmmData mapData = (rvmmData)data;
+        rvmmWorkspace workspace = (rvmmWorkspace) mapData.getApp().getWorkspaceComponent();
         mapData.reset();
         
         ArrayList<Double> locationOfImages = new ArrayList<Double>();
@@ -241,6 +243,7 @@ public class rvmmFiles implements AppFileComponent {
         double lineColorBlue = getDataAsDouble(json,JSON_MAP_LINE_COLOR_BLUE);
         Color lineColor = Color.color(lineColorRed, lineColorGreen, lineColorBlue);
         mapData.getColorController().changeColor(lineColor);
+        workspace.getBorderColorPicker().setValue(lineColor);
         double lineThickness = getDataAsDouble(json,JSON_MAP_THICKNESS);
         mapData.getColorController().changeThinkness(lineThickness);
     // GO THROUGH ALL THE SUBREGIONS

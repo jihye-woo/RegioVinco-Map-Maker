@@ -1,6 +1,7 @@
 package mv.data;
 
 import djf.components.AppDataComponent;
+import djf.ui.dialogs.AppDialogsFacade;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -9,13 +10,12 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.ButtonType;
+import static javafx.scene.control.ButtonType.YES;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -26,6 +26,10 @@ import javafx.scene.shape.Rectangle;
 import javax.imageio.ImageIO;
 import mv.RegioVincoMapMakerApp;
 import static mv.MapMakerPropertyType.MV_MAP_PANE;
+import static mv.MapMakerPropertyType.Move_Polygon;
+import static mv.MapMakerPropertyType.Move_polygon_title;
+import static mv.MapMakerPropertyType.change_polygon;
+import static mv.MapMakerPropertyType.change_polygon_title;
 import mv.workspace.rvmmDialogController;
 import mv.workspace.rvmmWorkspace;
 import static mv.workspace.style.MapViewerStyle.CLASS_MV_MAP;
@@ -52,7 +56,7 @@ public class rvmmData implements AppDataComponent {
     // Images
     ArrayList<ImageInfo> images;
     ImageView selectedImage;
-    int selectedPolygonID;
+    int wasSelected = -1;
     /**
      * Constructor can only be called after the workspace
      * has been initialized because it retrieves the map pane.
@@ -65,7 +69,7 @@ public class rvmmData implements AppDataComponent {
         colorController = new ColorAndThicknessInfo();
         infoRegions = FXCollections.observableArrayList();
 //        colorCodeGetter = new HashMap<String, Integer>();
-        selectedPolygonID = -1;
+        wasSelected = -1;
     }
 //    public void setcolorCodeGetter(String subRegionName, int colorCode){
 //        colorCodeGetter.put(subRegionName, colorCode);
@@ -101,44 +105,46 @@ public class rvmmData implements AppDataComponent {
     public void polygonSelecting(int selectedPolygon){
         Polygon p;
         if(selectedPolygon < 0){
-            if(selectedPolygonID >= 0){
-                p = getSubregion(selectedPolygonID).get(0);
+            if(wasSelected >= 0){
+                p = getSubregion(wasSelected).get(0);
                 int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
                 p.getStyleClass().add(CLASS_MV_MAP);
                 p.setFill(Color.grayRgb(colorCode));
-                selectedPolygonID = -1;
+                wasSelected = -1;
             }
         }
-        else if(selectedPolygon != selectedPolygonID){
-            if(selectedPolygonID != -1){
-            p = getSubregion(selectedPolygonID).get(0);
-            int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
-              String GREY_STYLE ="-fx-fill: rgb("+colorCode+","+colorCode+","+colorCode+")";
-              p.getStyleClass().add(CLASS_MV_MAP);
-              p.setFill(Color.grayRgb(colorCode));
+        else if(selectedPolygon != wasSelected){
+            if(wasSelected != -1){ // unselect
+                p = getSubregion(wasSelected).get(0);
+                int colorCode = getEachSubRegionsInfo((int)p.getUserData()).getColor();
+                String GREY_STYLE ="-fx-fill: rgb("+colorCode+","+colorCode+","+colorCode+")";
+                p.getStyleClass().clear();
+                p.getStyleClass().add(CLASS_MV_MAP);
+                p.setFill(Color.grayRgb(colorCode));
             }
-            selectedPolygonID = selectedPolygon;
-            p = getSubregion(selectedPolygonID).get(0);
-//            String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
+            wasSelected = selectedPolygon;
+            p = getSubregion(wasSelected).get(0);
             p.getStyleClass().clear();
             p.setFill(Color.RED);
+            rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
+//            workspace.getTable().getSelectionModel().select((int)p.getUserData());
         }
         
-        if(selectedPolygonID >=0){
+        if(wasSelected >=0){
             rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
             workspace.getTable().getSelectionModel().select(subregionId);
         }
     }
     
     public int currentSelectedPolygon(){
-        return selectedPolygonID;
+        return wasSelected;
     }
     public void swapHashMapValue(int currentKey, int targetKey){
         ObservableList<Polygon> instantValue = getSubregion(targetKey);
         subregions.replace(targetKey, subregions.get(currentKey));
         subregions.replace(currentKey, instantValue);
-        polygonSelecting(targetKey);
     }
+    
     @Override
     public void reset() {
         // CLEAR THE DATA
@@ -183,10 +189,24 @@ public class rvmmData implements AppDataComponent {
             polygonToAdd.setUserData(subregionId);
             map.getChildren().add(polygonToAdd);
             polygonToAdd.setOnMouseClicked(e->{
-                if(e.getButton().equals(MouseButton.PRIMARY)){
+                rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
+                if(workspace.CanIMoveToPolygon()){
+                    if(e.getClickCount() == 1){
+                         AppDialogsFacade.showMessageDialog(app.getGUIModule().getWindow(), change_polygon_title, change_polygon);
+                         if(wasSelected >=0 && (wasSelected != (int)polygonToAdd.getUserData())){
+                             ButtonType buttonType = AppDialogsFacade.showYesNoCancelDialog(app.getGUIModule().getWindow(), Move_polygon_title, Move_Polygon);
+                             if(buttonType.equals(YES)){
+                                workspace.swapPoly(wasSelected, (int)polygonToAdd.getUserData());
+                             }
+                         }
+                        int id = (int)polygonToAdd.getUserData();
+                        polygonSelecting(id);
+                        workspace.getTable().getSelectionModel().select(id);
+                    }
+                }
+                else if(e.getButton().equals(MouseButton.PRIMARY)){
                     int id = (int)polygonToAdd.getUserData();
                     polygonSelecting(id);
-                    rvmmWorkspace workspace = (rvmmWorkspace) app.getWorkspaceComponent();
                     workspace.getTable().getSelectionModel().select(id);
                     if(e.getClickCount() ==2){
                         rvmmDialogController controller = new rvmmDialogController(app);
@@ -194,6 +214,7 @@ public class rvmmData implements AppDataComponent {
                     }
                 }
             });
+            
         }
         SubRegionInfo info = new SubRegionInfo(subRegionName, SubregionCaptial, SubregionLeader);
         info.setColor(colorCode);
@@ -222,13 +243,9 @@ public class rvmmData implements AppDataComponent {
     public void setColorAndHover(Polygon p, int rgbCode){
         String subregionName = getEachSubRegionsInfo((int)p.getUserData()).getSubregion();
         infoRegions.get((int)p.getUserData()).setColor(rgbCode);
+        p.getStyleClass().clear();
         p.setFill(Color.grayRgb(rgbCode));
-//        String GREY_STYLE ="-fx-fill: rgb("+rgbCode+","+rgbCode+","+rgbCode+")";
-//            String HOVERED_STYLE = "-fx-fill:  radial-gradient(radius 180%,  blue , derive(blue, -30%), derive(blue, 30%));";
-//            p.styleProperty()
-//                    .bind(Bindings.when(p.hoverProperty())
-//                            .then(new SimpleStringProperty(HOVERED_STYLE))
-//                            .otherwise(new SimpleStringProperty(GREY_STYLE)));
+        p.getStyleClass().add(CLASS_MV_MAP);
     }
     /**
      * This calculates and returns the x pixel value that corresponds to the
@@ -311,10 +328,17 @@ public class rvmmData implements AppDataComponent {
             selectedImage.setScaleY(selectedImage.getScaleY()-0.05);
         }
         selectedImage = currentImage;
-        
         currentImage.setScaleX(currentImage.getScaleX()+0.05);
         currentImage.setScaleY(currentImage.getScaleY()+0.05);
     }
+    public void deselectImage(){
+        if(selectedImage!= null){
+            selectedImage.setScaleX(selectedImage.getScaleX()-0.05);
+            selectedImage.setScaleY(selectedImage.getScaleY()-0.05);
+        }
+        selectedImage = null;
+    }
+    
     public ImageView getSelectedImage(){
         return selectedImage;
     }

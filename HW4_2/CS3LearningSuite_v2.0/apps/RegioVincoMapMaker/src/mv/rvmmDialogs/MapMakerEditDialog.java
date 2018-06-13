@@ -163,7 +163,6 @@ public class MapMakerEditDialog extends Stage{
         String subreigonName = data.getSubRegionInfo().get(polygonId).getSubregion();
         String Captial = data.getSubRegionInfo().get(polygonId).getCapital();
         String Leader = data.getSubRegionInfo().get(polygonId).getLeader();
-        
         data.polygonSelecting(polygonId);
         // customize setting 
         headerLabel.setAlignment(Pos.CENTER_RIGHT);
