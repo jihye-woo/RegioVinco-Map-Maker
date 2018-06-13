@@ -100,6 +100,9 @@ gridPane.setHalignment(headerLabel, HPos.CENTER);
         heightTextField.setText(Double.toString(leftArea.getWidth()));
         widthTextField.setText(Double.toString(data.getMap().getWidth()));
         okButton.setOnAction(e->{
+              Rectangle ClippingRectangle = (Rectangle)data.getMap().getParent().getParent().getClip();
+              ClippingRectangle.setWidth(Double.parseDouble(widthTextField.getText()));
+              ClippingRectangle.setHeight(Double.parseDouble(heightTextField.getText()));
 //            Rectangle clippingLeft = new Rectangle();
 //            leftArea.setClip(clippingLeft);
 //            clippingLeft.widthProperty().bind(leftArea.widthProperty());

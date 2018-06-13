@@ -96,8 +96,9 @@ public class rvmmData implements AppDataComponent {
         return colorController;
     }
     // current polygon Id Selection
-    public void polygonSelecting(int selectedPolygon){
+    public boolean polygonSelecting(int selectedPolygon){
         Polygon p;
+        boolean selectionChanged = false;
         if(selectedPolygon != selectedPolygonID){
             if(selectedPolygonID != -1){
             p = getSubregion(selectedPolygonID).get(0);
@@ -106,10 +107,12 @@ public class rvmmData implements AppDataComponent {
               p.setStyle(GREY_STYLE);
             }
             selectedPolygonID = selectedPolygon;
+            selectionChanged = true;
             p = getSubregion(selectedPolygonID).get(0);
             String clickedStyle = "-fx-fill:  radial-gradient(radius 180%,  red , derive(red, -30%), derive(red, 30%));";
             p.setStyle(clickedStyle);
         }
+        return selectionChanged;
     }
     
     public int currentSelectedPolygon(){

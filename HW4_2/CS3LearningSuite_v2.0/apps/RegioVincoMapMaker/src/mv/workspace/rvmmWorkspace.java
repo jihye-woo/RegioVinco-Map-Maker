@@ -102,10 +102,15 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         moveup.setOnAction(e->{
             data = (rvmmData) app.getDataComponent();
             int currentIndex = data.currentSelectedPolygon();
+            System.out.println(currentIndex);
+            System.out.println(data.getEachSubRegionsInfo(currentIndex).getSubregion());
             if(currentIndex > 0){
                 Collections.swap(data.getSubRegionInfo(), currentIndex, currentIndex-1);
                 data.swapHashMapValue(currentIndex, currentIndex-1);
             }
+            currentIndex = data.currentSelectedPolygon();
+            System.out.println(currentIndex);
+            System.out.println(data.getEachSubRegionsInfo(currentIndex).getSubregion());
         });
         SplitPane sp = new SplitPane(leftArea,rightArea);
         sp.setOrientation(Orientation.HORIZONTAL);
