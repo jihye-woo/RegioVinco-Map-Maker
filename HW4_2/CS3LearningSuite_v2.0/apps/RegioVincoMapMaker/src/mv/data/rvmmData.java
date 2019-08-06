@@ -288,6 +288,7 @@ public class rvmmData implements AppDataComponent {
             leftArea.getChildren().add(iv);
             imagecon= new ImageInfo(image, imagePath, x, y);
             images.add(leftArea.getChildren().indexOf(iv)-1, imagecon);
+            
             iv.setOnMousePressed(e1->{
                 iv.setCursor(Cursor.HAND);
                 locationX = e1.getX();

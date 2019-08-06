@@ -9,10 +9,9 @@ import static djf.modules.AppGUIModule.FOCUS_TRAVERSABLE;
 import static djf.modules.AppGUIModule.HAS_KEY_HANDLER;
 import djf.ui.AppNodesBuilder;
 import djf.ui.controllers.AppFileController;
-import djf.ui.dialogs.AppDialogsFacade;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -30,11 +30,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import static javafx.scene.paint.CycleMethod.NO_CYCLE;
+import static javafx.scene.paint.CycleMethod.REFLECT;
+import static javafx.scene.paint.CycleMethod.REPEAT;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import static mv.MapMakerPropertyType.CREATEMAP_BUTTON;
@@ -61,6 +69,9 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
     TableView table;
     ColorPicker borderColorPicker;
     boolean moveToPolygon = false;
+    RadialGradient gradient;
+    Rectangle ocean;
+    BackGroundValue backgroundValues;
     
     public rvmmWorkspace(RegioVincoMapMakerApp app) {
         super(app);
@@ -78,18 +89,17 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         AppFileController controller = new AppFileController((AppTemplate)app);
         rvmmDialogController dialogController = new rvmmDialogController((AppTemplate) app);
         rvmmButtonController buttonController = new rvmmButtonController((RegioVincoMapMakerApp) app);
-        
+        backgroundValues = new BackGroundValue();
         // AND THIS WILL BE USED TO CLIP THE MAP SO WE CAN ZOOM
         BorderPane outerMapPane = new BorderPane();
         Rectangle clippingRectangle = new Rectangle();
-        Rectangle frame = new Rectangle();
+//        Rectangle frame = new Rectangle();
         outerMapPane.setClip(clippingRectangle);
-        frame.widthProperty().bind(clippingRectangle.widthProperty());
-        frame.heightProperty().bind(clippingRectangle.heightProperty());
-        frame.opacityProperty().set(0);
-        frame.setStrokeWidth(100);
-        frame.setStroke(Color.CORAL);
-        frame.setVisible(false);
+        gradient = new RadialGradient(backgroundValues.getFocusAngle().getValue(),
+        backgroundValues.getFocusDistance().getValue(), backgroundValues.getCenterX().getValue(), backgroundValues.getCenterY().getValue(), 
+                backgroundValues.getBackgroundGadient().getValue(), backgroundValues.getProportional().getValue(), backgroundValues.getCycleMethod().getValue(),
+                backgroundValues.getStop1().getValue(), backgroundValues.getStop2().getValue());
+          
         ScrollBar s1 = new ScrollBar();
         s1.setMax(800);
         s1.setMin(0);
@@ -98,6 +108,8 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         Pane leftBasedArea = new Pane();
         Pane leftArea = new Pane();
         leftArea.getChildren().add(mapPane);
+       
+        
         VBox rightArea = workspaceBuilder.buildVBox(RVMM_RIGHTAREA, null, null, CLASS_RVMM_TABLE, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         HBox hbox1 = workspaceBuilder.buildHBox(MV_MAP_HBOX1, rightArea, null, CLASS_MV_MAP_HBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Label vboxLabel = workspaceBuilder.buildLabel(MV_LABEL, hbox1, null, CLASS_MV_MAP_VBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -192,7 +204,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             data = (rvmmData) app.getDataComponent();
             buttonController.processRemoveImage(data.getSelectedImage());
         });
-        
         Button topLeft = workspaceBuilder.buildIconButton(RVMM_TOOLBAR_BUTTON_TOPLEFT, toolbar3, null, CLASS_MV_MAP_ICON, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         topLeft.setOnAction(e->{
             buttonController.processSanpTopLeft();
@@ -209,7 +220,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         resize.setOnAction(e->{
             dialogController.processChangeDimensions();
         });
-        
         mapPane.setOnMousePressed(e->{
             data = (rvmmData) app.getDataComponent();
             originalX = e.getX();
@@ -252,7 +262,16 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         toggleFrameBox.selectedProperty().addListener(new ChangeListener<Boolean>(){
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    frame.setVisible(newValue);
+                Pane left = (Pane) ((rvmmData)app.getDataComponent()).getMap().getParent();
+                if(newValue){
+//                    left.borderProperty().set(new Border(   BorderStroke expected = new BorderStroke(Color.BLACK, Color.BLACK,
+//            Color.BLACK, Color.BLACK, BorderStrokeStyle.NONE,
+//            BorderStrokeStyle.NONE, BorderStrokeStyle.NONE,
+//            BorderStrokeStyle.SOLID, null, null, Insets.EMPTY);));
+                }
+                else{
+                    left.borderProperty().setValue(Border.EMPTY);
+                }
             }
         });
         
@@ -326,12 +345,25 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         //Hbox2 2
         Slider bggradientSlider = workspaceBuilder.buildSlider(RVMM_BOTTOM1_SLIDER1, bottom2, null, CLASS_RVMM_CHECKBOX, 0, 360, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         bggradientSlider.setMajorTickUnit(25);
+        bggradientSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> {backgroundValues.setBackgroundGadient(newVal.doubleValue());
+           
+        });
         Slider fangleSlider = workspaceBuilder.buildSlider(RVMM_BOTTOM1_SLIDER2, bottom2, null, CLASS_RVMM_CHECKBOX, 0, 1920, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         fangleSlider.setMajorTickUnit(500);
+        fangleSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> {backgroundValues.setFocusAngle(newVal.doubleValue());
+          updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));});
         Slider centerXSlider = workspaceBuilder.buildSlider(RVMM_BOTTOM1_SLIDER3, bottom2, null, CLASS_RVMM_CHECKBOX, 0, 960, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         centerXSlider.setMajorTickUnit(200);
+        centerXSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> {backgroundValues.setCenterX(newVal.doubleValue());
+                updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));});
         ColorPicker pickStop0Color = workspaceBuilder.buildColorPicker(RVMM_BOTTOM1_COLORPICKER, bottom2, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-        
+        pickStop0Color.setOnAction(e->{
+             backgroundValues.setStop2(new Stop(0, pickStop0Color.getValue()));
+             updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));
+        });
         //Hbox2 3
         Label Proportional = workspaceBuilder.buildLabel(RVMM_BOTTOM2_1LABEL, bottom3, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Label focusDistance = workspaceBuilder.buildLabel(RVMM_BOTTOM2_2LABEL, bottom3, null, CLASS_RVMM_BOTTOMBOX_LABEL, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
@@ -343,15 +375,26 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
         CheckBox proportionalCheckBox = workspaceBuilder.buildCheckBox(RVMM_BOTTOM2_CHECKBOX, bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         Slider focuseDistanceSlider = workspaceBuilder.buildSlider(RVMM_BOTTOM2_SLIDER1, bottom4, null, CLASS_RVMM_CHECKBOX, -1, 1, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         focuseDistanceSlider.setMajorTickUnit(2);
+        focuseDistanceSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> {backgroundValues.setFocusDistance(newVal.doubleValue());
+              updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));
+        });
         Slider centerYSlider = workspaceBuilder.buildSlider(RVMM_BOTTOM2_SLIDER2, bottom4, null, CLASS_RVMM_CHECKBOX, 0, 1080, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
         centerYSlider.setMajorTickUnit(500);
-        
-        ArrayList<String> options = new ArrayList<String>();
-        options.add("NO_CYCLE");
-        options.add("CYCLE");
-        ComboBox cycleMethodBox = workspaceBuilder.buildComboBox(RVMM_BOTTOM2_COMBOBOX, options, "NO_CYCLE", bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        centerYSlider.valueProperty().addListener((obs, oldval, newVal)
+           -> {backgroundValues.setCenterY(newVal.doubleValue());
+           updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));});
+        ComboBox<CycleMethod> cycleMethodBox = workspaceBuilder.buildComboBox(RVMM_BOTTOM2_COMBOBOX, null, null, bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
+        cycleMethodBox.getItems().addAll(NO_CYCLE, REFLECT, REPEAT);
+        cycleMethodBox.setOnAction(e->{
+            backgroundValues.setCycleMethod(cycleMethodBox.getSelectionModel().getSelectedItem());
+            updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));
+        });
         ColorPicker pickStop1Color = workspaceBuilder.buildColorPicker(RVMM_BOTTOM2_COLORPICKER, bottom4, null, CLASS_RVMM_CHECKBOX, HAS_KEY_HANDLER, FOCUS_TRAVERSABLE, ENABLED);
-    
+        pickStop1Color.setOnAction(e->{
+            backgroundValues.setStop1(new Stop(1, pickStop1Color.getValue()));
+            updateBackground(backgroundValues, (Rectangle) ((rvmmData)app.getDataComponent()).getMap().getChildren().get(0));
+        });
         Rectangle ocean = new Rectangle();
         mapPane.getChildren().add(ocean);
         ocean.getStyleClass().add(CLASS_MV_MAP_OCEAN);
@@ -367,8 +410,6 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
             ocean.setWidth(newValue.getHeight()*2);
             ocean.setHeight(newValue.getHeight());
         });
-        
-        
          // AND PUT EVERYTHING IN THE WORKSPACE
         workspace = new BorderPane();
         ((BorderPane)workspace).setTop(topToolBar);
@@ -384,6 +425,17 @@ public class rvmmWorkspace extends AppWorkspaceComponent {
                 Collections.swap(data.getSubRegionInfo(), currentIndex, targetIndext);
                 data.swapHashMapValue(currentIndex, targetIndext);
                 data.polygonSelecting(targetIndext);
+    }
+    public void updateBackground(BackGroundValue backgroundValue, Rectangle rec){
+        gradient = new RadialGradient(backgroundValue.getFocusAngle().getValue(),
+        backgroundValue.getFocusDistance().getValue(), backgroundValue.getCenterX().getValue(), backgroundValue.getCenterY().getValue(), 
+        backgroundValue.getBackgroundGadient().getValue(), backgroundValue.getProportional().getValue(), backgroundValue.getCycleMethod().getValue(),
+        backgroundValue.getStop1().getValue(), backgroundValue.getStop2().getValue());
+        rec.setFill(gradient);
+//        rec.getStyleClass().add(CLASS_MV_MAP_OCEAN);
+    }
+    public BackGroundValue getBackgroundValues(){
+        return backgroundValues;
     }
     
     public TableView getTable(){

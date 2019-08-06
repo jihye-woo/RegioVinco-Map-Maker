@@ -2,24 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/data/SubRegionInfo.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/workspace/style/MapViewerStyle.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/rvmmDialogs/helperDialog.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/files/rvmmFiles.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/workspace/rvmmWorkspace.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/data/ColorAndThicknessInfo.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/RegioVincoMapMakerApp.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/workspace/rvmmDialogController.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/data/ImageInfo.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/rvmmDialogs/MapMakerDialog.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/workspace/rvmmButtonController.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/MapMakerPropertyType.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/data/rvmmData.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/rvmmDialogs/MapMakerRenameDialog.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/rvmmDialogs/MapMakerEditDialog.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/rvmmDialogs/MapMakerChangeDiemensionDialog.java</file>
-            <file>file:/C:/Users/Jihye/Documents/cse219/HW4_2/CS3LearningSuite_v2.0/apps/RegioVincoMapMaker/src/mv/clipboard/MapViewerClipboard.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

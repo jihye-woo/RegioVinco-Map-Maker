@@ -280,7 +280,7 @@ public class AppGUIModule {
         }
     }
 
-    private void initFileToolbar() {
+    private void initFilptioeToolbar() {
         fileToolbar = new ToolBar();
         topToolbarPane.getChildren().add(fileToolbar);
         fileController = new AppFileController(app);

@@ -21,15 +21,15 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Polygon;
 import javax.imageio.ImageIO;
 import javax.json.Json;
@@ -44,7 +44,6 @@ import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import static mv.MapMakerPropertyType.RVMM_TABLE;
-import static mv.MapMakerPropertyType.RVMM_TABLECOL1;
 import mv.data.ImageInfo;
 import mv.data.rvmmData;
 import mv.workspace.rvmmWorkspace;
@@ -64,6 +63,13 @@ public class rvmmFiles implements AppFileComponent {
     static final String JSON_MAP_LINE_COLOR_GREEN = "map_line_color_green";
     static final String JSON_MAP_LINE_COLOR_BLUE = "map_line_color_blue";
     static final String JSON_SUBREGIONS_DATA = "subregions";
+    static final String JSON_MAP_BACKGROUND_FocusAngle = "background_color_focusAngle";
+    static final String JSON_MAP_BACKGROUND_FocusDistance = "background_color_focusDistance";
+    static final String JSON_MAP_BACKGROUND_CenterX = "background_color_centerX";
+    static final String JSON_MAP_BACKGROUND_CenterY = "background_color_centerY";
+    static final String JSON_MAP_BACKGROUND_CycleMethod = "background_color_CycleMethod";
+    static final String JSON_MAP_BACKGROUND_Stop1 = "background_color_stop1";
+    static final String JSON_MAP_BACKGROUND_Stop2 = "background_color_stop2";
     
     static final String JSON_SUBREGIONS_NAME = "name";
     static final String JSON_SUBREGIONS_CAPTIAL = "capital";
@@ -187,6 +193,13 @@ public class rvmmFiles implements AppFileComponent {
                 .add(JSON_MAP_LINE_COLOR_GREEN, rvmmdata.getColorController().getColor().getGreen())
                 .add(JSON_MAP_LINE_COLOR_BLUE, rvmmdata.getColorController().getColor().getBlue())
                 .add(JSON_MAP_THICKNESS, rvmmdata.getColorController().getThickness())
+//                .add(JSON_MAP_BACKGROUND_FocusAngle, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getFocusAngle().get())
+//                .add(JSON_MAP_BACKGROUND_FocusDistance, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getFocusDistance().get())
+//                .add(JSON_MAP_BACKGROUND_CenterX, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getCenterX().get())
+//                .add(JSON_MAP_BACKGROUND_CenterY, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getCenterY().get())
+//                .add(JSON_MAP_BACKGROUND_CycleMethod, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getCycleMethod().get().toString())
+//                .add(JSON_MAP_BACKGROUND_Stop1, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getStop2().get().hashCode())
+//                .add(JSON_MAP_BACKGROUND_Stop2, ((rvmmWorkspace)rvmmdata.getApp().getWorkspaceComponent()).getBackgroundValues().getStop1().get().hashCode())
                 .add(JSON_SUBREGIONS, subregions)
                 .add(JSON_NUM_OF_IMAGE, images.size())
                 .add(JSON_IMAGE,imagesArray)
@@ -246,7 +259,26 @@ public class rvmmFiles implements AppFileComponent {
         workspace.getBorderColorPicker().setValue(lineColor);
         double lineThickness = getDataAsDouble(json,JSON_MAP_THICKNESS);
         mapData.getColorController().changeThinkness(lineThickness);
-    // GO THROUGH ALL THE SUBREGIONS
+        double focuseAngle = getDataAsDouble(json, JSON_MAP_BACKGROUND_FocusAngle);
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setFocusAngle(focuseAngle);
+        double focuseDistance = getDataAsDouble(json, JSON_MAP_BACKGROUND_FocusDistance);
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setFocusDistance(focuseDistance);
+        double centerX =  getDataAsDouble(json, JSON_MAP_BACKGROUND_CenterX);
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setCenterX(centerX);
+        double centerY =  getDataAsDouble(json, JSON_MAP_BACKGROUND_CenterY);
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setCenterY(centerY);
+        String cycleMethodString = json.getString(JSON_MAP_BACKGROUND_CycleMethod);
+        CycleMethod cycleMethod = CycleMethod.NO_CYCLE;
+        if(cycleMethodString.equals("REPEAT")){
+            cycleMethod = CycleMethod.REPEAT;
+        }
+        else if(cycleMethodString.equals("REFLECT")){
+            cycleMethod = CycleMethod.REFLECT;
+        }
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setCycleMethod(cycleMethod);
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setStop1(new Stop(0, Color.web(json.getString(JSON_MAP_BACKGROUND_Stop1))));
+        ((rvmmWorkspace)mapData.getApp().getWorkspaceComponent()).getBackgroundValues().setStop2(new Stop(0, Color.web(json.getString(JSON_MAP_BACKGROUND_Stop2))));
+        // GO THROUGH ALL THE SUBREGIONS
         for (int subregionIndex = 0; subregionIndex < numSubregions; subregionIndex++) {
             // MAKE A POLYGON LIST FOR THIS SUBREGION
             JsonObject jsonSubregion = jsonSubregionsArray.getJsonObject(subregionIndex);
